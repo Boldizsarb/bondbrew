@@ -3,10 +3,10 @@ import './aPost.css'
 import { useSelector, useDispatch } from "react-redux";
 import Comment from '../../img/comment.png'
 import Share from '../../img/share.png'
-import Heart from '../../img/like.png'
+import Heart from '../../img/like1.png'
 import NotLike from '../../img/notlike.png'
 import { useState } from 'react';
-//import { likePost } from "../../api/PostsRequests";
+import { likePost } from "../../api/postRequest";
 
 
 // each post
@@ -19,13 +19,13 @@ const Post = ({ data }) => {
   const [liked, setLiked] = useState(data.likes.includes(user._id));
   const [likes, setLikes] = useState(data.likes.length)
   
-  //console.log(data)
+  console.log(data)
   
-  // const handleLike = () => {
-  //   likePost(data._id, user._id);
-  //   setLiked((prev) => !prev);
-  //   liked? setLikes((prev)=>prev-1): setLikes((prev)=>prev+1)
-  // };
+  const handleLike = () => { // like
+    likePost(data._id, user._id);
+    setLiked((prev) => !prev);
+    liked? setLikes((prev)=>prev-1): setLikes((prev)=>prev+1)
+  };
 
   return (
     <div className="Post">
@@ -40,7 +40,7 @@ const Post = ({ data }) => {
           src={liked ? Heart : NotLike}
           alt=""
           style={{ cursor: "pointer" }}
-          // onClick={handleLike}
+          onClick={handleLike}
         />
         <img src={Comment} alt="" />
         <img src={Share} alt="" />

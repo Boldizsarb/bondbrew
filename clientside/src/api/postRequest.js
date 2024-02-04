@@ -2,7 +2,7 @@ import axios from 'axios'
 
 const url = process.env.REACT_APP_AXIOS_BASE_URL
 
-const API = axios.create({ baseURL: "http//localhost:5000/images/" });
+const API = axios.create({ baseURL: url });
 
 API.interceptors.request.use((req) => {
     if (localStorage.getItem('profile')) {
