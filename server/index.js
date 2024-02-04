@@ -12,8 +12,9 @@ const app = express();
 app.use(express.json());
 dotenv.config();
 
-
-
+// serving images to public, ergo the client side can access the images
+app.use(express.static("public"));
+app.use("/images", express.static("images"));
 
 
 // Middleware
@@ -30,6 +31,8 @@ app.use("/userser", Userrouter); // get, update, delete, follow, unfollow
 app.use("/post", PostRouter); // create, get, update, delete, like, timeline
 
 app.use("/upload", UploadRouter); // upload image
+
+
 
 mongoose.connect(process.env.MONGO_DB, {
     //useNewUrlParser: true,

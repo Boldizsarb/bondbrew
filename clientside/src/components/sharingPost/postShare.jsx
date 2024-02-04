@@ -12,44 +12,46 @@ import { uploadImage, uploadPost } from "../../actions/uploadAction";
 
 const PostShare = () => {
     const [image, setImage] = useState(null); 
-    const imageRef = useRef();
+    
     const { user } = useSelector((state) => state.authReducer.authData); // getting the user from the store
     const desc = useRef();
     const dispatch = useDispatch();
     const loading = useSelector((state) => state.postReducer.uploading);
-    const onImageChange = (event) => {
-      if (event.target.files && event.target.files[0]) {
-        let img = event.target.files[0];
-        setImage(
-          //image: URL.createObjectURL(img),
-           img
-        );
-      }
-    };
+
+     const onImageChange = (event) => {
+    if (event.target.files && event.target.files[0]) {
+      let img = event.target.files[0];
+      setImage(img);
+    }
+  };
+
+    const imageRef = useRef();
 
     const resetPost = () => { // setting the post to the initial state
       desc.current.value = "";
       setImage(null);
     }
 
-    const handleSubmit = (e) => {
+    const handleUpload = async (e) => {
       e.preventDefault();
-       
+  
+      //post data
       const newPost = {
         userId: user._id,
-        desc: desc.current.value
-      }
-      if(image){ // storing static files in the filesystem
+        desc: desc.current.value,
+      };
+  
+      // if there is an image with post
+      if (image) {
         const data = new FormData();
-        const filename = Date.now() + image.name; // creating a unique name for the file
-        data.append("name", filename);
+        const fileName = Date.now() + image.name;
+        data.append("name", fileName);
         data.append("file", image);
-        newPost.img = filename;
+        newPost.image = fileName;
         console.log(newPost);
-        try{
-          dispatch(uploadImage(data))
-
-        }catch(err){
+        try {
+          dispatch(uploadImage(data));
+        } catch (err) {
           console.log(err);
         }
       }
@@ -69,7 +71,7 @@ const PostShare = () => {
               <UilScenery />
               Photo
             </div>
-            <button className="button ps-button" onClick={handleSubmit} disabled={loading}>{loading? "Uploading...": "Share"}</button>
+            <button className="button ps-button" onClick={handleUpload} disabled={loading}>{loading? "Uploading...": "Share"}</button>
             <div style={{ display: "none" }}>
               <input
                 type="file"
