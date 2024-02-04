@@ -13,8 +13,8 @@ const Profile = () => {
         <ProfileLeftSide />
 
         <div className="Profile-center"> {/* the middle of the page */}
-
-            <ProfileCard /> 
+                {/**providing the location for the profile card */}
+            <ProfileCard location = "profilePage" /> 
             <PostSides />
            
         </div>

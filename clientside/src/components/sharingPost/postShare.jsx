@@ -12,7 +12,7 @@ import { uploadImage, uploadPost } from "../../actions/uploadAction";
 
 const PostShare = () => {
     const [image, setImage] = useState(null); 
-    
+    const serverPubicFolder = process.env.REACT_APP_PUBLIC_FOLDER;
     const { user } = useSelector((state) => state.authReducer.authData); // getting the user from the store
     const desc = useRef();
     const dispatch = useDispatch();
@@ -61,7 +61,7 @@ const PostShare = () => {
     
     return (
       <div className="PostShare">
-        <img src={ProfileImage} alt="" />
+        <img src={user.profilePicture? serverPubicFolder + user.cover.coverPicture : serverPubicFolder + "defaultProfile.png"} alt="" />
         <div>
           <input ref={desc} required type="text" placeholder="What's happening" />
           <div className="postOptions">

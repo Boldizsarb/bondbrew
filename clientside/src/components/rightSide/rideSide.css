@@ -15,7 +15,24 @@
 .navIcons>img{
     width: 1.5rem;
     height: 1.5rem;
+    transition: transform 0.3s ease;
 }
+.navIcons img{
+    transition: transform 0.3s ease;
+}
+
+.navIcons img:hover {
+    transform: scale(1.4); 
+    border-radius: 50%;
+ 
+}
+
+.navIcons>a>img{
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+
 
 
 .r-button{
