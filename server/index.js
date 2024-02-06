@@ -48,5 +48,5 @@ mongoose.connect(process.env.MONGO_DB, {
 
 
 // original: "mongodb+srv://donboyszy:WFU3NSzMmNOmWjSD@bondbrew.t7bbpt4.mongodb.net/?retryWrites=true&w=majority"
-// "mongodb+srv://donboyszy:WFU3NSzMmNOmWjSD@bondbrew.t7bbpt4.mongodb.net/bondbrew?retryWrites=true&w=majority"
+
 

@@ -19,7 +19,7 @@ const Post = ({ data }) => {
   const [liked, setLiked] = useState(data.likes.includes(user._id));
   const [likes, setLikes] = useState(data.likes.length)
   
-  console.log(data)
+  //console.log(data)
   
   const handleLike = () => { // like
     likePost(data._id, user._id);
@@ -29,7 +29,7 @@ const Post = ({ data }) => {
 
   return (
     <div className="Post">
-      {console.log("data.image:", data.image)}
+      {/*console.log("data.image:", data.image)*/}
       <img
          src={data.image ? process.env.REACT_APP_PUBLIC_FOLDER + data.image : ""}
          alt=""
