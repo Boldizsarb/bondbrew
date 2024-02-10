@@ -21,7 +21,9 @@ const RightSide = () => {
       </Link>
         <img src={Noti} alt="" />
         <img src={Noti} alt="" />
-        <img src={Comment} alt="" />
+        <Link to={"../chat"}> {/* takes you to the chat page */}
+          <img src={Comment} alt="" />
+        </Link>
       </div>
 
       <TrendCard />
