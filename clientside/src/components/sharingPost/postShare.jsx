@@ -39,6 +39,7 @@ const PostShare = () => {
       const newPost = {
         userId: user._id,
         desc: desc.current.value,
+        sharedby: user.firstname,
       };
   
       // if there is an image with post
@@ -63,7 +64,7 @@ const PostShare = () => {
       <div className="PostShare">
         <img src={user.profilePicture? serverPubicFolder + user.profilePicture : serverPubicFolder + "defaultProfile.png"} alt="" />
         <div>
-          <input ref={desc} required type="text" placeholder="What's happening" />
+          <input ref={desc} required type="text" placeholder="Share with you friends" />
           <div className="postOptions">
             <div className="option" style={{ color: "var(--photo)" }}
             onClick={()=>imageRef.current.click()}

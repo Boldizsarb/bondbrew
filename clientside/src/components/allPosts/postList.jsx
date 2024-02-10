@@ -19,9 +19,9 @@ const Posts = () => {
     dispatch(getTimelinePosts(user._id));
   }, []);
 
-  if(!posts) return 'There are no posts to show. Post something!';
-
+  if(!posts) return 'There are no posts to show...';
   if(params.id) posts = posts.filter((post)=> post.userId===params.id)
+  
   return (
     <div className="Posts">
       {loading

@@ -1,0 +1,14 @@
+.UnfollowButton{
+    color: var(--orange);
+    border: 2px solid var(--orange);
+    cursor: pointer;
+    background: transparent;
+}
+
+
+.FollowersCard>span{
+    font-weight: bold;
+    color: rgb(142, 98, 17);
+    align-self: center;
+    cursor: pointer;
+}

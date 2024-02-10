@@ -1,36 +1,51 @@
-import React from "react";
 import "./followersCard.css";
-
+import User from "../user/user";
+import React, { useEffect, useState } from "react";
+import "./followersCard.css";
+import FollowersModal from "../followersModal/followersModal";
+import { getAllUser } from "../../api/userRequest";
+import { useSelector } from "react-redux";
 // under my profile, I want to see a list of people I can follow
 
 
 
-import { friendsData } from "../../data/friendsData";
 
-const FollowersCard = () => {
+
+
+
+const FollowersCard = ({ location }) => {
+
+    const [modalOpened, setModalOpened] = useState(false);
+    const [persons, setPersons] = useState([]);
+    const { user } = useSelector((state) => state.authReducer.authData);
+  
+    useEffect(() => {
+      const fetchPersons = async () => {
+        const { data } = await getAllUser();
+        setPersons(data);
+      };
+      fetchPersons();
+    }, []);
+  
     return (
-        <div className="FollowersCard">
-        <h3>Who is your friend</h3>
-
-        {friendsData. map((friend, id)=>{
-            return(
-                <div className="follower">
-                    <div>
-                        <img src={friend.img} alt="" className='followerImage' />
-                        <div className="name">
-                            <span>{friend.name}</span>
-                            <span>@{friend.username}</span>
-                        </div>
-                    </div>
-                    <button className='button fc-button'>
-                        Follow
-                    </button>
-                </div>
-            )
+      <div className="FollowersCard">
+        <h3>People you may know</h3>
+  
+        {persons.map((person, id) => {
+          if (person._id !== user._id) return <User person={person} key={id} />;
         })}
-    </div>
-  )
-  }
-
-
-export default FollowersCard;
+        {!location ? (
+          <span onClick={() => setModalOpened(true)}>Show more</span>
+        ) : (
+          ""
+        )}
+  
+        <FollowersModal
+          modalOpened={modalOpened}
+          setModalOpened={setModalOpened}
+        />
+      </div>
+    );
+  };
+  
+  export default FollowersCard;
