@@ -5,6 +5,7 @@ import "./style/App.css";
 import {Routes, Route, Navigate} from "react-router-dom";
 import { useSelector } from "react-redux";
 import Chat from "./pages/chat/chat";
+import ForgotPassword from "./pages/forgotPassword/forgotPassword";
 
 //////  this file enables the routing of the app
 function App() {
@@ -16,6 +17,8 @@ function App() {
     <div className="App"> 
       <div className="blur" style={{top:'-18%',right:'0'}}></div>
       <div className="blur" style={{top: '36%',left:'-6rem'}}></div>
+      <div className="blur" style={{top: '-20%',left:'20rem'}}></div>
+      <div className="blur" id="moreblur" style={{top: '40%',left:'40rem'}}></div>
      <Routes>
      <Route
           path="/"
@@ -36,6 +39,10 @@ function App() {
         <Route
           path="/chat"
           element={user ? <Chat /> : <Navigate to="../auth" />}
+        />
+        <Route
+          path="/forgotPassword"
+          element={!user ? <ForgotPassword /> : <Navigate to="../auth" />}
         />
       </Routes>
     </div>

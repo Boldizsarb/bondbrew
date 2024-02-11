@@ -26,7 +26,7 @@
   height: 14rem;
   border-radius: 50%;
   background: #bf862b;
-  filter: blur(72px)
+  filter: blur(90px)
 }
 .button {
   display: flex;
@@ -49,4 +49,11 @@
 .button:disabled{  /* in loading state the button wiont be clickable*/
   background: silver;
   pointer-events: none;
+}
+#moreblur{
+  position: absolute;
+  top: 40%; 
+  left: 40rem; 
+  filter: blur(110px);
+  max-width: calc(100% - 60rem); /*  it doesn't go beyond the parent width minus 60rem */
 }

@@ -97,3 +97,14 @@
       align-items: center;
       justify-content: center;
   }
+  .instruction{
+      color: var(--gray);
+      transition: "color 0.5s ease in-out";
+  }
+  .instruction:hover{
+      color: #b06219 ;
+  }
+  .forgotP{
+      color: var(--gray);
+      transition: "color 0.5s ease in-out";
+  }

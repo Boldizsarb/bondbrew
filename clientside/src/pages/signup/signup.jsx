@@ -4,7 +4,8 @@ import Logo from "../../img/logo1.png";
 import { useDispatch, useSelector } from "react-redux"; // instance of the hook 
 import { Provider } from 'react-redux';
 import { signUp, logIn } from "../../actions/signupAction"; // importing the action
-//import { useNavigate } from "react-router-dom";
+import { Link } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 const Auth = () => {
 
@@ -122,9 +123,17 @@ const Auth = () => {
         </span>
 
         <div>  {/* onclick the previous value will be set*/}
-            <span style={{fontSize: '12px',cursor:"pointer"}} onClick={()=>{setIsSignup((prev)=>!prev); resetForm()}}  >
-              {isSignup ? "Already have an account. Blend in!": "Do not have an account yet, Brew one!"}</span>
-        </div>                          {/*if loading is true the button wont be clickable */}
+            <span className="instruction" style={{fontSize: '15px',cursor:"pointer"}} onClick={()=>{setIsSignup((prev)=>!prev); resetForm()}}  >
+              {isSignup ? "Already have an account? Blend in!": "Do not have an account yet? Brew one!"}</span>
+              
+        </div >   
+          <div style={{maxHeight: "0.3vh"}}>
+              <Link to="/forgotPassword" style={{textDecoration:"none"}}>
+                {!isSignup && 
+                <span className="forgotP" style={{marginRight: '10vh',fontSize: '12px',cursor:"pointer"}}>Forgot Password</span>}
+              </Link>
+
+          </div>                       {/*if loading is true the button wont be clickable */}
         <button className="button infoButton" type="submit" disabled={loading} >
             {loading? "Loading..." : isSignup ? "Sginup" : "Login"}
           </button>
