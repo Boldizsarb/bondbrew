@@ -5,13 +5,16 @@ import { getUser } from "../../api/userRequest";
 import { getMessages } from "../../api/messageRequest";
 import {format} from "timeago.js";
 import InputEmoji from "react-input-emoji";
+import { addMessage } from "../../api/messageRequest";
 
 
 
-const ChatBox = ({chat,currentUser}) => {
+const ChatBox = ({chat,currentUser, setSendMessage, receivedMessage }) => {
 
     const [userData, setUserData] = useState(null);
-
+    const scroll = useRef();
+    const [messages, setMessages] = useState([]); // an empty array
+    const [newMessage, setNewMessage] = useState("");
 
     // fetching data for header
   useEffect(() => {
@@ -31,7 +34,7 @@ const ChatBox = ({chat,currentUser}) => {
   }, [chat, currentUser]); // if these change then the useEffect will run again
   ///////// fetching data for header
   ////////////////// fetching messages 
-    const [messages, setMessages] = useState([]); // an empty array
+    
     useEffect(() => {
         const fetchMessages = async ()=> {
             try {
@@ -45,11 +48,49 @@ const ChatBox = ({chat,currentUser}) => {
         if(chat !== null) fetchMessages(); // will only run if chat is not null
     }, [chat])
 
-    const [newMessage, setNewMessage] = useState("");
+    
 
     const handleChange = (newMessage)=> {
     setNewMessage(newMessage)
   }
+  
+    //// sending message
+   // Send Message
+   const handleSend = async(e)=> {
+    e.preventDefault()
+    const message = {
+      senderId : currentUser,
+      text: newMessage,
+      chatId: chat._id,
+  }
+  const receiverId = chat.members.find((id)=>id!==currentUser);
+  // send message to socket server
+  setSendMessage({...message, receiverId})
+  // send message to database
+  try {
+    const { data } = await addMessage(message);
+    setMessages([...messages, data]);
+    setNewMessage("");
+  }
+  catch
+  {
+    console.log("error")
+  }
+}
+
+  // receiving message
+  useEffect(() => {   // the message box will re-render when the receiveMessage state changes
+    if (receivedMessage !== null && receivedMessage.chatId === chat._id) {
+      setMessages([...messages, receivedMessage]);
+    }
+  
+  },[receivedMessage])
+  
+
+  // scroll to bottom
+  useEffect(() => {
+    scroll.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]); // if messages change then the useEffect will run again
 
 
 
@@ -89,7 +130,7 @@ const ChatBox = ({chat,currentUser}) => {
             <div className="chat-body" >
               {messages.map((message) => (
                 <>
-                  <div 
+                  <div ref = {scroll}
                     className={
                       message.senderId === currentUser
                         ? "message own"
@@ -109,7 +150,7 @@ const ChatBox = ({chat,currentUser}) => {
                 value={newMessage}
                 onChange={handleChange}
               />
-              <div className="send-button button" >Send</div>
+              <div className="send-button button" onClick={handleSend}>Send</div>
               <input
                 type="file"
                 name=""

@@ -9,6 +9,7 @@ import Home from "../../img/home.png";
 import Noti from "../../img/noti.png";
 import Comment from "../../img/chat.png";
 import { Link } from "react-router-dom";
+import {io} from "socket.io-client";
 
 
 const Chat = () => {
@@ -16,7 +17,13 @@ const Chat = () => {
     ////////////////////////// getting both users
     const [chats, setChats] = useState([]); // chats will be an array of objects
     const {user} = useSelector((state) => state.authReducer.authData); // this is the user state from the redux store
+    const [currentChat, setCurrentChat] = useState(null); // the current chatq*
+    const [onlineUsers, setOnlineUsers] = useState([]); // the online users
+    const [sendMessage, setSendMessage] = useState(null)
+    const [receivedMessage, setReceivedMessage] = useState(null);
 
+    const socket = useRef();
+        /// getting the chats
     useEffect(() => {
         const getChats = async () => {
           try {
@@ -30,10 +37,40 @@ const Chat = () => {
         getChats(); // gets called when the page is loaded
     }, [user._id]);
       //////////////////////////////////////////////////////
-      //////////////////// Chat 
-      const [currentChat, setCurrentChat] = useState(null); // the current chatq*
+      //////////////////// Chat ////// SOCKET IO ///////
+      
 
+        // Connect to Socket.io
+    useEffect(() => {
+        socket.current = io("ws://localhost:8800");
+        socket.current.emit("new-user-add", user._id);
+        socket.current.on("get-users", (users) => {
+            setOnlineUsers(users);
+        });
+    }, [user]);
 
+        //send message to the socket server
+    useEffect(() => {
+        if (sendMessage!==null) {
+            socket.current.emit("send-message", sendMessage);}
+    }, [sendMessage]);
+
+    //receive message from the socket server
+    useEffect(() => {
+        socket.current.on("recieve-message", (data) => {
+          console.log(data)
+          setReceivedMessage(data);
+        }
+    
+        );
+      }, []);
+
+      ///// checking if the user is online
+      const isUserOnline = (chat) => {
+        const chatMember = chat.members.find((member) => member !== user._id);
+        const online = onlineUsers.find((user) => user.userId === chatMember);
+        return online ? true : false;
+      };
 
 
     return (
@@ -46,7 +83,7 @@ const Chat = () => {
                 <div className="Chat-list">
                    {chats.map((chat) => (
                     <div onClick={()=> setCurrentChat(chat)} >
-                        <Conversation data = {chat} currentUserId = {user._id} /> {/**Conversation component */}
+                        <Conversation data = {chat} currentUserId = {user._id} online={isUserOnline(chat)} /> {/**Conversation component */}
                     </div>
                      ))}
                 </div>
@@ -68,7 +105,7 @@ const Chat = () => {
                     </div>
                 </div>
                     {/**Chat body */}
-                    <ChatBox  chat={currentChat} currentUser = {user._id}/>
+                    <ChatBox  chat={currentChat} currentUser = {user._id} setSendMessage={setSendMessage} receivedMessage={receivedMessage}/>
                 
             </div>
         </div>
