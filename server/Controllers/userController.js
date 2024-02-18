@@ -1,6 +1,11 @@
 import UserModel from "../Models/userModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+dotenv.config();
+
+const SECRET_KEY = process.env.SECRET_KEY;
+const frontEndUrl = process.env.FRONTEND_BASE_URL;
 
 
 // get all users 
@@ -38,6 +43,104 @@ export const getUser = async (req, res) => {
     res.status(500).json(error);
   }
 };
+
+export const getUserByUserName = async (req, res) => {
+  const username = req.params.username;
+
+  try {
+    const user = await UserModel.findOne({ username: username });
+
+    if (user) {
+      const { password, ...otherDetails } = user._doc;  // taking the password out of the user details upon request, this makes it invisible
+
+      res.status(200).json(otherDetails);
+    } else {
+      res.status(404).json("User does not exist");
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
+
+  ///// FORGOT PASSWORD    ///// FORGOT PASSWORD    ///// FORGOT PASSWORD    ///// FORGOT PASSWORD    ///// FORGOT PASSWORD    ///// FORGOT PASSWORD    
+export const getUserByUsername = async (req, res) => {
+  const username  = req.params.username;
+
+  try {
+    const user = await UserModel.findOne({ username: username });
+
+    if (user) {
+      // Return all user data if a match is found
+      const secret = SECRET_KEY + user.password;
+      const token = jwt.sign({ username: user.username, id: user._id }, secret, {
+        expiresIn: "1h",
+      });
+      // the link
+      //const link = `http://localhost:3000/resetpassword/${user._id}/${token}`; // have to be 3000 || the link to front end 
+       const link = `${frontEndUrl}/resetpassword/${user._id}/${token}`; // have to be 3000 || the link to front end
+      console.log(link);
+    
+
+      //res.status(200).json(user);
+      //res.status(200).json(link);
+      res.status(200).json({ link: link });
+    } else {
+      res.status(404).json({ message: "User does not exist" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const resetPassword = async (req, res) => {
+  const { id, token } = req.params;
+  //console.log(req.params);
+  const user = await UserModel.findOne({ _id: id });
+  if(!user) return res.status(404).json("User does not exist");
+  const secret = SECRET_KEY + user.password;
+  // veryfying the token
+  try {
+    const decoded = jwt.verify(token, secret);
+    if (decoded) {
+      res.status(200).json(user);
+     // res.status(200).json("verified");
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+
+  //res.status(200).json("done");
+};
+
+
+export const updatePassword = async (req, res) => {
+  const id = req.params.id; // The ID from URL parameters
+  const { _id, password } = req.body; // Extracting _id, password, and admin status from request body
+  
+  // Validate current user's ID or admin status before proceeding
+  if (id === _id ) {
+    if (!password) {
+      return res.status(400).json("Password is required.");
+    }
+    try {
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(password, salt);
+
+      // Update only the password field in the user document
+      const updatedUser = await UserModel.findByIdAndUpdate(id, { $set: { password: hashedPassword } }, { new: true });
+
+      // Simplified response without the token
+      res.status(200).json({ user: updatedUser });
+    } catch (error) {
+      res.status(500).json(error.message);
+    }
+  } else {
+    res.status(403).json("Access Denied! You can only update your own profile.");
+  }
+};
+
+
+////////////////////// END OF FORGOT PASSWORD    ///////// END OF FORGOT PASSWORD    ///////// END OF FORGOT PASSWORD    ///////// END OF FORGOT PASSWORD    
 
 export const fetchUserById = async (req, res) => {
   const id = req.body.userId;

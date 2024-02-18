@@ -6,11 +6,12 @@ import {Routes, Route, Navigate} from "react-router-dom";
 import { useSelector } from "react-redux";
 import Chat from "./pages/chat/chat";
 import ForgotPassword from "./pages/forgotPassword/forgotPassword";
+import ResetPassword from "./pages/resetPassword/resetPassword";
 
 //////  this file enables the routing of the app
 function App() {
 
-  const user = useSelector((state) => state.authReducer.authData); // this is the user state from the redux store
+  const user = useSelector((state) => state.authReducer.authData); // user state from the redux store
 
   return (
     
@@ -43,6 +44,10 @@ function App() {
         <Route
           path="/forgotPassword"
           element={!user ? <ForgotPassword /> : <Navigate to="../auth" />}
+        />
+        <Route
+          path="/resetpassword/:id/:token" // coming from the signuprequest.js/ api
+          element={!user ? <ResetPassword /> : <Navigate to="../auth" />}
         />
       </Routes>
     </div>

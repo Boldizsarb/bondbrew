@@ -10,6 +10,7 @@ import UploadRouter from "./Routes/uploadRoutes.js";
 import ChatRouter from "./Routes/chatRoutes.js";
 import MessageRouter from "./Routes/messageRoutes.js";
 
+
 const app = express();
 app.use(express.json());
 dotenv.config();
@@ -37,6 +38,8 @@ app.use("/upload", UploadRouter); // upload image
 app.use("/chat", ChatRouter); // create, get, find
 
 app.use("/message", MessageRouter); // add, get
+
+
 
 
 
