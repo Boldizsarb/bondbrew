@@ -23,14 +23,18 @@ const User = ({ person }) => {
     setFollowing((prev) => !prev);
   };
 
+  const handleFirstNameClick = () => {
+    console.log(person._id);
+  };
+
   return (
     <div className="follower">
       <div>
       <img src={person.profilePicture? serverPubicFolder + person.profilePicture : serverPubicFolder + "defaultProfile.png"}  alt="profile"
           className="followerImage" />
         <div className="name">
-          <span>{person.firstname}</span>
-          <span>{person.username}</span>
+          <span onClick={handleFirstNameClick} style={{cursor:"pointer"}}>{person.firstname}</span>
+          <span>{person.lastname}</span>
         </div>
       </div>
       <button

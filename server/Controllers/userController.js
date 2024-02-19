@@ -44,6 +44,42 @@ export const getUser = async (req, res) => {
   }
 };
 
+
+ // querrying first and last name
+export const getUserByFirstName = async (req, res) => {
+
+  const name = req.params.name;
+
+  if (!name) {
+    return res.status(400).json("Name parameter is required");
+  }
+
+  try {
+    const users = await UserModel.find({
+      $or: [
+        { firstname: { $regex: new RegExp(name, 'i') } }, 
+        { lastname: { $regex: new RegExp(name, 'i') } }   
+      ]
+    });
+
+    if (users.length > 0) {
+      // Exclude the password from the response
+      const sanitizedUsers = users.map(user => {
+        const { password, ...otherDetails } = user.toObject(); 
+        return otherDetails;
+      });
+      res.status(200).json(sanitizedUsers);
+    } else {
+      res.status(404).json("User(s) not found");
+    }
+  } catch (error) {
+    res.status(500).json(error.message);
+  }
+};
+
+
+
+
 export const getUserByUserName = async (req, res) => {
   const username = req.params.username;
 

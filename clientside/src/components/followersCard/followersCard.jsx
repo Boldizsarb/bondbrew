@@ -31,7 +31,7 @@ const FollowersCard = ({ location }) => {
       <div className="FollowersCard">
         <h3>People you may know</h3>
   
-        {persons.map((person, id) => {
+        {persons.slice(0, 10).map((person, id) => {
           if (person._id !== user._id) return <User person={person} key={id} />;
         })}
         {!location ? (
@@ -43,6 +43,7 @@ const FollowersCard = ({ location }) => {
         <FollowersModal
           modalOpened={modalOpened}
           setModalOpened={setModalOpened}
+          persons={persons} // passing all the users not just the first 10
         />
       </div>
     );

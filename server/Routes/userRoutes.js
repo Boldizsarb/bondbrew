@@ -1,5 +1,5 @@
 import express from "express";
-import{getUser, updateUser, deleteUser, followUser, UnFollowUser, getAllUsers, fetchUserById, getUserByUsername, resetPassword,getUserByUserName, updatePassword} from "../Controllers/userController.js";
+import{getUser, updateUser, deleteUser, followUser, UnFollowUser, getAllUsers, fetchUserById, getUserByUsername, resetPassword,getUserByUserName, updatePassword, getUserByFirstName} from "../Controllers/userController.js";
 import authMiddleWare from "../middleware/authMiddleware.js";
       
 const router = express.Router();
@@ -17,6 +17,8 @@ router.post('/username/:username', getUserByUsername) // with the link
 router.get('/resetpassword/:id/:token', resetPassword)
 router.get("/username/:username", getUserByUserName)
 router.put('/updatepassword/:id', updatePassword)
+
+router.get('/name/:name', getUserByFirstName)
 
 
 export default router;
