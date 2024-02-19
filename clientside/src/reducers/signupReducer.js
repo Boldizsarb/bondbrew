@@ -13,7 +13,9 @@ const authReducer = (state = { authData: null, loading: false, error: false, upd
   
   
         case "AUTH_FAIL":
-        return {...state, loading: false, error: true };
+        return {...state, loading: false, error: action.payload };
+        case "AUTH_ERROR_RESET":
+          return { ...state, error: false }; // Reset the error state
       case "UPDATING_START":
         return {...state, updateLoading: true , error: false}
       case "UPDATING_SUCCESS":
@@ -22,7 +24,7 @@ const authReducer = (state = { authData: null, loading: false, error: false, upd
       
       
         case "UPDATING_FAIL":
-        return {...state, updateLoading: true, error: true}
+        return {...state, updateLoading: true, error: action.payload}
   
   
   

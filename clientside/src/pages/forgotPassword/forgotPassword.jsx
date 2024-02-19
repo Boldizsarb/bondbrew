@@ -1,7 +1,9 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import emailjs from '@emailjs/browser';
+import Logo from "../../img/logo1.png";
+import "./forgotPassword.css";
 
 
 
@@ -86,23 +88,40 @@ const ForgotPassword = () => {
 
 
     return (
-         <div>
-            <h1>Forgot Password</h1>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label>Email:</label>
-                    <input 
-                        required
-                         type="email" 
-                        placeholder="Enter your email" 
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)} // Update email state on input change
-                    />
+        <div className="Auth">
+            <div>
+                    <div className="a-left">
+                        <img src={Logo} alt="" id="welcomeLogo" />
+                        <div className="Webname">
+                            <h1>Bond Brew</h1>
+                            <h6>Blend In, Bond Out, Brewing Friendships, One Click at a Time </h6>
+                        </div>
+                    </div>
+                <div className="a-right">
+                <div className='right-fogot'>
+                    
+                    <form className="infoForm authForm" onSubmit={handleSubmit}>
+                    <h3>Forgot Password</h3>
+                        <div>
+                            <label>Email:</label>
+                            <input 
+                                className="infoInput"
+                                required
+                                type="email" 
+                                placeholder="Enter your email" 
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)} // Update email state on input change
+                            />
+                        </div>
+                        <span style={{color:"red"}}>{message}</span>
+                        <Link to="/auth" className="forgotP" style={{marginRight: '10vh',fontSize: '12px',cursor:"pointer",textDecoration:"none" }}>Back to Login</Link>
+                        
+                    
+                        {linkToBeSent === '' && <button className= "button infoButton" type="submit">Submit</button>} {/**becomes invisible once the email is sent */}
+                    </form>
+                    </div>
                 </div>
-                <p style={{color:"red"}}>{message}</p>
-               
-                {linkToBeSent === '' && <button className= "button" type="submit">Submit</button>} {/**becomes invisible once the email is sent */}
-            </form>
+            </div>
         </div>
     )
 }

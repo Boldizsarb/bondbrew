@@ -12,7 +12,7 @@ function ProfileModal({ modalOpened, setModalOpened, data }) {
   const theme = useMantineTheme();
   const { password, ...other } = data;
   const [formData, setFormData] = useState(other);
-  console.log(formData);
+  //console.log(formData);
   const [profileImage, setProfileImage] = useState(null);
   const [coverImage, setCoverImage] = useState(null);
   const dispatch = useDispatch();
