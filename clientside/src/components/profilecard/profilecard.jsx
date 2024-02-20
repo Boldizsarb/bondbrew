@@ -5,11 +5,20 @@ import Profile from "../../img/linkedin.JPG";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
-const ProfileCard = ({location}) => {
+const ProfileCard = ({location, person}) => {
     const ProfilePage = true;
+    //console.log(person);
 
-    const { user } = useSelector((state) => state.authReducer.authData);
+    // the person is being passed from the clickedUserProfile page and the user is converrted to the person
+    const storeUser = useSelector((state) => state.authReducer.authData.user);
+    //const user = location === "clickedProfilePage" ? person : storeUser;
+    const user = location === "clickedProfilePage" ? (person || storeUser) : storeUser;
+    
+    //const { user } = useSelector((state) => state.authReducer.authData);
+    //console.log(user) 
+
     const serverPubicFolder = process.env.REACT_APP_PUBLIC_FOLDER;
+    
 
     const posts = useSelector((state)=>state.postReducer.posts) // getting the posts from the store for the number of posts
 
@@ -51,7 +60,7 @@ const ProfileCard = ({location}) => {
           </div>
           <hr />
         </div>{/*do not show the my profile on the profile page */}
-         {location === "profilePage" ? (
+         {location === "profilePage" || location === "clickedProfilePage"? (
         ""
       ) : (
         <span>

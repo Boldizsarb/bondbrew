@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { followUser, unfollowUser } from "../../actions/userAction";
 import "./user.css";
+import { useNavigate } from 'react-router-dom'; 
 
 
 
@@ -11,6 +12,7 @@ const User = ({ person }) => {
   const serverPubicFolder = process.env.REACT_APP_PUBLIC_FOLDER;
   const { user } = useSelector((state) => state.authReducer.authData);
   const dispatch = useDispatch()
+  const navigate = useNavigate();
   
   const [following, setFollowing] = useState(
     person.followers.includes(user._id)
@@ -24,8 +26,14 @@ const User = ({ person }) => {
   };
 
   const handleFirstNameClick = () => {
-    console.log(person._id);
+    //console.log(person._id);
+    navigate(`/clickProfile/${person._id}`);
   };
+ // console.log(person);
+
+  if (!person) {
+    return <div>No user to display</div>;
+  }
 
   return (
     <div className="follower">

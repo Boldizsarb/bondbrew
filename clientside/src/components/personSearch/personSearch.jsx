@@ -5,6 +5,7 @@ import {UilSearch} from '@iconscout/react-unicons';
 import SearchModal from './personSearchModal';
 import User from '../user/user';
 import { useSelector } from "react-redux";
+import { Link } from 'react-router-dom';
 
 const getUserUrl = process.env.REACT_APP_AXIOS_BASE_URL;
 
@@ -24,6 +25,11 @@ const PersonSearch = () => {
     const getUser = async (search) => {
         try {
           const res = await fetch(`${getUserUrl}userser/name/${search}`);
+          if(!res.ok){
+                //console.log("No user found");
+                //return null;
+                return [];
+            }
           const data = await res.json();
           //console.log(data);
           return data;
@@ -36,6 +42,7 @@ const PersonSearch = () => {
     //console.log(search);
     const data = await getUser(search);
     if (data) {
+        //console.log(data);
         setPeople(data); // Update the state with fetched data
         openModal(); // Optionally open the modal after search
     }
@@ -44,7 +51,9 @@ const PersonSearch = () => {
 
     return (
         <div className="personSearch">
+                <Link to={"../home"}>
                 <img id="logo" src={Logo} alt="The custom logo"/>
+                </Link>
                 <div className="Search">
                     <input type="text" placeholder="Search"
                     value={search}

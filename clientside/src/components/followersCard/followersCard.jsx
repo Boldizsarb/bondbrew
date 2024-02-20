@@ -26,12 +26,21 @@ const FollowersCard = ({ location }) => {
       };
       fetchPersons();
     }, []);
+
+    function shuffle(array) { // randomizing the people to follow
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+    const shuffledPersons = shuffle(persons);
   
     return (
       <div className="FollowersCard">
         <h3>People you may know</h3>
   
-        {persons.slice(0, 10).map((person, id) => {
+        {shuffledPersons.slice(0, 10).map((person, id) => { // random 1o suer
           if (person._id !== user._id) return <User person={person} key={id} />;
         })}
         {!location ? (

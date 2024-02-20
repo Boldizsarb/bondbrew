@@ -8,10 +8,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import * as UserApi from "../../../../api/userRequest";
 import { logout } from "../../../../actions/signupAction";
+import { followUser, unfollowUser } from "../../../../actions/userAction";
 
 /// will need to make the data dynamic here as well 
 
-const InfoCard = () => {
+const InfoCard = ({location,person}) => {
 
   const [modalOpened, setModalOpened] = useState(false); // this is for the modal of the info card, it is false by default it is closed 
   const dispatch = useDispatch()
@@ -20,14 +21,19 @@ const InfoCard = () => {
   const [profileUser, setprofileUser] = useState({}); 
   const {user} = useSelector((state) => state.authReducer.authData); // current user from the store 
 
+  // const storeUser = useSelector((state) => state.authReducer.authData.user);
+  // const user = location === "clickedProfile" ? (person || storeUser) : storeUser; // this is the reason why the pen is in there 
+
+
   useEffect(() => {
     const fetchProfileUser = async () => {
       if (currentUserId === user._id) {
         setprofileUser(user);
        // console.log(profileUser)
       } else {
-        console.log("loading")
+        //console.log("loading")
         const profileUser = await UserApi.getUser(currentUserId);
+        
         setprofileUser(profileUser);
         //console.log(profileUser)
       }
@@ -38,6 +44,15 @@ const InfoCard = () => {
   const handleLogOut = ()=> {
     dispatch(logout())
   }
+
+  console.log(person)
+  // follow button: 
+  // const [following, setFollowing] = useState(   // this brakes because the person is not defined here, need a dummy user, 
+  //   person.followers.includes(user._id)
+    
+  // );
+
+
 
             //////////////////////////////// will have to add more data here, the input is in the modal and jin the profilemodal(server)
   return (
@@ -79,6 +94,7 @@ const InfoCard = () => {
         </span>
         <span>{profileUser.worksAt}</span>
       </div>
+      
 
       <button className="button logout-button" onClick={handleLogOut}>Logout</button>
     </div>

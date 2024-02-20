@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import Chat from "./pages/chat/chat";
 import ForgotPassword from "./pages/forgotPassword/forgotPassword";
 import ResetPassword from "./pages/resetPassword/resetPassword";
+import ClickedUserProfile from "./pages/clickedUserProfile/clickedUserProfile";
 
 //////  this file enables the routing of the app
 function App() {
@@ -48,6 +49,10 @@ function App() {
         <Route
           path="/resetpassword/:id/:token" // coming from the signuprequest.js/ api
           element={!user ? <ResetPassword /> : <Navigate to="../auth" />}
+        />
+        <Route
+          path="/clickProfile/:id"
+          element={user ? <ClickedUserProfile /> : <Navigate to="../auth" />}
         />
       </Routes>
     </div>

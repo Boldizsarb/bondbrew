@@ -8,15 +8,15 @@ import Posts from "../allPosts/postList";
 
 
 
-const PostSides = () => {
+const PostSides = ({location}) => {
     return (
         <div className="PostSide">
-            <PostShare />
+            {location !== "clickedProfilePage" && <PostShare />}
             <Posts />
     
    </div>
     );
 };
 
-
+// the <PostShare /> is not shown on the clickedProfilePage, but on the profilePage!
 export default PostSides;

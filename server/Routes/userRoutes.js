@@ -19,6 +19,7 @@ router.get("/username/:username", getUserByUserName)
 router.put('/updatepassword/:id', updatePassword)
 
 router.get('/name/:name', getUserByFirstName)
+router.get('/fetch/:id', fetchUserById)
 
 
 export default router;
