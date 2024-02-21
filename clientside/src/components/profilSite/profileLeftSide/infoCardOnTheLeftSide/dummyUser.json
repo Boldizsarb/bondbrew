@@ -1,0 +1,19 @@
+{
+    "_id": "65be4e4559e9623a0c17afc9",
+    "username": "sample",
+    "firstname": "sample",
+    "lastname": "sample",
+    "isAdmin": false,
+    "followers": [
+      "65bf95db82771afa27cd83e8",
+      "65d21151d5ebad6dcf7defe9"
+    ],
+    "following": [
+      "65be57cde7b93ca54eeb5fed",
+      "65bf95db82771afa27cd83e8"
+    ],
+ 
+    "__v": 0
+
+
+  }
