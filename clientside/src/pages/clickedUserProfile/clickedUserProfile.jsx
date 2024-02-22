@@ -51,7 +51,7 @@ const ClickedUserProfile = () => {
 
             </div>
            
-            <RightSide />
+            <RightSide location={"clickedUser"} person={clickedUser}/>
             
         </div>
     )
