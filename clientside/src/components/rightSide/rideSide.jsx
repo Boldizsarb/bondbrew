@@ -67,12 +67,6 @@ const RightSide = ({location,person}) => {
 
 
 
-
-
-
-
-
-
   return (
     <div className="RightSide">
       <div className="navIcons">

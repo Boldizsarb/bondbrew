@@ -1,9 +1,11 @@
-import React from "react";
+import React, {  useEffect,useState } from 'react';
 import "./profilecard.css";
 import Cover from "../../img/logo1.png";
 import Profile from "../../img/linkedin.JPG";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import PostModal from '../aPost/aPostModal';
+
 
 const ProfileCard = ({location, person}) => {
     const ProfilePage = true;
@@ -21,13 +23,21 @@ const ProfileCard = ({location, person}) => {
     
 
     const posts = useSelector((state)=>state.postReducer.posts) // getting the posts from the store for the number of posts
+    // image modal: 
+    const [modalOpened, setModalOpened] = useState(false);
+    const imageName = serverPubicFolder + user.profilePicture
+    
+    const openModal = () => {
+      setModalOpened(true);
+  };
 
 
     return (
       <div className="ProfileCard">
         <div className="ProfileImages">
-          <img src={user.coverPicture? serverPubicFolder + user.coverPicture : serverPubicFolder + "defaultCover.png"} alt="" />
-          <img src={user.profilePicture? serverPubicFolder + user.profilePicture : serverPubicFolder + "defaultProfile.png"} alt="" />
+          <img src={user.coverPicture? serverPubicFolder + user.coverPicture : serverPubicFolder + "defaultCover.png"} alt="Profile Picture" />
+      <img src={user.profilePicture? imageName : serverPubicFolder + "defaultProfile.png"} alt="Profile Picture" 
+         onClick={openModal} />
         </div>
   
         <div className="ProfileName">
@@ -69,6 +79,7 @@ const ProfileCard = ({location, person}) => {
           </Link>
         </span>
       )}
+      <PostModal modalOpened={modalOpened} setModalOpened={setModalOpened} imageName={imageName} />
       </div>
     );
   };

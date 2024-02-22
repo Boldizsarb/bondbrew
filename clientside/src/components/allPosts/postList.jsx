@@ -1,6 +1,5 @@
-import React, { useEffect } from "react";
-import './postList.css'
-import { PostsData } from '../../data/postData'
+import React, { useEffect, useState} from "react";
+import './postList.css';
 import Post from '../aPost/aPost'
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -14,20 +13,37 @@ const Posts = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.authReducer.authData); // fetchign user from redux store
   let { posts, loading } = useSelector((state) => state.postReducer);
+  const [location, setLocation] = useState("");
+
+  const [refreshTrigger, setRefreshTrigger] = useState(0); // to refresh the posts upon delete
+
+ 
+
+  useEffect(() => { // need to make it depend on the number of posts
+    dispatch(getTimelinePosts(user._id));
+  }, [refreshTrigger]); // if the trigger changes the useEffect will run again, refresing the posts
+
 
   useEffect(() => {
-    dispatch(getTimelinePosts(user._id));
-  }, []);
+    if (params.id) {
+      setLocation(params.id === user._id ? "profilePage" : "");
+    }
+  }, [params.id, user._id]); 
+  //console.log(location);
 
   if(!posts) return 'There are no posts to show...';
+
   if(params.id) posts = posts.filter((post)=> post.userId===params.id)
+  //console.log(params.id);
+
+
   
   return (
     <div className="Posts">
       {loading
         ? "Loading posts...."
-        : posts.map((post, id) => {
-            return <Post data={post} key={id} />;
+        : posts.map((post, id) => { // onpost delete is a function that will be passed to the post component, and the callback will be called when the delete button is clicked
+            return <Post data={post} key={id} location={location} onPostDelete={() => setRefreshTrigger(prev => prev + 1)}/>;
           })}
     </div>
   );

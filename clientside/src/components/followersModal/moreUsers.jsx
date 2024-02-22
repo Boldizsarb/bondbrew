@@ -7,7 +7,7 @@ import User from '../user/user';
 const AllUsersCard = ({ persons }) => {
     return (
       <div className="UsersCard">
-        <h3>All People</h3>
+        <h2>People</h2>
         {persons.map((person, id) => (
           <User person={person} key={id} />
         ))}

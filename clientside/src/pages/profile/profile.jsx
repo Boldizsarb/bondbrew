@@ -15,7 +15,7 @@ const Profile = () => {
         <div className="Profile-center"> {/* the middle of the page */}
                 {/**providing the location for the profile card */}
             <ProfileCard location = "profilePage" /> 
-            <PostSides />
+            <PostSides  />
            
         </div>
 

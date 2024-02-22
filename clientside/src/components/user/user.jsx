@@ -36,6 +36,7 @@ const User = ({ person }) => {
   }
 
   return (
+    <div>
     <div className="follower">
       <div>
       <img src={person.profilePicture? serverPubicFolder + person.profilePicture : serverPubicFolder + "defaultProfile.png"}  alt="profile"
@@ -45,6 +46,7 @@ const User = ({ person }) => {
           <span>{person.lastname}</span>
         </div>
       </div>
+      
       <button
         className={
           following ? "button fc-button UnfollowButton" : "button fc-button"
@@ -53,7 +55,13 @@ const User = ({ person }) => {
       >
         {following ? "Unfollow" : "Follow"}
       </button>
+      
     </div>
+    <hr
+                style={{ width: "95%",border: "0.1px solid #ececec", marginTop: "20px",}}
+              />
+    </div>
+    
   );
 };
 

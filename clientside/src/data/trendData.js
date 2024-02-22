@@ -10,7 +10,7 @@ export const TrendData= [
       shares: 80.5,
     },
     {
-      name: "Zainkeepscode",
+      name: "Boyszy",
       shares: 75.5,
     },
     {

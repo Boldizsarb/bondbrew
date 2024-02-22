@@ -21,6 +21,7 @@ function App() {
       <div className="blur" style={{top: '36%',left:'-6rem'}}></div>
       <div className="blur" style={{top: '-20%',left:'20rem'}}></div>
       <div className="blur" id="moreblur" style={{top: '40%',left:'40rem'}}></div>
+      
      <Routes>
      <Route
           path="/"
