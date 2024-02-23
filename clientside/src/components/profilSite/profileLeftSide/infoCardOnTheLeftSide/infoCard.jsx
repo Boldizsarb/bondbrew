@@ -68,14 +68,14 @@ const InfoCard = ({location,person}) => {
     setFollowing((prev) => !prev);
   };
   
+  const headerText = location === "clickedProfile" ? `${person.firstname}'s Info` : "Your Info"; // dinamycally changing the header 
+  
 
-
-
-            //////////////////////////////// will have to add more data here, the input is in the modal and jin the profilemodal(server)
+            
   return (
     <div className="InfoCard">
       <div className="infoHead">
-        <h4>Your Info</h4>
+      <h4>{headerText}</h4>
         {user._id === currentUserId?  (<div>
           <UilPen
             width="2rem"
@@ -89,28 +89,73 @@ const InfoCard = ({location,person}) => {
           />
         </div>): ""}
         
+
       </div>
 
-      <div className="info">
-        <span>
-          <b>Status </b>
-        </span>
-        <span>{profileUser.relationship}</span>
-      </div>
+      
 
+      {profileUser.livesin && (
       <div className="info">
         <span>
-          <b>City </b>
+          <b>City: </b>
         </span>
         <span>{profileUser.livesin}</span>
       </div>
+      )}
+
+     {profileUser.country && (
+      <div className="info">
+        <span>
+          <b>Country: </b>
+        </span>
+        <span>{profileUser.country}</span>
+      </div>
+      )}
 
       <div className="info">
         <span>
-          <b>Works at </b>
+          <b>Life Motto: </b>
         </span>
-        <span>{profileUser.worksAt}</span>
+        <span>{profileUser.worksAt ? profileUser.worksAt : "Be bold, be kind, be you."}</span>
       </div>
+
+      {profileUser.relationship && ( 
+      <div className="info">
+        <span>
+          <b>Relationship: </b>
+        </span>
+        <span>{profileUser.relationship}</span>
+      </div>
+      )}
+
+    {profileUser.about && ( 
+      <div className="info">
+        <span>
+          <b>Field of work: </b>
+        </span>
+        <span>{profileUser.about}</span>
+      </div>
+      )}
+
+      {profileUser.mostinterestedin && ( 
+      <div className="info">
+        <span>
+          <b>Most Interested in: </b>
+        </span>
+        <span>{profileUser.mostinterestedin}</span>
+      </div>
+      )}
+
+      {profileUser.hobbies && ( 
+      <div className="info">
+        <span>
+          <b>Most loved hobby: </b>
+        </span>
+        <span>{profileUser.hobbies}</span>
+      </div>
+      )}
+
+
       {location === "clickedProfile" ? (
         <button
           className={

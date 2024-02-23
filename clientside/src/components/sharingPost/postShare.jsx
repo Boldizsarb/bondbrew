@@ -18,12 +18,21 @@ const PostShare = () => {
     const dispatch = useDispatch();
     const loading = useSelector((state) => state.postReducer.uploading);
 
-     const onImageChange = (event) => {
+
+  
+  const onImageChange = (event) => {
     if (event.target.files && event.target.files[0]) {
       let img = event.target.files[0];
-      setImage(img);
+      if (/^image\//.test(img.type)) { // checking if the file is an image
+        setImage(img);
+      } else {
+        // Alert the user if the file is not an image
+        alert("Only image files are allowed!");
+      }
     }
   };
+
+
 
     const imageRef = useRef();
 
@@ -34,6 +43,10 @@ const PostShare = () => {
 
     const handleUpload = async (e) => {
       e.preventDefault();
+      if (!image && !desc.current.value.trim()) { // wont allow empty posts
+        alert('Cannot upload empty post.');
+        return; // exit
+      }
   
       //post data
       const newPost = {

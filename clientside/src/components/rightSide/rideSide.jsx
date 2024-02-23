@@ -65,6 +65,30 @@ const RightSide = ({location,person}) => {
 
   };
 
+  //const [buttonBgClass, setButtonBgClass] = useState('button-bg-default');
+
+  const changeColorToBlue = (color) => {
+    document.documentElement.style.setProperty('--blur-color-default', color);
+    document.documentElement.style.setProperty('--buttonBg', 'linear-gradient(120deg, #2ed3f0 0%, #8fd3f4 100%)');
+    document.documentElement.style.setProperty('--buttonHover',  '#2ed3f0');
+  };
+  const changeColorToGreen = (color) => {
+    document.documentElement.style.setProperty('--blur-color-default', color);
+    document.documentElement.style.setProperty('--buttonBg', 'linear-gradient(120deg, #67e25f 0%, #07a81c 100%)');
+    document.documentElement.style.setProperty('--buttonHover',  ' #67e25f');
+  }
+  const changeColorToPink = (color) => {
+    document.documentElement.style.setProperty('--blur-color-default', color);
+    document.documentElement.style.setProperty('--buttonBg', 'linear-gradient(120deg, #ef8ae0 0%, #e14ae4 100%)');
+    document.documentElement.style.setProperty('--buttonHover',  ' #ed74db');
+  }
+  const changeColorToDefault = () => {
+    document.documentElement.style.setProperty('--blur-color-default', ' #bf862b');
+    document.documentElement.style.setProperty('--buttonBg', 'linear-gradient(98.63deg, #e7ab58 0%, #b06219 100%)');
+    document.documentElement.style.setProperty('--buttonHover',  ' #fca61f');
+  }
+
+
 
 
   return (
@@ -98,8 +122,21 @@ const RightSide = ({location,person}) => {
   {location === "clickedUser" ? `Message ${person.firstname}` : "Share"}
 </button>
 <ShareModal modalOpened={modalOpened} setModalOpened={setModalOpened} />
+
+<div className="color-circles">
+<span className="color-palet">Palette:</span>
+<div className="small-default-circle" onClick={() => changeColorToDefault("#bf862b")}></div>
+  <div className="small-blue-circle" onClick={() => changeColorToBlue("blue")}></div>
+  <div className="small-green-circle" onClick={() => changeColorToGreen("green")}></div>
+  <div className="small-pink-circle" onClick={() => changeColorToPink("#e317e3")}></div>
+</div>
+
     </div>
   );
 };
 
+
 export default RightSide; 
+
+
+{/* <button onClick={() => changeColorToBlue("blue")}>blue</button> */}

@@ -42,8 +42,10 @@ const User = ({ person }) => {
       <img src={person.profilePicture? serverPubicFolder + person.profilePicture : serverPubicFolder + "defaultProfile.png"}  alt="profile"
           className="followerImage" />
         <div className="name">
-          <span onClick={handleFirstNameClick} style={{cursor:"pointer"}}>{person.firstname}</span>
-          <span>{person.lastname}</span>
+        <span onClick={handleFirstNameClick} style={{cursor:"pointer"}}>
+          {person.firstname.charAt(0).toUpperCase() + person.firstname.slice(1)}
+          </span>
+          <span>{person.lastname.charAt(0).toUpperCase() + person.lastname.slice(1)}</span>
         </div>
       </div>
       

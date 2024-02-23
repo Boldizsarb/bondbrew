@@ -58,7 +58,7 @@ const PersonSearch = () => {
                     <input type="text" placeholder="Search"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)} />
-                    <div className="searchIcon" onClick={handleSearch} >
+                    <div className="searchIcon button" onClick={handleSearch} >
                         <UilSearch  />
 
                     </div>

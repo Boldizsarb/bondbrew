@@ -1,6 +1,6 @@
 :root {
   --yellow: #f5c32c;
-  --orange: #fca61f;
+  --buttonHover: #fca61f;
   --black: #242d49;
   --gray: rgba(36, 45, 73, 0.65);
   --profileShadow: 0px 4px 17px 2px rgba(0, 0, 0, 0.25);
@@ -12,6 +12,9 @@
   --video: #4A4EB7;
   --location: #EF5757;
 --shedule: #E1AE4A;
+--blur-color-default: #bf862b; /*default */
+--blur-color-blue: rgba(17, 118, 235, 0.486);
+--blur-color-green: rgb(30, 232, 30);
 }
 
 .App{
@@ -25,7 +28,7 @@
   width: 22rem;
   height: 14rem;
   border-radius: 50%;
-  background: #bf862b;
+ 
   filter: blur(90px)
 }
 .button {
@@ -40,8 +43,8 @@
 }
 
 .button:hover {
-  color: var(--orange);
-  border: 2px solid var(--orange);
+  color: var(--buttonHover);
+  border: 2px solid var(--buttonHover);
   cursor: pointer;
   background: transparent;
 }
@@ -56,4 +59,13 @@
   left: 40rem; 
   filter: blur(110px);
   max-width: calc(100% - 60rem); /*  it doesn't go beyond the parent width minus 60rem */
+}
+.blur {
+  /* initial color */
+  background-color: var(--blur-color-default);
+}
+
+
+.button-bg-blue {
+  background: linear-gradient(120deg, #ef8ae0 0%, #e14ae4 100%);
 }

@@ -24,14 +24,25 @@ function ProfileModal({ modalOpened, setModalOpened, data }) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+ 
   const onImageChange = (event) => {
     if (event.target.files && event.target.files[0]) {
       let img = event.target.files[0];
-      event.target.name === "profileImage"
-        ? setProfileImage(img)
-        : setCoverImage(img);
+      // Check if the file is an image
+      if (/^image\//.test(img.type)) {
+        // Assign the image based on the input field's name attribute
+        if (event.target.name === "profileImage") {
+          setProfileImage(img);
+        } else if (event.target.name === "coverImage") {
+          setCoverImage(img);
+        }
+      } else {
+        // Alert the user if the file is not an image
+        alert("Only image files are allowed!");
+      }
     }
   };
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -105,7 +116,7 @@ function ProfileModal({ modalOpened, setModalOpened, data }) {
             type="text"
             className="infoInput"
             name="worksAt"
-            placeholder="Works at"
+            placeholder="Life Motto"
             onChange={handleChange} 
             value={formData.worksAt}
           />
@@ -138,6 +149,40 @@ function ProfileModal({ modalOpened, setModalOpened, data }) {
             name="relationship"
             placeholder="RelationShip Status"
             onChange={handleChange}
+            value={formData.relationship}
+          />
+        </div>
+
+        <div>
+          <input
+            type="text"
+            className="infoInput"
+            name="about"
+            placeholder="Field of work"
+            onChange={handleChange}
+            value={formData.about}
+          />
+        </div>
+
+        <div>
+          <input
+            type="text"
+            className="infoInput"
+            name="mostinterestedin"
+            placeholder="I am most interested in..."
+            onChange={handleChange}
+            value={formData.mostinterestedin}
+          />
+        </div>
+
+        <div>
+          <input
+            type="text"
+            className="infoInput"
+            name="hobbies"
+            placeholder="My most favorite hobbies are..."
+            onChange={handleChange}
+            value={formData.hobbies}
           />
         </div>
 
@@ -146,7 +191,7 @@ function ProfileModal({ modalOpened, setModalOpened, data }) {
             Profile Image 
             <input type="file" name='profileImage' onChange={onImageChange}/>
             Cover Image
-            <input type="file" name="coverImage" onChange={onImageChange} />
+            <input  type="file" name="coverImage" onChange={onImageChange} />
         </div>
 
         <button className="button infoButton" onClick={handleSubmit}>Update</button>

@@ -94,3 +94,6 @@
     margin-bottom: 1rem;
     cursor: pointer;
 }
+.myProfileText{
+  color: var(--buttonHover);
+}

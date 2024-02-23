@@ -40,3 +40,56 @@
     width: 80%;
     align-self: center;
 }
+/*COLOR PALETTE   COLOR PALETTE   COLOR PALETTE   COLOR PALETTE   COLOR PALETTE    */
+.color-circles {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Adjust the gap between circles */
+
+
+    background: rgba(255, 255, 255, 0.5); /* Adjust the transparency as needed */
+    border-radius: 10px; /* Adjust border radius for rounded corners */
+    padding: 20px; /* Add padding for space around the circles */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+
+
+  }
+.small-blue-circle {
+    width: 20px; /* Circle size */
+    height: 20px; /* Circle size */
+    background-color: #2ed3f0; /* Circle color */
+    border-radius: 50%; /* Make it round */
+    cursor: pointer; /* Change cursor on hover */
+    margin: 10px; /* Spacing around the circle */
+  }
+
+.small-green-circle {
+width: 20px; /* Circle size */
+height: 20px; /* Circle size */
+background-color: #3ede5b; /* Circle color */
+border-radius: 50%; /* Make it round */
+cursor: pointer; /* Change cursor on hover */
+margin: 10px; /* Spacing around the circle */
+}
+.small-pink-circle {
+width: 20px; /* Circle size */
+height: 20px; /* Circle size */
+background-color: #ed74db; /* Circle color */
+border-radius: 50%; /* Make it round */
+cursor: pointer; /* Change cursor on hover */
+margin: 10px; /* Spacing around the circle */
+}
+.small-default-circle {
+width: 20px; /* Circle size */
+height: 20px; /* Circle size */
+background-color: #bf862b; /* Circle color */
+border-radius: 50%; /* Make it round */
+cursor: pointer; /* Change cursor on hover */
+margin: 10px; /* Spacing around the circle */
+}
+
+.color-palet {
+    font-weight: bold;
+    font-size: 1.1rem;
+    /* E /* Adjust the font size as needed */
+}

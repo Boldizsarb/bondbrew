@@ -41,8 +41,8 @@ const ProfileCard = ({location, person}) => {
         </div>
   
         <div className="ProfileName">
-          <span>{user.firstname} {user.lastname}</span>
-          <span> {user.worksAt? user.worksAt : "About me"}</span>
+        <span>{user.firstname.charAt(0).toUpperCase() + user.firstname.slice(1)} {user.lastname.charAt(0).toUpperCase() + user.lastname.slice(1)}</span>
+          <span style={{ fontStyle: 'italic'}}> {user.worksAt? user.worksAt : "About me"}</span>
         </div>
   
         <div className="followStatus">
@@ -73,8 +73,8 @@ const ProfileCard = ({location, person}) => {
          {location === "profilePage" || location === "clickedProfilePage"? (
         ""
       ) : (
-        <span>
-          <Link to={`/profile/${user._id}`} style={{ textDecoration: "none", color: "inherit" }}>
+        <span >
+          <Link className='myProfileText' to={`/profile/${user._id}`} style={{ textDecoration: "none" }}>
             My Profile
           </Link>
         </span>
