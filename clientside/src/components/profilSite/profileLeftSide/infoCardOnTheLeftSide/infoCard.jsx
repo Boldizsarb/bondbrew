@@ -119,6 +119,15 @@ const InfoCard = ({location,person}) => {
         <span>{profileUser.worksAt ? profileUser.worksAt : "Be bold, be kind, be you."}</span>
       </div>
 
+      {profileUser.gender && ( 
+      <div className="info">
+        <span>
+          <b>Gender: </b>
+        </span>
+        <span>{profileUser.gender}</span>
+      </div>
+      )}
+
       {profileUser.relationship && ( 
       <div className="info">
         <span>

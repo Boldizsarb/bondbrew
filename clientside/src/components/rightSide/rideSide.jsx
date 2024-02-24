@@ -1,14 +1,11 @@
 import React, { useState } from "react";
 import "./rideSide.css";
-import Home from "../../img/home.png";
-import Noti from "../../img/noti.png";
-import Comment from "../../img/chat.png";
 import TrendCard from "../rightSideTrendCards/trendCards";
 import ShareModal from "../shareModal/shareModal";
-import { Link } from "react-router-dom";
 import dummyUser from "../profilSite/profileLeftSide/infoCardOnTheLeftSide/dummyUser.json"; // this is the dummy user, it is used to prevent the app from crashing when the person is not defined
 import { useSelector } from "react-redux";
 import { useNavigate } from 'react-router-dom';
+import NavIcons from "./navicons";
 
 
 // home page icons on the right hand side of the page 
@@ -93,17 +90,8 @@ const RightSide = ({location,person}) => {
 
   return (
     <div className="RightSide">
-      <div className="navIcons">
-      <Link to={"../home"}>
-        <img src={Home} alt="" />
-      </Link>
-        <img src={Noti} alt="" />
-        <img src={Noti} alt="" />
-        <Link to={"../chat"}> {/* takes you to the chat page */}
-          <img src={Comment} alt="" />
-        </Link>
-      </div>
-
+      <NavIcons />
+      
       <TrendCard />
 
       <button
@@ -140,3 +128,4 @@ export default RightSide;
 
 
 {/* <button onClick={() => changeColorToBlue("blue")}>blue</button> */}
+

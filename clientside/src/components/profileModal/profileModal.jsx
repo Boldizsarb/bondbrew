@@ -154,6 +154,19 @@ function ProfileModal({ modalOpened, setModalOpened, data }) {
         </div>
 
         <div>
+          <select
+            className="infoInput"
+            name="gender"
+            onChange={handleChange}
+            value={formData.gender}
+          >
+            <option value="" >Keep it secret</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
+        </div>
+
+        <div>
           <input
             type="text"
             className="infoInput"

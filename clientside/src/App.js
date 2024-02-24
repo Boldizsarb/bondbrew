@@ -8,6 +8,7 @@ import Chat from "./pages/chat/chat";
 import ForgotPassword from "./pages/forgotPassword/forgotPassword";
 import ResetPassword from "./pages/resetPassword/resetPassword";
 import ClickedUserProfile from "./pages/clickedUserProfile/clickedUserProfile";
+import Plan from "./pages/plan/plan";
 
 //////  this file enables the routing of the app
 function App() {
@@ -54,6 +55,10 @@ function App() {
         <Route
           path="/clickProfile/:id"
           element={user ? <ClickedUserProfile /> : <Navigate to="../auth" />}
+        />
+        <Route
+          path="/plan"
+          element={user ? <Plan /> : <Navigate to="../auth" />}
         />
       </Routes>
     </div>

@@ -9,6 +9,7 @@ import PostRouter from "./Routes/postRoutes.js";
 import UploadRouter from "./Routes/uploadRoutes.js";
 import ChatRouter from "./Routes/chatRoutes.js";
 import MessageRouter from "./Routes/messageRoutes.js";
+import PlanRouter from "./Routes/planRoutes.js";
 
 
 const app = express();
@@ -21,8 +22,8 @@ app.use("/images", express.static("images"));
 
 
 // Middleware
-app.use(bodyParser.json({ limit: "30mb", extended: true }));
-app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
+app.use(bodyParser.json({ limit: "10mb", extended: true }));
+app.use(bodyParser.urlencoded({ limit: "10mb", extended: true }));
 app.use(cors());
 
 
@@ -38,6 +39,8 @@ app.use("/upload", UploadRouter); // upload image
 app.use("/chat", ChatRouter); // create, get, find
 
 app.use("/message", MessageRouter); // add, get
+
+app.use("/plan", PlanRouter); // 
 
 
 

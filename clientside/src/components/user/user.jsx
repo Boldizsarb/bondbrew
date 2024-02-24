@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 
 
 
-const User = ({ person }) => {
+const User = ({ person, location }) => {
 
   const serverPubicFolder = process.env.REACT_APP_PUBLIC_FOLDER;
   const { user } = useSelector((state) => state.authReducer.authData);
@@ -48,7 +48,7 @@ const User = ({ person }) => {
           <span>{person.lastname.charAt(0).toUpperCase() + person.lastname.slice(1)}</span>
         </div>
       </div>
-      
+      {location !== "plan" && (
       <button
         className={
           following ? "button fc-button UnfollowButton" : "button fc-button"
@@ -57,6 +57,7 @@ const User = ({ person }) => {
       >
         {following ? "Unfollow" : "Follow"}
       </button>
+       )}
       
     </div>
     <hr

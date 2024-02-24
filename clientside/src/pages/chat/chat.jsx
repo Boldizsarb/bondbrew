@@ -10,6 +10,7 @@ import Noti from "../../img/noti.png";
 import Comment from "../../img/chat.png";
 import { Link } from "react-router-dom";
 import {io} from "socket.io-client";
+import NavIcons from "../../components/rightSide/navicons";
 
 
 const Chat = () => {
@@ -77,32 +78,23 @@ const Chat = () => {
         <div className="Chat">
             {/** LEFT SIDE  */}
             <div className="Left-side-chat">
-                <LogoSearch />
+                    <LogoSearch />
                 <div className="Chat-container">    
-                <h2>Chats</h2>
-                <div className="Chat-list">
-                   {chats.map((chat) => (
-                    <div onClick={()=> setCurrentChat(chat)} >
-                        <Conversation data = {chat} currentUserId = {user._id} online={isUserOnline(chat)} /> {/**Conversation component */}
+                    <h2>Chats</h2>
+                    <div className="Chat-list">
+                    {chats.map((chat) => (
+                        <div onClick={()=> setCurrentChat(chat)} >
+                            <Conversation data = {chat} currentUserId = {user._id} online={isUserOnline(chat)} /> {/**Conversation component */}
+                        </div>
+                        ))}
                     </div>
-                     ))}
                 </div>
-            </div>
 
             </div>
             {/** RIGHT SIDE  */}
             <div className="Right-side-chat">
                 <div style={{width: "20rem", alignSelf: "flex-end"}}>
-                    <div className="navIcons">
-                        <Link to={"../home"}>
-                            <img src={Home} alt="" />
-                        </Link>
-                            <img src={Noti} alt="" />
-                            <img src={Noti} alt="" />
-                        <Link to={"../chat"}> {/* takes you to the chat page */}
-                            <img src={Comment} alt="" />
-                        </Link>
-                    </div>
+                    <NavIcons />
                 </div>
                     {/**Chat body */}
                     <ChatBox  chat={currentChat} currentUser = {user._id} setSendMessage={setSendMessage} receivedMessage={receivedMessage}/>
