@@ -1,0 +1,43 @@
+.planBody {
+    position: relative;
+    margin-left: 1rem;
+    max-height: calc(100vh - 230px); /* Adjust the value according to your layout */
+    overflow-y: auto;
+    /* other styles */
+}
+#brewingPlan{
+    text-shadow: 1px 1px 2px var(--buttonHover);
+}
+.tools {
+    position: absolute;
+    top: 5%;
+    right: 5%;
+    /* additional styles if needed, e.g., padding or margin */
+}
+.plan-inputdiv{
+    background-color: var(--inputColor);
+    border-radius: 1vh;
+    padding: 0.9vh;
+    max-width: 80%;
+}
+.plan-input{
+    background-color: transparent;
+    border:none;
+    outline: none;
+    width: 100%;
+}
+
+
+
+
+
+
+
+/* textarea,
+input[type="date"] {
+    width: 80%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+} */
