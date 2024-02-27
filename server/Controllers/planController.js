@@ -91,3 +91,45 @@ export const deletePlan = async (req, res) => {
     }
   }
 };
+
+
+export const updatePlan = async (req, res) => {
+
+  const planid = req.params.id;
+  const { userId, title, desc, city, from, to } = req.body;
+
+  const plan = await PlanModel.findById(planid);
+
+  if (plan.userId !== userId) {
+    res.status(403).json("You can update only your plan");
+  } else {
+    try {
+      await PlanModel.findByIdAndUpdate(planid, {
+        $set: {
+          ...(title && { title }), // Only add to update if provided
+          ...(desc && { desc }),
+          ...(city && { city }),
+          ...(from && { from }),
+          ...(to && { to }),
+        },
+      },
+      { new: true } // Return the updated document
+    );
+      res.status(200).json("Plan has been updated...");
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
+}
+
+
+export const getPlanByTitle = async (req, res) => {
+  const title = req.params.title;
+  try {
+    const plan = await PlanModel.find({ title: { $regex: title, $options: "i" } });
+    res.status(200).json(plan);
+  }
+  catch (error) {
+    res.status(500).json(error);
+  }
+}

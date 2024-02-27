@@ -8,6 +8,7 @@ import Bin from "../../img/bin.png";
 import { UilPen } from "@iconscout/react-unicons";
 import Bin2 from "../../img/bin2.png";
 import ConfirmDeletePlan from "./confirmDeletePlan";
+import PlanUpdateModal from "./updateModal";
 
 
 
@@ -24,6 +25,7 @@ const PlanBox = ({data,currentUserId,  onbuttonclick, refreshingplan,resetCurren
     const [message, setMessage] = useState("");
     const [isHovered, setIsHovered] = useState(false); // hover for bin
     const [modalOpened, setModalOpened] = useState(false); // delete modal
+    const [modalOpened1, setModalOpened1] = useState(false); // update modal 
 
     useEffect(() => {
 
@@ -152,7 +154,7 @@ const PlanBox = ({data,currentUserId,  onbuttonclick, refreshingplan,resetCurren
     }
     //////// new plan //// new plan //// new plan //// new plan //// new plan 
     const [title , setTitle] = useState("");
-    const [description, setDescription] = useState("");
+    const [desc, setDescription] = useState("");
     const [city, setCity] = useState("");
     const [from, setFrom] = useState("");
     const [to, setTo] = useState("");
@@ -163,7 +165,7 @@ const PlanBox = ({data,currentUserId,  onbuttonclick, refreshingplan,resetCurren
         
         const newPlan = {
             title,
-            description,
+            desc,
             city,
             from,
             to,
@@ -217,6 +219,16 @@ const PlanBox = ({data,currentUserId,  onbuttonclick, refreshingplan,resetCurren
     const openDeleteModal = () => {
         setModalOpened(true);
     }   
+    const openUpdateModal = () => {
+        setModalOpened1(true);
+    }
+
+    const refresh = () => {
+        onbuttonclick()
+        refreshingplan()
+        setRefreshTrigger(prev => prev + 1)
+        console.log("refreshed");
+    }
 
 
     return ( // middle, print out 
@@ -237,7 +249,9 @@ const PlanBox = ({data,currentUserId,  onbuttonclick, refreshingplan,resetCurren
                 <div className="planBody">
                     {data.userId === currentUserId && (
                         <div className="tools" >
-                            <UilPen width="2rem" height="1.2rem"  style={{cursor:"pointer"}}  />
+
+                            <UilPen width="2rem" height="1.2rem"  style={{cursor:"pointer"}} onClick={openUpdateModal} />
+
                             <img style={{cursor:"pointer"}}
                                 onMouseEnter={() => setIsHovered(true)}
                                 onMouseLeave={() => setIsHovered(false)}
@@ -248,11 +262,11 @@ const PlanBox = ({data,currentUserId,  onbuttonclick, refreshingplan,resetCurren
                     )}
                     
 
-                    <h3> Place: {data.city}</h3>
-                    <p>From: {data.from}</p>
-                    <p>To: {data.to}</p>
-                    
+                    <h3> Location: {data.city}</h3>
+                   
                     <p>{data.desc}</p>
+                    <p>From: {data.from ? data.from : (data.to ? "Not specified" : "Not time sensitive")}</p>
+                    <p>To: {data.to ? data.to : (data.from ? "Not specified" : "Not time sensitive")}</p>
                     {interested === "Uninterested" && interested !== "Creator" && (
                     <button className= "button infoButton" onClick={handleinterest}>I am interested</button>
                     )}
@@ -278,6 +292,7 @@ const PlanBox = ({data,currentUserId,  onbuttonclick, refreshingplan,resetCurren
                         </div>
                     )}
                 <ConfirmDeletePlan modalOpened={modalOpened} setModalOpened={setModalOpened} handleDelete={handleDelete} id={data._id} />
+                <PlanUpdateModal modalOpened1={modalOpened1} setModalOpened1={setModalOpened1}  id={data._id} userId={currentUserId}  refresh={refresh}/>
 
                 </div>
                 
@@ -312,7 +327,7 @@ const PlanBox = ({data,currentUserId,  onbuttonclick, refreshingplan,resetCurren
                     
                     <p>Describe the plan:</p>
                     <div className="plan-inputdiv">
-                        <textarea id="description" className="plan-input" cols="30" rows="8" value={description} placeholder='Describe your plan' onChange={(event) => setDescription(event.target.value)} required />
+                        <textarea id="description" className="plan-input" cols="30" rows="8" value={desc} placeholder='Describe your plan' onChange={(event) => setDescription(event.target.value)} required />
                     </div>
                     
                     <p>Is there a set time when does it take place?</p>

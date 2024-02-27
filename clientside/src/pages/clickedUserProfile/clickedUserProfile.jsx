@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate,  useParams } from 'react-router-dom';
 import { useSelector } from "react-redux";
 import './clickedUserProfile.css';
 import ClickedProfileLeft from './clickedLeftSide/clickedProfileLeft';
@@ -18,6 +18,7 @@ const getUserUrl = process.env.REACT_APP_AXIOS_BASE_URL;
 const ClickedUserProfile = () => {
 
     const { id } = useParams(); // the clicked user's id
+    const navigate = useNavigate();
     //console.log(id);
     const { user } = useSelector((state) => state.authReducer.authData); // current user's data
     const [clickedUser, setClickedUser] = useState(null); // the clicked user's data
@@ -28,8 +29,6 @@ const ClickedUserProfile = () => {
                 const res = await fetch(`${getUserUrl}userser/${id}`);
                 const data = await res.json();
                 setClickedUser(data);
-                //console.log(data);
-                //console.log(clickedUser);
             } catch (error) {
                 console.log(error.message);
             }
@@ -39,6 +38,10 @@ const ClickedUserProfile = () => {
     
     }, [id]);
 
+    if (id === user._id) navigate(`/profile/${user._id}`);
+
+
+   
  
 
 

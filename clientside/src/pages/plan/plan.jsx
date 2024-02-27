@@ -24,6 +24,8 @@ const Plan = () => {
     const [isSpinning, setIsSpinning] = useState(false); //  animation for the spinner
 
     const [isShowingMyPlans, setIsShowingMyPlans] = useState(false);
+    const [currentPlanId, setCurrentPlanId] = useState("");
+    //console.log(currentPlanId);
 
 
     const getPlans = useEffect(() => {
@@ -45,14 +47,15 @@ const Plan = () => {
 
     //console.log(currentPlan);
  
+    useEffect(() => { // updating the current plan
 
-    const updateCurrentPlan = () => {
-        if (!currentPlan) return; // Check if there's a current plan selected
-        const updatedPlan = Plans.find(plan => plan._id === currentPlan._id);
-        if (updatedPlan) {
-          setCurrentPlan(updatedPlan);
-        }
-      };
+        if (currentPlanId) {
+            const updatedPlan = Plans.find(plan => plan._id === currentPlanId);
+            if (updatedPlan) {
+                setCurrentPlan(updatedPlan);
+            }
+    }
+}, [ Plans, refreshTrigger]);
 
     const handlemyplans = () => {
         const myPlans = allPlans.filter(plan => plan.userId === user._id);
@@ -82,7 +85,7 @@ const Plan = () => {
         <div className="Chat">
         {/** LEFT SIDE  */}
         <div className="Left-side-chat">
-                <PersonSearch />
+                <PersonSearch location={"plans"} />
             <div className="Chat-container">    
                 <div className="plus-icon-container">
                     <img src={Plus} style={{maxWidth:"4vh"}} alt="Plus icon" onClick={handleaddnew} className={isSpinning ? 'spin-animation' : ''}/>
@@ -102,7 +105,7 @@ const Plan = () => {
 
                 <div className="Chat-list">
                 {Plans.map((plan) => (
-                    <div onClick={()=>setCurrentPlan(plan)}  >
+                      <div onClick={() => {setCurrentPlan(plan); setCurrentPlanId(plan._id);}}>
                         <AllPlans data={plan} currentUserId = {user._id} setCurrentPlan={setCurrentPlan} />
                     </div>
                 ))}
@@ -119,7 +122,7 @@ const Plan = () => {
                 {/**Chat body */}
             <PlanBox data={currentPlan} currentUserId = {user._id} 
             onbuttonclick={() => setRefreshTrigger(prev => prev + 1)}  
-            refreshingplan={updateCurrentPlan}
+            // refreshingplan={updateCurrentPlan}
             resetCurrentPlan={resetCurrentPlan}
             />    
             
