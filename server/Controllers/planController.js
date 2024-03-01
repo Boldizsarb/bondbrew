@@ -24,7 +24,17 @@ export const getPlanById = async (req, res) => {
   }
 };
 
+
 export const getPlans = async (req, res) => {
+  try {
+    const plans = await PlanModel.find();
+    res.status(200).json(plans);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
+
+export const getLimitedPlans = async (req, res) => {
   try {
     const plans = await PlanModel.find();
     res.status(200).json(plans);

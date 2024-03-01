@@ -2,11 +2,11 @@ import React, { useEffect, useRef, useState } from "react";
 import NavIcons from '../../components/rightSide/navicons'
 import "./plan.css"
 import PersonSearch from '../../components/personSearch/personSearch'
-import {  useSelector } from "react-redux";
+import {  useDispatch, useSelector } from "react-redux";
 import AllPlans from "../../components/planComponents/allPlans";
 import PlanBox from "../../components/planComponents/planBox";
 import Plus from "../../img/plus.png";
-
+import { useLocation } from "react-router-dom";
 
 
 
@@ -25,8 +25,18 @@ const Plan = () => {
 
     const [isShowingMyPlans, setIsShowingMyPlans] = useState(false);
     const [currentPlanId, setCurrentPlanId] = useState("");
+    const [selectedPlan, setSelectedPlan] = useState(null); // callback to update selectedPlan
     //console.log(currentPlanId);
+    const location = useLocation();
+    const { plan } = location.state || {}; // A
 
+    useEffect(() => {
+        if (plan) {
+          setCurrentPlan(plan);
+        }
+      }, [plan])
+   
+    
 
     const getPlans = useEffect(() => {
         const getPlans = async () => {
@@ -79,13 +89,21 @@ const Plan = () => {
         setCurrentPlan(null);
     };
 
+    
+    // Callback  to update selectedPlan
+    const handlePlanSelect = (plan) => {
+        setSelectedPlan(plan);
+        setCurrentPlan(plan);
+        
+    };
+
 
 
     return (
         <div className="Chat">
         {/** LEFT SIDE  */}
         <div className="Left-side-chat">
-                <PersonSearch location={"plans"} />
+                <PersonSearch location={"plans"} onPlanSelect={handlePlanSelect} />
             <div className="Chat-container">    
                 <div className="plus-icon-container">
                     <img src={Plus} style={{maxWidth:"4vh"}} alt="Plus icon" onClick={handleaddnew} className={isSpinning ? 'spin-animation' : ''}/>
@@ -106,8 +124,8 @@ const Plan = () => {
                 <div className="Chat-list">
                 {Plans.map((plan) => (
                       <div onClick={() => {setCurrentPlan(plan); setCurrentPlanId(plan._id);}}>
-                        <AllPlans data={plan} currentUserId = {user._id} setCurrentPlan={setCurrentPlan} />
-                    </div>
+                      <AllPlans data={plan} currentUserId = {user._id} setCurrentPlan={setCurrentPlan} />
+                  </div>
                 ))}
                     
                 </div>
@@ -134,3 +152,7 @@ const Plan = () => {
 
 export default Plan
 
+
+{/* <div onClick={() => {setCurrentPlan(plan); setCurrentPlanId(plan._id);}}>
+                        <AllPlans data={plan} currentUserId = {user._id} setCurrentPlan={setCurrentPlan} />
+                    </div> */}

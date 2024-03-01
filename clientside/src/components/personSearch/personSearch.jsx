@@ -6,11 +6,13 @@ import SearchModal from './personSearchModal';
 import User from '../user/user';
 import { useSelector } from "react-redux";
 import { Link } from 'react-router-dom';
+import PlanSearchModal from '../planComponents/planSearchModal';
+
 
 const getUserUrl = process.env.REACT_APP_AXIOS_BASE_URL;
 
 
-const PersonSearch = ({location}) => {
+const PersonSearch = ({location,onPlanSelect}) => {
 
 
     const [modalOpened, setModalOpened] = useState(false);
@@ -18,7 +20,8 @@ const PersonSearch = ({location}) => {
     const [people, setPeople] = useState([]); // response from the server
     const { user } = useSelector((state) => state.authReducer.authData);
     const [plans, setPlans] = useState([]); // array of all plans
-    const [modalOpened1, setModalOpened1] = useState(false); // paln search modal
+
+    const [modalOpened2, setModalOpened2] = useState(false); // paln search modal
     //console.log(search);
 
     const openModal = () => {
@@ -60,17 +63,30 @@ const PersonSearch = ({location}) => {
             const data1 = await getPlans(search);
             if(data1){
                 setPlans(data1);
-                console.log(plans);
-                //setModalOpened1(true);
+                //console.log('About to open modal with plans:',plans);
+                setModalOpened2(true);
+                
+            }
+        }else{
+             //console.log(search);
+        const data = await getUser(search);
+            if (data) {
+                //console.log(data);
+                setPeople(data); // Update the state with fetched data
+                openModal(); // Optionally open the modal after search
             }
         }
-        //console.log(search);
-        const data = await getUser(search);
-        if (data) {
-            //console.log(data);
-            setPeople(data); // Update the state with fetched data
-            openModal(); // Optionally open the modal after search
-        }
+       
+    };
+
+
+    const [selectedPlan, setSelectedPlan] = useState(null); // passing the selected plan to from the modal
+    
+    const onPlanSelected = (plan) => {
+        onPlanSelect(plan); //  callback passed from Plan
+        //setSelectedPlan(plan);
+       // console.log('Plan selected:', plan);
+        
     };
 
 
@@ -91,13 +107,22 @@ const PersonSearch = ({location}) => {
 
                     </div>
                    
+
                     
                 </div>
                 <SearchModal
                 modalOpened={modalOpened}
                 setModalOpened={setModalOpened}
                 people={people} // passing people to the modal
-        />
+                />
+                <PlanSearchModal 
+                modalOpened2={modalOpened2}
+                setModalOpened2={setModalOpened2}
+                plans={plans} onPlanSelected={onPlanSelected}
+                />
+                
+                
+               
         </div>
     );
 };

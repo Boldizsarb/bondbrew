@@ -21,7 +21,9 @@ function SearchModal({ modalOpened, setModalOpened, people}) {
       onClose={() => setModalOpened(false)}
     >
         <div style={{maxHeight: "400px", overflowY: "auto"}}>
-        {people.length > 0 ? (
+
+
+        {people && Array.isArray(people) && people.length > 0 ? (
           people.map((person, index) => (
             <User key={index} person={person} />
           ))
@@ -35,3 +37,5 @@ function SearchModal({ modalOpened, setModalOpened, people}) {
 }
 
 export default SearchModal;
+
+//{people.length > 0  ? (
