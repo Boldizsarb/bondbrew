@@ -30,6 +30,17 @@
     text-shadow: 1px 1px 2px var(--buttonHover);
 }
 
+.from-to{
+    color: var(--gray);
+    font-size: 0.9rem;
+}
+
+#desc{
+    font-size: 1.1rem;
+    font-style: oblique;
+
+}
+
 
 
 

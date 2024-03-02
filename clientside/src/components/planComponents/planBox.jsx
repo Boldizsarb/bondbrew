@@ -230,6 +230,8 @@ const PlanBox = ({data,currentUserId,  onbuttonclick, refreshingplan,resetCurren
         console.log("refreshed");
     }
 
+    
+
 
     return ( // middle, print out 
         <>
@@ -264,9 +266,9 @@ const PlanBox = ({data,currentUserId,  onbuttonclick, refreshingplan,resetCurren
 
                     <h3> Location: {data.city}</h3>
                    
-                    <p>{data.desc}</p>
-                    <p>From: {data.from ? data.from : (data.to ? "Not specified" : "Not time sensitive")}</p>
-                    <p>To: {data.to ? data.to : (data.from ? "Not specified" : "Not time sensitive")}</p>
+                    <p id="desc" >{data.desc}</p>
+                    <p className="from-to">From: {data.from ? data.from : (data.to ? "Not specified" : "Not time sensitive")}</p>
+                    <p className="from-to">To: {data.to ? data.to : (data.from ? "Not specified" : "Not time sensitive")}</p>
                     {interested === "Uninterested" && interested !== "Creator" && (
                     <button className= "button infoButton" onClick={handleinterest}>I am interested</button>
                     )}

@@ -79,7 +79,7 @@ const PostShare = () => {
         <div>
           <input ref={desc} required type="text" placeholder="Share with you friends" />
           <div className="postOptions">
-            <div className="option" style={{ color: "var(--photo)" }}
+            <div className="option" style={{ color: "var(--buttonHover)" }}
             onClick={()=>imageRef.current.click()}
             >
               <UilScenery />

@@ -21,7 +21,32 @@
     height: auto;
     min-height: 80vh;
     overflow: scroll;
+
   }
+
+  .Chat-container::-webkit-scrollbar {
+    width: 2px; /* thin'  scrollbar */
+}
+
+.Chat-container::-webkit-scrollbar-track {
+    background: transparent; /* track background */
+}
+
+.Chat-container::-webkit-scrollbar-thumb {
+    background-color: rgba(0,0,0,0.2); /*  scrollbar handle color */
+    border-radius: 1rem;
+}
+
+/* For Firefox */
+.Chat-container {
+    scrollbar-width: thin; /* Makes scrollbar thin */
+    scrollbar-color: rgba(0,0,0,0.2) transparent; /*  scrollbar color and track color */
+}
+
+
+
+
+
   
   .Chat-list {
     display: flex;

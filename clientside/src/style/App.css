@@ -28,8 +28,8 @@
   width: 22rem;
   height: 14rem;
   border-radius: 50%;
- 
   filter: blur(90px)
+
 }
 .button {
   display: flex;
@@ -68,4 +68,40 @@
 
 .button-bg-blue {
   background: linear-gradient(120deg, #ef8ae0 0%, #e14ae4 100%);
+}
+html, body {
+  margin: 0;
+  padding: 0;
+ 
+  height: 100%;
+  width: 100%;
+}
+
+
+@media (max-width: 768px) {
+  .blur {
+    width: 20vw; /* Ensure the blur is large enough to be noticed */
+    height: 15vh; /* Adjust height to be visible but not overwhelming */
+    opacity: 0.75; /* Increase opacity for visibility */
+    position: absolute;
+    top: 10%; /* Adjusted to ensure visibility without top overflow */
+    left: 10%; /* Centered to enhance appearance without causing layout issues */
+    filter: blur(40px); /* Adjust blur effect to ensure it's noticeable */
+  }
+
+  #moreblur {
+    top: 50%; /* Position it differently to ensure visibility */
+    left: 50%;
+    transform: translate(-50%, -50%); /* Center it within the viewport */
+    width: 25vw;
+    height: 20vh;
+    opacity: 0.75;
+    filter: blur(60px);
+  }
+
+  .App {
+    position: relative; /* Ensure .App is positioned to act as a reference for absolute positioning */
+    overflow: hidden; /* Keep this to prevent any part of the blur from causing overflow */
+    padding: 1rem; /* Adjust padding to ensure content is not too close to the edges */
+  }
 }

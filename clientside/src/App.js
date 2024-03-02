@@ -9,6 +9,7 @@ import ForgotPassword from "./pages/forgotPassword/forgotPassword";
 import ResetPassword from "./pages/resetPassword/resetPassword";
 import ClickedUserProfile from "./pages/clickedUserProfile/clickedUserProfile";
 import Plan from "./pages/plan/plan";
+import Matching from "./pages/matching/matching";
 
 //////  this file enables the routing of the app
 function App() {
@@ -24,7 +25,7 @@ function App() {
       <div className="blur" id="moreblur" style={{top: '40%',left:'40rem'}}></div>
       
      <Routes>
-     <Route
+        <Route
           path="/"
           element={user ? <Navigate to="home" /> : <Navigate to="auth" />}
         />
@@ -59,6 +60,10 @@ function App() {
         <Route
           path="/plan"
           element={user ? <Plan /> : <Navigate to="../auth" />}
+        />
+         <Route
+          path="/matching"
+          element={user ? <Matching /> : <Navigate to="../auth" />}
         />
       </Routes>
     </div>

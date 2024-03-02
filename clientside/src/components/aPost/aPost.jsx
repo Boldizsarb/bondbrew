@@ -105,7 +105,7 @@ const deletePost = async (postId) => {
             onClick={handleDelete}
           />
         )}
-        <img src={Share} alt="" />
+        {/* <img src={Share} alt="" /> */}
         <span>Shared by: {sharedBy}</span>
       </div>
 
