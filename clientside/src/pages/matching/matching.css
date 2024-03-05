@@ -98,3 +98,4 @@
 .toggle-arrow:hover{
     background-color: var(--buttonHover);
 }
+/*BUG BUG::: smaller phone the flippin matches div over laps and hte arrow is not visible*/
