@@ -6343,6 +6343,11 @@ language-tags@^1.0.5:
   dependencies:
     language-subtag-registry "~0.3.2"
 
+leaflet@^1.9.4:
+  version "1.9.4"
+  resolved "https://registry.npmjs.org/leaflet/-/leaflet-1.9.4.tgz"
+  integrity sha512-nxS1ynzJOmOlHp+iL3FyWqK89GtNL8U8rvlMOsQdTTssxZwCXh8N2NB3GDQOL+YR3XnWyZAxwQixURb+FA74PA==
+
 leven@^3.1.0:
   version "3.1.0"
   resolved "https://registry.npmjs.org/leven/-/leven-3.1.0.tgz"
@@ -7893,6 +7898,11 @@ react-fast-compare@^3.0.1:
   resolved "https://registry.npmjs.org/react-fast-compare/-/react-fast-compare-3.2.2.tgz"
   integrity sha512-nsO+KSNgo1SbJqJEYRE9ERzo7YtYbou/OqjSQKxV7jcKox7+usiUVZOAC+XnDOABXggQTno0Y1CpVnuWEc1boQ==
 
+react-geolocated@^4.1.2:
+  version "4.1.2"
+  resolved "https://registry.npmjs.org/react-geolocated/-/react-geolocated-4.1.2.tgz"
+  integrity sha512-/Ec26Wb1h06bB/axHYclBxrG0Yqob0T0W9awRi87cyedC3rMnpOR+Aqb7Q26FAEF+dNWXIpVDGNw1YZtlPUAEw==
+
 react-input-emoji@^5.6.5:
   version "5.6.6"
   resolved "https://registry.npmjs.org/react-input-emoji/-/react-input-emoji-5.6.6.tgz"
@@ -8019,7 +8029,7 @@ react-tinder-card@^1.6.4:
   dependencies:
     p-sleep "^1.1.0"
 
-react@*, "react@^16.8 || ^17 || ^18", "react@^16.8 || ^17.0", "react@^16.8.0 || ^17 || ^18", "react@^16.8.0 || ^17.0.0 || ^18.0.0", react@^18.0, react@^18.0.0, "react@>= 16", react@>=16.8, react@>=16.8.0, react@>=17.0.x, react@18.0:
+react@*, "react@^16.8 || ^17 || ^18", "react@^16.8 || ^17.0", "react@^16.8.0 || ^17 || ^18", "react@^16.8.0 || ^17.0.0 || ^18.0.0", react@^18.0, react@^18.0.0, "react@>= 16", "react@>= 16.8.0 < 19.0.0", react@>=16.8, react@>=16.8.0, react@>=17.0.x, react@18.0:
   version "18.0.0"
   resolved "https://registry.npmjs.org/react/-/react-18.0.0.tgz"
   integrity sha512-x+VL6wbT4JRVPm7EGxXhZ8w8LTROaxPXOqhlGyVSrv0sB1jkyFGgXxJ8LVoPRLvPR6/CIZGFmfzqUa2NYeMr2A==

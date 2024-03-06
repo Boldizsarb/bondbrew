@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,  useRef  } from "react";
 import "./planBox.css";
 import { getUser } from "../../api/userRequest";
 import { useDispatch } from "react-redux";
@@ -9,12 +9,16 @@ import { UilPen } from "@iconscout/react-unicons";
 import Bin2 from "../../img/bin2.png";
 import ConfirmDeletePlan from "./confirmDeletePlan";
 import PlanUpdateModal from "./updateModal";
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
+import { getUserLocation } from "../../middlewares/geoLocation.js";
 
 
 
 
 
-const PlanBox = ({data,currentUserId,  onbuttonclick, refreshingplan,resetCurrentPlan}) => {
+
+const PlanBox = ({data,currentUserId,  onbuttonclick, refreshingplan,resetCurrentPlan, mapInitiator}) => {
     
     const getUserUrl = process.env.REACT_APP_AXIOS_BASE_URL;
     const [userData, setUserData] = useState(null);
@@ -26,6 +30,8 @@ const PlanBox = ({data,currentUserId,  onbuttonclick, refreshingplan,resetCurren
     const [isHovered, setIsHovered] = useState(false); // hover for bin
     const [modalOpened, setModalOpened] = useState(false); // delete modal
     const [modalOpened1, setModalOpened1] = useState(false); // update modal 
+    //const [mapInitiater, setMapInitiater] = useState(0); // forces the map to re-render when the current plan changes
+   
 
     useEffect(() => {
 
@@ -114,10 +120,10 @@ const PlanBox = ({data,currentUserId,  onbuttonclick, refreshingplan,resetCurren
                 console.log("Error");
             }
             
-           
             onbuttonclick()
             refreshingplan()
             setInterested("Creator");
+            
         setMessage(`Your interest was registered! You can even message ${userData.firstname} to make plans together!`)
 
             return response.json();
@@ -227,9 +233,118 @@ const PlanBox = ({data,currentUserId,  onbuttonclick, refreshingplan,resetCurren
         onbuttonclick()
         refreshingplan()
         setRefreshTrigger(prev => prev + 1)
+        
         console.log("refreshed");
     }
+    /////////// MAP ////////////// MAP ////////////// MAP ////////////// MAP ////////////// MAP ////////////// MAP
+    const mapRef = useRef(null);
+    const markerRef = useRef(null);
 
+    // getting the current position of the user: 
+    const [currentposition, setCurrentposition] = useState({});
+    const [useCurrentLocation, setUseCurrentLocation] = useState(false);
+    const [finalLocation, setFinalLocation] = useState({ lat: 50.92608620744581, lng: -1.4339711201693437});
+
+    useEffect(() => { // current location if the user wants to use it
+        if (useCurrentLocation) { //  but only if yes clicked 
+
+        getUserLocation()
+          .then(({ latitude, longitude }) => {
+            setCurrentposition({ latitude, longitude });
+            setFinalLocation({ lat: latitude, lng: longitude });
+          })
+          .catch((error) => {
+            console.error('Error getting location:', error);
+          });
+        }
+        return
+      }, [useCurrentLocation]);
+
+      
+      /// city to lat and long  /// city to lat and long  /// city to lat and long
+
+      const [coordinates, setCoordinates] = useState({lat:0.00 , lng:0.00}); // search for city 
+      const [cityrefreshtrigger , setCityrefreshtrigger] = useState(0);
+
+      useEffect(() => {
+        if (!city) return;
+        const fetchCoordinates = async () => {
+            try {
+                const response = await fetch(`https://nominatim.openstreetmap.org/search?city=${encodeURIComponent(city)}&format=json&limit=1`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch coordinates');
+                }
+               const data = await response.json();
+                // Process the data right after fetching, using the same async function
+                if (data[0] && data[0].lat && data[0].lon) {
+                    setCoordinates({ lat: data[0].lat, lng: data[0].lon });
+                    setFinalLocation({ lat: data[0].lat, lng: data[0].lon });
+                    setCityrefreshtrigger(prev => prev + 1);
+                } else {
+                    console.log("No coordinates found for the city");
+                }
+                } catch (error) {
+                console.error("Error fetching coordinates:", error);
+                }
+            };
+
+
+            fetchCoordinates();
+            
+        
+    }, [city]);
+
+  
+    console.log("final"+finalLocation.lat, finalLocation.lng)
+
+
+      useEffect(() => {// atual map
+       
+        const updateMapLocation = (location) => {
+            if (!mapRef.current) return; 
+    
+            if (!mapRef.current.leafletMap) {
+                const map = L.map(mapRef.current).setView([location.lat, location.lng], 13);
+                mapRef.current.leafletMap = map;
+    
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                }).addTo(map);
+            } else {
+                mapRef.current.leafletMap.setView([location.lat, location.lng], 13);
+            }
+    
+            
+            mapRef.current.leafletMap.on('click', function(mapEvent) {
+                // Log the latitude and longitude of the clicked location
+                //console.log(mapEvent.latlng);
+    
+                // Update the finalLocation state with the clicked coordinates
+                setFinalLocation({ lat: mapEvent.latlng.lat, lng: mapEvent.latlng.lng });
+    
+                // Optionally, remove the previous marker if you only want one marker on the map at a time
+                if (markerRef.current) {
+                    mapRef.current.leafletMap.removeLayer(markerRef.current);
+                }
+    
+                // Add a new marker at the clicked location
+                markerRef.current = L.marker([mapEvent.latlng.lat, mapEvent.latlng.lng]).addTo(mapRef.current.leafletMap)
+                    .bindPopup('Selected location').openPopup();
+            });
+        };
+    
+        // Determine initial location for the map based on user preference for current location
+        let initialLocation = finalLocation;
+        if (useCurrentLocation && currentposition.latitude && currentposition.longitude) {
+            initialLocation = { lat: currentposition.latitude, lng: currentposition.longitude };
+        }
+    
+        // Initialize or update the map location
+        updateMapLocation(initialLocation);
+    }, [mapInitiator, currentposition, useCurrentLocation,cityrefreshtrigger]); 
+
+    ////// MAP END ////// MAP END ////// MAP END ////// MAP END ////// MAP END ////// MAP END ////// MAP END ////// MAP END
+        //console.log(useCurrentLocation)
     
 
 
@@ -326,6 +441,22 @@ const PlanBox = ({data,currentUserId,  onbuttonclick, refreshingplan,resetCurren
                     <div className="plan-inputdiv">
                         <input type="text" className="plan-input"  id="city" value={city} onChange={(event) => setCity(event.target.value)} required placeholder="Location"/>
                     </div>
+                     <br />
+
+                    <div>
+                        <span>Want to use current location? </span>
+                        <label>
+                            <input type="radio" name="useCurrentLocation" value="yes" checked={useCurrentLocation === true} onChange={() => setUseCurrentLocation(true)} />
+                            Yes
+                        </label>
+                        <label>
+                            <input type="radio" name="useCurrentLocation" value="no" checked={useCurrentLocation === false} onChange={() => setUseCurrentLocation(false)} />
+                            No
+                        </label>
+                    </div>
+
+                    <br />
+                    <div id="map-newplan" ref={mapRef} style={{ height: '40vh' }}></div>
                     
                     <p>Describe the plan:</p>
                     <div className="plan-inputdiv">
@@ -345,6 +476,7 @@ const PlanBox = ({data,currentUserId,  onbuttonclick, refreshingplan,resetCurren
                     <br /><br />
                     <button type="submit" className="button  infoButton ">Post</button>
                 </form>
+               
                 
                 </div>
             </>    

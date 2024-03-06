@@ -29,6 +29,7 @@ const Plan = () => {
     //console.log(currentPlanId);
     const location = useLocation();
     const { plan } = location.state || {}; // A
+    const [mapInitiator, setMapInitiator] = useState(0); // map
 
     useEffect(() => {
         if (plan) {
@@ -78,11 +79,11 @@ const Plan = () => {
         setPlans(allPlans); // Reset the Plans state to show all plans
         setIsShowingMyPlans(false);
     };
-    const handleaddnew = () => {
+    const handleaddnew = () => { // new plan clicked 
         setIsSpinning(true);
         setTimeout(() => setIsSpinning(false), 1000); 
         setCurrentPlan(null);
-
+        setMapInitiator(prev => prev + 1); // re- renders the map
     };
 
     const resetCurrentPlan = () => {
@@ -142,6 +143,7 @@ const Plan = () => {
             onbuttonclick={() => setRefreshTrigger(prev => prev + 1)}  
             // refreshingplan={updateCurrentPlan}
             resetCurrentPlan={resetCurrentPlan}
+            mapInitiator={mapInitiator}
             />    
             
         </div>

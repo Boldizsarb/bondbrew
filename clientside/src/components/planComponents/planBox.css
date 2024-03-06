@@ -40,18 +40,13 @@
     font-style: oblique;
 
 }
+#map-newplan{
+    max-height: 40vh;
+    width: 81%;
+}
 
 
 
 
 
 
-
-/* textarea,
-input[type="date"] {
-    width: 80%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-} */
