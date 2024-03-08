@@ -12,6 +12,8 @@ import PlanUpdateModal from "./updateModal";
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { getUserLocation } from "../../middlewares/geoLocation.js";
+import icon from 'leaflet/dist/images/marker-icon.png';
+import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 
 
 
@@ -31,6 +33,11 @@ const PlanBox = ({data,currentUserId,  onbuttonclick, refreshingplan,resetCurren
     const [modalOpened, setModalOpened] = useState(false); // delete modal
     const [modalOpened1, setModalOpened1] = useState(false); // update modal 
     //const [mapInitiater, setMapInitiater] = useState(0); // forces the map to re-render when the current plan changes
+    //map stuff
+    const [currentposition, setCurrentposition] = useState({});
+    const [useCurrentLocation, setUseCurrentLocation] = useState(false);
+    const [finalLocation, setFinalLocation] = useState({ lat: 50.92608620744581, lng: -1.4339711201693437});
+    const readOnlyMapRef = useRef(null);
    
 
     useEffect(() => {
@@ -57,7 +64,7 @@ const PlanBox = ({data,currentUserId,  onbuttonclick, refreshingplan,resetCurren
         const fetchInterestedUsers = async () => {
             if (!data || !data.peopleinterested || data.peopleinterested.length === 0) {
                 //console.log("No interested users or data is not available"); // it is keep on printing
-                return; // Exit if no interested users or data is not available
+                return; // exit if no interested users or data is not available
             }
             try {
                 const usersData = await Promise.all(data.peopleinterested.map(userId => getUser(userId).then(res => res.data)));
@@ -175,6 +182,8 @@ const PlanBox = ({data,currentUserId,  onbuttonclick, refreshingplan,resetCurren
             city,
             from,
             to,
+            lat: finalLocation.lat,
+            lng: finalLocation.lng,
             userId: currentUserId
         }
         //console.log(newPlan);
@@ -241,9 +250,7 @@ const PlanBox = ({data,currentUserId,  onbuttonclick, refreshingplan,resetCurren
     const markerRef = useRef(null);
 
     // getting the current position of the user: 
-    const [currentposition, setCurrentposition] = useState({});
-    const [useCurrentLocation, setUseCurrentLocation] = useState(false);
-    const [finalLocation, setFinalLocation] = useState({ lat: 50.92608620744581, lng: -1.4339711201693437});
+    
 
     useEffect(() => { // current location if the user wants to use it
         if (useCurrentLocation) { //  but only if yes clicked 
@@ -278,7 +285,7 @@ const PlanBox = ({data,currentUserId,  onbuttonclick, refreshingplan,resetCurren
                 // Process the data right after fetching, using the same async function
                 if (data[0] && data[0].lat && data[0].lon) {
                     setCoordinates({ lat: data[0].lat, lng: data[0].lon });
-                    setFinalLocation({ lat: data[0].lat, lng: data[0].lon });
+                    setFinalLocation({ lat: data[0].lat, lng: data[0].lon });// setting the map 
                     setCityrefreshtrigger(prev => prev + 1);
                 } else {
                     console.log("No coordinates found for the city");
@@ -287,7 +294,6 @@ const PlanBox = ({data,currentUserId,  onbuttonclick, refreshingplan,resetCurren
                 console.error("Error fetching coordinates:", error);
                 }
             };
-
 
             fetchCoordinates();
             
@@ -298,7 +304,7 @@ const PlanBox = ({data,currentUserId,  onbuttonclick, refreshingplan,resetCurren
     console.log("final"+finalLocation.lat, finalLocation.lng)
 
 
-      useEffect(() => {// atual map
+      useEffect(() => {// atual map when creating a plan
        
         const updateMapLocation = (location) => {
             if (!mapRef.current) return; 
@@ -313,14 +319,18 @@ const PlanBox = ({data,currentUserId,  onbuttonclick, refreshingplan,resetCurren
             } else {
                 mapRef.current.leafletMap.setView([location.lat, location.lng], 13);
             }
+
+            let DefaultIcon = L.icon({
+                iconUrl: icon,
+                shadowUrl: iconShadow,
+                iconAnchor: [12, 41]
+            });
     
             
             mapRef.current.leafletMap.on('click', function(mapEvent) {
-                // Log the latitude and longitude of the clicked location
                 //console.log(mapEvent.latlng);
     
-                // Update the finalLocation state with the clicked coordinates
-                setFinalLocation({ lat: mapEvent.latlng.lat, lng: mapEvent.latlng.lng });
+                setFinalLocation({ lat: mapEvent.latlng.lat, lng: mapEvent.latlng.lng }); // final with the clicked 
     
                 // Optionally, remove the previous marker if you only want one marker on the map at a time
                 if (markerRef.current) {
@@ -328,7 +338,7 @@ const PlanBox = ({data,currentUserId,  onbuttonclick, refreshingplan,resetCurren
                 }
     
                 // Add a new marker at the clicked location
-                markerRef.current = L.marker([mapEvent.latlng.lat, mapEvent.latlng.lng]).addTo(mapRef.current.leafletMap)
+                markerRef.current = L.marker([mapEvent.latlng.lat, mapEvent.latlng.lng],{icon:DefaultIcon}).addTo(mapRef.current.leafletMap)
                     .bindPopup('Selected location').openPopup();
             });
         };
@@ -342,6 +352,45 @@ const PlanBox = ({data,currentUserId,  onbuttonclick, refreshingplan,resetCurren
         // Initialize or update the map location
         updateMapLocation(initialLocation);
     }, [mapInitiator, currentposition, useCurrentLocation,cityrefreshtrigger]); 
+
+    //// read only map for the plan
+    useEffect(() => {
+        if (!data || !data.lat || !data.lng || !readOnlyMapRef.current) return;
+
+     //  readOnlyMapRef.current.innerHTML = "";
+
+        
+
+        const map = L.map(readOnlyMapRef.current, {
+            center: [data.lat, data.lng],
+            zoom: 13,
+            keyboard: false,
+        });
+    
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        }).addTo(map);
+    
+        let DefaultIcon = L.icon({
+            iconUrl: icon,
+            shadowUrl: iconShadow,
+            iconSize: [25, 41], // Size of the icon
+            iconAnchor: [12, 41], // Point of the icon which will correspond to marker's location
+            popupAnchor: [1, -34], // Point from which the popup should open relative to the iconAnchor
+        });
+    
+        L.marker([data.lat, data.lng], { icon: DefaultIcon }).addTo(map)
+            .bindPopup(`${data.title}`).openPopup();
+
+            readOnlyMapRef.current.leafletMap = map;
+
+            
+            return () => { // removing the initial map otherwise it will keep on adding the map and eror
+                map.remove();
+            };
+    
+    }, [data]); 
+    //console.log(data.lat)
 
     ////// MAP END ////// MAP END ////// MAP END ////// MAP END ////// MAP END ////// MAP END ////// MAP END ////// MAP END
         //console.log(useCurrentLocation)
@@ -380,6 +429,7 @@ const PlanBox = ({data,currentUserId,  onbuttonclick, refreshingplan,resetCurren
                     
 
                     <h3> Location: {data.city}</h3>
+                    <div className="readOnlyMapContainer" ref={readOnlyMapRef} style={{ height: '200px', width: '100%' }}></div>
                    
                     <p id="desc" >{data.desc}</p>
                     <p className="from-to">From: {data.from ? data.from : (data.to ? "Not specified" : "Not time sensitive")}</p>

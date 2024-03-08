@@ -40,10 +40,11 @@
     font-style: oblique;
 
 }
-#map-newplan{
+#map-newplan{  /*the map for the new plans*/
     max-height: 40vh;
     width: 81%;
 }
+
 
 
 

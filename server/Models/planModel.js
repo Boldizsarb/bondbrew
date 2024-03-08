@@ -8,6 +8,8 @@ const PlanSchema = mongoose.Schema(
         from: String,
         to: String,
         city: String,
+        lat: Number,
+        lng: Number,
         peopleinterested: []
       
     },
