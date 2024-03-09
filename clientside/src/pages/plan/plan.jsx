@@ -7,6 +7,7 @@ import AllPlans from "../../components/planComponents/allPlans";
 import PlanBox from "../../components/planComponents/planBox";
 import Plus from "../../img/plus.png";
 import { useLocation } from "react-router-dom";
+import { getUserLocation } from "../../middlewares/geoLocation.js";
 
 
 
@@ -30,16 +31,34 @@ const Plan = () => {
     const location = useLocation();
     const { plan } = location.state || {}; // A
     const [mapInitiator, setMapInitiator] = useState(0); // map
+    const [currentPosition , setCurrentposition] = useState({latitude: 0, longitude: 0});
 
-    useEffect(() => {
+
+    useEffect(() => { // current location 
+       
+        getUserLocation()
+          .then(({ latitude, longitude }) => {
+            setCurrentposition({ latitude, longitude });
+            //setFinalLocation({ lat: latitude, lng: longitude });
+          })
+          .catch((error) => {
+            console.error('Error getting location:', error);
+          });
+        
+    }, []);
+
+        //console.log(currentPosition);
+
+    useEffect(() => { // setting the current plan
         if (plan) {
           setCurrentPlan(plan);
         }
       }, [plan])
-   
-    
 
-    const getPlans = useEffect(() => {
+
+   
+
+    useEffect(() => { // getting plans and displaying the closest ones first 
         const getPlans = async () => {
             try {
                 const response = await fetch(`${getUserUrl}plan/`);
@@ -47,16 +66,45 @@ const Plan = () => {
                     throw new Error("Error getting plans");
                 }
                 const data = await response.json();
-                setAllPlans(data);
-                setPlans(data);
+    
+                const userLatitude = currentPosition.latitude 
+                const userLongitude = currentPosition.longitude 
+    
+                // calculating distance to each plan 
+                const plansWithDistance = data.map(plan => {
+                    const distance = calculateDistance(userLatitude, userLongitude, plan.lat, plan.lng);
+                    return { ...plan, distance };
+                });
+                //sorting by distance
+                const sortedPlans = plansWithDistance.sort((a, b) => a.distance - b.distance);
+    
+                setAllPlans(sortedPlans);
+                setPlans(sortedPlans);
             } catch (error) {
                 console.log(error.message);
             }
         };
-        getPlans(); // gets called when the page is loaded
-    }, [refreshTrigger]);
 
-    //console.log(currentPlan);
+        getPlans(); 
+    }, [refreshTrigger, currentPosition]); 
+
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371; // radius of the earth in km
+            const dLat = deg2rad(lat2 - lat1);
+            const dLon = deg2rad(lon2 - lon1);
+            const a = 
+                Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+                Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+            const distance = R * c; // distance in km
+            return distance;
+        }
+        
+        function deg2rad(deg) {
+            return deg * (Math.PI/180)
+        }
+            ////////////////////////////////////////////////////////////
  
     useEffect(() => { // updating the current plan
 
@@ -97,7 +145,8 @@ const Plan = () => {
         setCurrentPlan(plan);
         
     };
-
+    
+ 
 
 
     return (
@@ -155,6 +204,3 @@ const Plan = () => {
 export default Plan
 
 
-{/* <div onClick={() => {setCurrentPlan(plan); setCurrentPlanId(plan._id);}}>
-                        <AllPlans data={plan} currentUserId = {user._id} setCurrentPlan={setCurrentPlan} />
-                    </div> */}

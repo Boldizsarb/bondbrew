@@ -106,7 +106,7 @@ export const deletePlan = async (req, res) => {
 export const updatePlan = async (req, res) => {
 
   const planid = req.params.id;
-  const { userId, title, desc, city, from, to } = req.body;
+  const { userId, title, desc, city, from, to, lat, lng } = req.body;
 
   const plan = await PlanModel.findById(planid);
 
@@ -121,6 +121,8 @@ export const updatePlan = async (req, res) => {
           ...(city && { city }),
           ...(from && { from }),
           ...(to && { to }),
+          ...(lat && { lat }),
+          ...(lng && { lng }),
         },
       },
       { new: true } // Return the updated document

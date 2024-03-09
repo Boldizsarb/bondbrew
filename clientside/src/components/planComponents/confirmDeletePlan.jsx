@@ -1,5 +1,6 @@
 import { Modal, useMantineTheme } from "@mantine/core";
 import React from "react";
+import "./planBox.css";
 
 
 function ConfirmDeletePlan({ modalOpened, setModalOpened, handleDelete,id}) {
@@ -8,7 +9,7 @@ function ConfirmDeletePlan({ modalOpened, setModalOpened, handleDelete,id}) {
     
      
     return (
-        <Modal
+        <Modal id="delete-plan-modal"
         overlayColor={
             theme.colorScheme === "dark"
             ? theme.colors.dark[9]

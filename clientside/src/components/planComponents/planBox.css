@@ -44,7 +44,10 @@
     max-height: 40vh;
     width: 81%;
 }
-
+.readOnlyMapContainer{
+    max-height: 30vh;
+    width: 81%;
+}
 
 
 

@@ -301,7 +301,7 @@ const PlanBox = ({data,currentUserId,  onbuttonclick, refreshingplan,resetCurren
     }, [city]);
 
   
-    console.log("final"+finalLocation.lat, finalLocation.lng)
+    //console.log("final"+finalLocation.lat, finalLocation.lng)
 
 
       useEffect(() => {// atual map when creating a plan
@@ -390,10 +390,21 @@ const PlanBox = ({data,currentUserId,  onbuttonclick, refreshingplan,resetCurren
             };
     
     }, [data]); 
-    //console.log(data.lat)
+
 
     ////// MAP END ////// MAP END ////// MAP END ////// MAP END ////// MAP END ////// MAP END ////// MAP END ////// MAP END
         //console.log(useCurrentLocation)
+
+        const [isMapVisible, setIsMapVisible] = useState(true);
+
+        useEffect(() => { // correcting overlaping problem of the map 
+            if(modalOpened === true || modalOpened1 === true){
+                setIsMapVisible(false);
+            }else{
+                setIsMapVisible(true);
+            }
+                
+    },[modalOpened,modalOpened1])
     
 
 
@@ -429,7 +440,7 @@ const PlanBox = ({data,currentUserId,  onbuttonclick, refreshingplan,resetCurren
                     
 
                     <h3> Location: {data.city}</h3>
-                    <div className="readOnlyMapContainer" ref={readOnlyMapRef} style={{ height: '200px', width: '100%' }}></div>
+                    <div className="readOnlyMapContainer" ref={readOnlyMapRef} style={{ height: '40vh', visibility: isMapVisible ? 'visible' : 'hidden'  }}></div>
                    
                     <p id="desc" >{data.desc}</p>
                     <p className="from-to">From: {data.from ? data.from : (data.to ? "Not specified" : "Not time sensitive")}</p>

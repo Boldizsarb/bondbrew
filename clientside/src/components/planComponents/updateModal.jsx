@@ -1,5 +1,9 @@
 import { Modal, useMantineTheme } from "@mantine/core";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef  } from "react";
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
+import icon from 'leaflet/dist/images/marker-icon.png';
+import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 
 function PlanUpdateModal({ modalOpened1, setModalOpened1, id, userId, refresh}) {
    
@@ -13,7 +17,12 @@ function PlanUpdateModal({ modalOpened1, setModalOpened1, id, userId, refresh}) 
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [data, setData] = useState("");
+  const [finalLat, setFinalLat] = useState(null); // not used
+  const [finalLng, setFinalLng] = useState(null); // not used
   const [message, setMessage] = useState("");
+  const mapRef = useRef(null);
+  const markerRef = useRef(null);
+  const [useCurrentLocation, setUseCurrentLocation] = useState(false);
 
 
 
@@ -29,6 +38,8 @@ function PlanUpdateModal({ modalOpened1, setModalOpened1, id, userId, refresh}) 
         setCity(jsonData.city);
         setFrom(jsonData.from);
         setTo(jsonData.to);
+        setFinalLat(jsonData.lat); // to not be null
+        setFinalLng(jsonData.lng);
         //console.log(title,desc,city,from,to);
       } catch (error) {
         console.error("Failed to fetch plan data:", error);
@@ -49,12 +60,13 @@ function PlanUpdateModal({ modalOpened1, setModalOpened1, id, userId, refresh}) 
       }
     const updatedPlan = async () => {
         try {
+          
             const response = await fetch(`${getUserUrl}plan/${id}`, {
                 method: "PUT",
                 headers: {
                 "Content-Type": "application/json",
                 },
-                body: JSON.stringify({userId, title, desc, city, from, to }),
+                body: JSON.stringify({userId, title, desc, city, from, to, lat: finalLat, lng: finalLng}),
             });
             if (!response.ok) {
                 throw new Error("Failed to update the plan");
@@ -71,6 +83,70 @@ function PlanUpdateModal({ modalOpened1, setModalOpened1, id, userId, refresh}) 
   
     setModalOpened1(false);
   };
+
+  ///// MAP   ///// MAP   ///// MAP   ///// MAP   ///// MAP   ///// MAP   ///// MAP  
+
+  useEffect(() => {
+    //console.log(data.lat)
+    if (!modalOpened1 || !mapRef.current) return;
+
+
+    const updateMapLocation =   () => {
+      let map = mapRef.current.leafletMap;
+
+      if (!map) {
+        map = L.map(mapRef.current).setView([data.lat, data.lng], 13);
+        mapRef.current.leafletMap = map;
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+      } else {
+        map.setView([data.lat, data.lng], 13);
+      }
+      map.invalidateSize();
+
+      let DefaultIcon = L.icon({
+          iconUrl: icon,
+          shadowUrl: iconShadow,
+          iconAnchor: [12, 41]
+      });
+
+      if (!markerRef.current) { // initial marker of the location
+        markerRef.current = L.marker([data.lat, data.lng], { icon: DefaultIcon }).addTo(map)
+          .bindPopup('Initial location').openPopup();
+      } else {
+        // Update marker position if it already exists
+        markerRef.current.setLatLng([data.lat, data.lng]).update();
+      }
+
+  
+      map.off('click');
+      map.on('click', function(mapEvent) {
+        if (markerRef.current) {
+          map.removeLayer(markerRef.current);
+        }
+        markerRef.current = L.marker([mapEvent.latlng.lat, mapEvent.latlng.lng], {icon: DefaultIcon}).addTo(map)
+            .bindPopup('New location').openPopup();
+            setFinalLat(mapEvent.latlng.lat);
+            setFinalLng(mapEvent.latlng.lng);
+      });
+    }
+
+  updateMapLocation();
+ 
+  },[ useCurrentLocation]);
+
+
+
+ useEffect(() => { // reseting the map 
+    if(modalOpened1 === false) {
+      setUseCurrentLocation(false);
+    }
+ }, [modalOpened1]);
+
+ //console.log(finalLat, finalLng)
+
+
 
   return (
     <Modal
@@ -110,6 +186,21 @@ function PlanUpdateModal({ modalOpened1, setModalOpened1, id, userId, refresh}) 
             onChange={(e) => setCity(e.target.value)}
           />
         </div>
+        <div>
+            <span>Would you like to specify location? </span>
+            <label>
+                <input type="radio" name="useCurrentLocation" value="yes" checked={useCurrentLocation === true} onChange={() => setUseCurrentLocation(true)} />
+                Yes
+            </label>
+            <label>
+                <input type="radio" name="useCurrentLocation" value="no" checked={useCurrentLocation === false} onChange={() => setUseCurrentLocation(false)} />
+                No
+            </label>
+        </div>
+
+        {useCurrentLocation && (
+          <div id="map-updateplan" ref={mapRef} style={{ height: '30vh', visibility: useCurrentLocation ? 'visible' : 'hidden'  }}></div>
+        )}
         <div>
           <label htmlFor="description">Description</label>
           <textarea

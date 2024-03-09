@@ -12,7 +12,7 @@ import RightArrow from '../../img/arrow_right.png';
 const Matching = () => {    
 
 
-    const [genderedUsers, setGenderedUsers] = useState(null)
+   // const [genderedUsers, setGenderedUsers] = useState(null)
     const [lastDirection, setLastDirection] = useState()
     const [isMatchesVisible, setIsMatchesVisible] = useState(false);
     const [characters, setCharacters] = useState([]) // array of all people
