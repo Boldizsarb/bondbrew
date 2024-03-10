@@ -1,0 +1,40 @@
+.interest-button{
+    background: var(--buttonBg);
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+} 
+.interest-button.clicked {
+    color: var(--buttonHover);
+    border: 2px solid var(--buttonHover);
+    background: transparent;
+}
+
+.interest-button:hover{
+    color: var(--buttonHover);
+    border: 2px solid var(--buttonHover);
+    background: transparent;
+}
+.removeButton { /*the romove small x button on the modal*/
+    background-color: transparent;
+    border-radius: 50%;
+    color: black;
+    cursor: pointer;
+    transition: color 0.3s;
+    margin-left: 10px;
+}
+
+.removeButton:hover {
+    color: red;
+}
+/* .interest-button:active{
+    color: var(--buttonHover);
+    border: 2px solid var(--buttonHover);
+    background: transparent;
+} */
+/* .interest-button:focus {
+    color: var(--buttonHover);
+    border: 2px solid var(--buttonHover);
+    background: transparent;
+    
+} */

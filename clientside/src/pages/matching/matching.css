@@ -1,10 +1,15 @@
 .main-matching-container {
+
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     height: calc(var(--vh, 1vh) * 100); /*this is more accurate on mobile*/
-    overflow: hidden; /* Hide overflow */
+    overflow: hidden; /* need to hide overflow due to tindercard */
+    max-height: 100%;
+    max-width: 100%;
+    position: relative;
+    
 }
 
 .swipe-container {
@@ -12,25 +17,34 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    /* margin-top: 20vh;  */
+  
+}
+.swipe-info {
+  position: absolute; /* or 'fixed' depending on the desired relation to the viewport */
+  top: 5vh; /* Adjust based on your layout needs */
+  left: 50%;
+  transform: translateX(-50%); /* Center horizontally */
 }
 
-.cardContainer {
+.cardContainer1 {
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-top: -20vh;
 }
 
 .swipe {
     position: absolute;
   }
   
-  .cardContainer {
+  .cardContainer1 {
     width: 90vw;
     max-width: 260px;
     height: 300px;
   }
   
-  .card {
+  .card1 {
     position: relative;
     background-color: #fff;
     width: 80vw;
@@ -40,6 +54,7 @@
     border-radius: 20px;
     background-size: cover;
     background-position: center;
+    /* transform: translateY(-10vh); */
   }
   
   .cardContent {
@@ -51,7 +66,7 @@
   
   }
   
-  .card h3 {
+  .card1 h3 {
     position: absolute;
     bottom: 0;
     margin: 10px;
@@ -99,3 +114,12 @@
     background-color: var(--buttonHover);
 }
 /*BUG BUG::: smaller phone the flippin matches div over laps and hte arrow is not visible*/
+
+
+ #burger-menu-onpage {
+  position: fixed;
+  top: 1vh;
+  right: 1vh;
+  z-index: 1000;
+}
+

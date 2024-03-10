@@ -1,0 +1,106 @@
+
+.label1{
+    display:flex;
+     flex-direction:column;
+     width:70px;
+     cursor:pointer;
+     z-index: 1001;
+   }
+   
+   .label1 span{
+     background:var(--buttonHover);
+     border-radius:10px;
+     height:7px;
+     margin: 7px 0;
+     transition: .4s  cubic-bezier(0.68, -0.6, 0.32, 1.6);
+     z-index: 1001;
+   }
+   
+   span:nth-of-type(1){
+     width:50%;
+   }
+   span:nth-of-type(2){
+     width:100%;
+   }
+   
+   span:nth-of-type(3){
+     width:75%;
+    
+   }
+   
+   input[type="checkbox"]{
+     display:none;
+   }
+   
+   input[type="checkbox"]:checked ~ span:nth-of-type(1){
+     transform-origin:bottom;
+     transform:rotatez(45deg) translate(8px,0px)
+   }
+   
+   input[type="checkbox"]:checked ~ span:nth-of-type(2){
+     
+     transform-origin:top;
+     transform:rotatez(-45deg)
+   }
+   
+   input[type="checkbox"]:checked ~ span:nth-of-type(3){
+     
+     transform-origin:bottom;
+     width:50%;
+     transform: translate(30px,-11px) rotatez(45deg);
+   
+   }  
+   /*menu options (link )*/      /*menu options (link )*/      /*menu options (link )*/      
+   .menu-options {
+    position: fixed;
+    top: 0;
+    left: 50%; /* Centered initially but will be off-screen due to translateX */
+    transform: translateX(150%); /* Start off-screen to the left */
+    width: 90%; /* Adjust the width as needed */
+    max-width: 90vh; /* Adjust the max-width as needed */
+    height: 100%;
+    background-color:rgba(255, 255, 255, 0.6);
+    transition: transform 0.5s ease-out, visibility 0s linear 0.5s, opacity 0.5s linear; /* Smooth transition for sliding and opacity */
+    visibility: hidden; /* Initially not visible */
+    opacity: 0; /* Start with 0 opacity */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 10;
+}
+
+
+.menu-options.open {
+    transform: translateX(-50%); /* Slide to the center */
+    visibility: visible; /* Make visible */
+    opacity: 1; /* Fade in */
+    transition-delay: 0s; /*  transition effects immediately */
+}
+/*menu options (link )*/      /*menu options (link )*/      /*menu options (link )*/      
+
+.img-link-burger{
+    transition: transform 0.3s ease;
+}
+.img-link-burger:hover {
+    transform: scale(1.4); 
+    border-radius: 50%;
+}
+
+.link-container {
+    display: flex;
+    align-items: center; /*vertically */
+    gap: 10px; /* Space between text and image */
+  }
+  
+
+.menu-options a, .menu-options a:visited, .menu-options a:hover, .menu-options a:active, .menu-options a:focus {
+    text-decoration: none; /* removes the text decoration*/
+    color: inherit; 
+  }
+
+  
+  .menu-options a:hover {
+    text-decoration: none; /* Keeps text decoration off even on hover */
+    text-shadow: 1px 1px 2px var(--buttonHover); /* Example shadow, adjust as needed */
+  }

@@ -4,7 +4,8 @@ import './matching.css';
 import TinderCard from 'react-tinder-card';
 import LeftArrow from '../../img/arrow_left.png';
 import RightArrow from '../../img/arrow_right.png';
-
+import BurgerMenu from '../../components/burgerMenu/burgerMenu';
+import { useSelector } from "react-redux";
 
 
 
@@ -18,6 +19,7 @@ const Matching = () => {
     const [characters, setCharacters] = useState([]) // array of all people
     const getUserUrl = process.env.REACT_APP_AXIOS_BASE_URL;
     const serverPubicFolder = process.env.REACT_APP_PUBLIC_FOLDER;
+    const { user } = useSelector((state) => state.authReducer.authData); // user data 
 
     const getCharacters = useEffect(() => {
         const getCharacters = async () => {
@@ -76,7 +78,7 @@ const Matching = () => {
         setIsMatchesVisible(!isMatchesVisible); // Toggle visibility state
     };
     
-
+    
     
 
 
@@ -84,6 +86,14 @@ const Matching = () => {
         <>
         <div className='main-matching-container'>
         {/* <div onClick={toggleMatches} style={{cursor: 'pointer'}}>Click Me</div> */}
+
+        <div id='burger-menu-onpage'>
+          <BurgerMenu location={"matching"} userid={user._id} />
+        </div>
+        
+        
+        
+
 
             <div>
                 {/* <NavIcons /> */}
@@ -94,7 +104,7 @@ const Matching = () => {
                     {lastDirection ? <p>You Swiped {lastDirection}</p> : <p/> }
 
                     </div>
-                <div className='cardContainer'>
+                <div className='cardContainer1'>
 
                 {characters.slice().reverse().map((character, index) =>
                         <TinderCard className='swipe' key={character.firstname}
@@ -104,7 +114,7 @@ const Matching = () => {
                          onCardLeftScreen={() => outOfFrame(character.firstname)}>
 
                               <div style={{ backgroundImage: 'url(' + (character.profilePicture ? 
-                                serverPubicFolder + character.profilePicture : serverPubicFolder + "defaultProfile.png") + ')' }} className='card'>
+                                serverPubicFolder + character.profilePicture : serverPubicFolder + "defaultProfile.png") + ')' }} className='card1'>
                                 <h3 style={{color:"var(--buttonHover)"}}>{character.firstname} {character.lastname}</h3>
                             </div>
                         </TinderCard>
@@ -121,7 +131,10 @@ const Matching = () => {
 
 
           
-            <p>{currentCharacter.firstname}</p> 
+            {currentCharacter.firstname && (
+              <p>{currentCharacter.firstname}</p>
+              )}
+
           
         </div>
         </>
