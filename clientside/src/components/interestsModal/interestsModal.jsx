@@ -9,6 +9,7 @@ function InterestModal({ interestsModal, setInterestsModal,userid }) {
     const theme = useMantineTheme();
     const [selectedInterests, setSelectedInterests] = useState([]);
     const { hobbies } = interests;
+    const [ message, setMessage ] = useState(''); 
 
 
     const toggleInterestSelection = (interest) => { // toggle th interest items
@@ -29,10 +30,19 @@ function InterestModal({ interestsModal, setInterestsModal,userid }) {
     };
 
     const handleSubmittion = () => { // submit the interests
-        console.log(selectedInterests);
 
-        //setInterestsModal(false);
+
+        if(selectedInterests.length < 2) {
+            setMessage('You need to select at least two interests');
+        } else if(selectedInterests.length > 5) {
+            setMessage('You can only select a maximum of five interests');
+        } else {
+            setMessage('');
+            //setInterestsModal(false);
+            // rest of the logic
+        }
     }
+     console.log(userid)
     
 
     
@@ -54,6 +64,8 @@ function InterestModal({ interestsModal, setInterestsModal,userid }) {
           onClose={() => setInterestsModal(false)}
         > 
         <div>
+          <h3 style={{color:"red"}}>{message}</h3>
+          <p>It is essential to select at least two and a maximum of five most common interests for the algorithm to function properly.</p>
             <h3>You picked:</h3>
             {selectedInterests.length === 0 ? (
                 <p>Nothing So far!</p>
@@ -67,7 +79,7 @@ function InterestModal({ interestsModal, setInterestsModal,userid }) {
             )}
         </div>
         <div>
-            <Button onClick={handleSubmittion} style={{marginTop: "20px"}}>Submit</Button>
+            <button className="button infoButton" onClick={handleSubmittion} style={{marginTop: "20px"}}>Submit</button>
         </div>
 
         <hr style={{ width: "95%",border: "0.1px solid #ececec", marginTop: "20px",}}/>
@@ -78,14 +90,13 @@ function InterestModal({ interestsModal, setInterestsModal,userid }) {
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', overflow: 'visible' }}>
 
         {hobbies.map((interest, index) => (
-            <Button
+            <button
             className={`interest-button ${selectedInterests.includes(interest) ? 'clicked' : ''}`}
               key={index}
               variant={selectedInterests.includes(interest) ? 'filled' : 'outline'}
               onClick={() => toggleInterestSelection(interest)}
               style={{
                 flexGrow: 1,
-                flexBasis: 'calc(50% - 10px)', // Adjust this to control initial size
                 padding: '10px',
                 margin: '5px',
                 height: 'auto',
@@ -101,7 +112,7 @@ function InterestModal({ interestsModal, setInterestsModal,userid }) {
               }}
             >
               {interest}
-            </Button>
+            </button>
           ))}
         </div>
       </div>

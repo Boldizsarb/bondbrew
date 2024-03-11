@@ -35,6 +35,7 @@ const UserSchema = mongoose.Schema(
         mostinterestedin: String,
         hobbies: String,
         gender: String,
+        interests: [],
         followers: [] ,
         following: []
     },

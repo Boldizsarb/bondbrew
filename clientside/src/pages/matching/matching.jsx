@@ -20,6 +20,51 @@ const Matching = () => {
     const getUserUrl = process.env.REACT_APP_AXIOS_BASE_URL;
     const serverPubicFolder = process.env.REACT_APP_PUBLIC_FOLDER;
     const { user } = useSelector((state) => state.authReducer.authData); // user data 
+    const [interestCriteria, setInterestCriteria] = useState(false) 
+
+
+    
+    useEffect(() => {  // checking if there is any interest first
+
+        const getInterests = async () => {
+          try {
+            const response = await fetch(`${getUserUrl}userser/interests`, {
+              method: 'POST', // or 'PUT' if that's what your backend expects for this operation
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ _id: user._id }), // Send the user ID in the request body
+            });
+            if (!response.ok) {
+              throw new Error(response.statusText)
+            }
+            const data = await response.json();
+            //console.log(data.interests)
+
+            if(data.interests.length < 2 && data.interests.length > 5) { // if the criteria is met
+                setInterestCriteria(true);
+            } else {
+                setInterestCriteria(false);
+            }
+          } catch (error) {
+            console.log(error.message);
+          }
+        }
+        getInterests(); // gets called when the page is loaded
+    }, []);
+
+
+    console.log(interestCriteria)
+
+    useEffect(() => {  
+        if(!interestCriteria) {
+           // need to set the interest modal open!!!!!!!!!!!!
+        }
+    }, [interestCriteria]);
+
+
+
+
 
     const getCharacters = useEffect(() => {
         const getCharacters = async () => {
@@ -37,7 +82,8 @@ const Matching = () => {
         }
         getCharacters(); // gets called when the page is loaded
     }, []);
-    console.log(characters)
+
+    //console.log(characters)
 
 
 
