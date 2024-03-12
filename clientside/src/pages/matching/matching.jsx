@@ -6,6 +6,8 @@ import LeftArrow from '../../img/arrow_left.png';
 import RightArrow from '../../img/arrow_right.png';
 import BurgerMenu from '../../components/burgerMenu/burgerMenu';
 import { useSelector } from "react-redux";
+import InterestModal from '../../components/interestsModal/interestsModal';
+
 
 
 
@@ -21,6 +23,7 @@ const Matching = () => {
     const serverPubicFolder = process.env.REACT_APP_PUBLIC_FOLDER;
     const { user } = useSelector((state) => state.authReducer.authData); // user data 
     const [interestCriteria, setInterestCriteria] = useState(false) 
+    const [interestsModal, setInterestsModal] = useState(false); // modal for interests
 
 
     
@@ -33,28 +36,29 @@ const Matching = () => {
               headers: {
                 'Content-Type': 'application/json',
               },
-              body: JSON.stringify({ _id: user._id }), // Send the user ID in the request body
+              body: JSON.stringify({ _id: user._id }), 
             });
             if (!response.ok) {
               throw new Error(response.statusText)
             }
             const data = await response.json();
-            //console.log(data.interests)
 
-            if(data.interests.length < 2 && data.interests.length > 5) { // if the criteria is met
-                setInterestCriteria(true);
+            if(data.interests.length < 2 || data.interests.length > 5) { // if the criteria is not met
+              setInterestCriteria(false);
+              setInterestsModal(true); // if no interest the modal opens 
+              // rest of the logic like forcing to chose the interests    
             } else {
-                setInterestCriteria(false);
+                setInterestCriteria(true);
             }
           } catch (error) {
             console.log(error.message);
           }
         }
-        getInterests(); // gets called when the page is loaded
+        getInterests();
     }, []);
 
 
-    console.log(interestCriteria)
+    //console.log(interestCriteria)
 
     useEffect(() => {  
         if(!interestCriteria) {
@@ -66,7 +70,7 @@ const Matching = () => {
 
 
 
-    const getCharacters = useEffect(() => {
+    const getCharacters = useEffect(() => { // getting all the users 
         const getCharacters = async () => {
           try {
             const response = await fetch(`${getUserUrl}userser/`);
@@ -136,6 +140,7 @@ const Matching = () => {
         <div id='burger-menu-onpage'>
           <BurgerMenu location={"matching"} userid={user._id} />
         </div>
+        <InterestModal interestsModal={interestsModal} setInterestsModal={setInterestsModal} userid={user._id} />
         
         
         

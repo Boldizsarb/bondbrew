@@ -10,6 +10,36 @@ function InterestModal({ interestsModal, setInterestsModal,userid }) {
     const [selectedInterests, setSelectedInterests] = useState([]);
     const { hobbies } = interests;
     const [ message, setMessage ] = useState(''); 
+    const getUserUrl = process.env.REACT_APP_AXIOS_BASE_URL;
+
+  // need to retrive the users interests from the database
+  useEffect(() => {
+    const getInterests = async () => {
+      try {
+        const response = await fetch(`${getUserUrl}userser/interests`, {
+          method: 'POST', // or 'PUT' if that's what your backend expects for this operation
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ _id: userid }),
+        });
+        if (!response.ok) {
+          throw new Error(response.statusText)
+        }
+        const data = await response.json();
+        setSelectedInterests(data.interests);
+      } catch (error) {
+        console.log(error.message);
+      }
+    }
+    getInterests();
+  }, [userid]);
+
+
+
+
+
+
 
 
     const toggleInterestSelection = (interest) => { // toggle th interest items
@@ -38,6 +68,27 @@ function InterestModal({ interestsModal, setInterestsModal,userid }) {
             setMessage('You can only select a maximum of five interests');
         } else {
             setMessage('');
+            const updateInterests = async () => {
+                try {
+                  const response = await fetch(`${getUserUrl}userser/interestupdate`, {
+                    method: 'PUT', 
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ _id: userid, interests: selectedInterests }),
+                  });
+                  if (!response.ok) {
+                    throw new Error(response.statusText)
+                  }
+                 // const data = await response.json();
+                  //console.log(data);
+                  setInterestsModal(false);
+                } catch (error) {
+                  console.log(error.message);
+                }
+              }
+              updateInterests();
+
             //setInterestsModal(false);
             // rest of the logic
         }

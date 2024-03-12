@@ -295,10 +295,12 @@ export const UnFollowUser = async (req, res) => {
 };
 
 export const getUserInterests = async (req, res) => {
-  const _id = req.body 
+  //const _id = req.body 
+  const _id = req.body._id;
   
   try {
-    const user = await UserModel.findById(_id); // Selects only the interests field and excludes the _id field
+    //const user = await UserModel.findById(_id); // Selects only the interests field and excludes the _id field
+    const user = await UserModel.findById(_id).select('interests -_id'); 
     if (!user) {
       return res.status(404).json("User not found.");
     }
@@ -312,24 +314,24 @@ export const getUserInterests = async (req, res) => {
 
 export const updateInterests = async (req, res) => {
 
-  const id = req.params.id; // The ID from URL parameters
+  //const id = req.params.id; // The ID from URL parameters
   const { _id, interests } = req.body; // Extracting _id and interests from request body
   
   // Validate current user's ID before proceeding
-  if (id === _id) {
-    if (!interests || !Array.isArray(interests) || interests.length === 0) {
+  //if (id === _id) {
+    if (!interests || !Array.isArray(interests) || interests.length === 0 || interests.length > 5) {
       return res.status(400).json("Interests are required and must be a non-empty array.");
     }
     try {    
-      const updatedUser = await UserModel.findByIdAndUpdate(id, { $set: { interests } }, { new: true });
+      const updatedUser = await UserModel.findByIdAndUpdate(_id, { $set: { interests } }, { new: true });
 
-      res.status(200).json({ user: updatedUser });
+      res.status(200).json("Successfully updated interests.");
     } catch (error) {
       res.status(500).json(error.message);
     }
-  } else {
+  //} else {
     res.status(403).json("Access Denied! You can only update your own profile.");
-  }
+  //}
 };
 
 
