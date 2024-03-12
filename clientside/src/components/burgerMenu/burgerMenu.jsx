@@ -6,6 +6,7 @@ import Matching from "../../img/matching.png";
 import Comment from "../../img/chat.png";
 import Plan from "../../img/plan.png";
 import InterestModal from "../interestsModal/interestsModal";
+import SetLocation from "../setLocation/setLocationModal";
 
 
 
@@ -17,6 +18,7 @@ const BurgerMenu = ({location,userid}) => {
     const [matchingStuff, setMatchingStuff] = useState(false);  // matching stuff visible
     const checkboxRef = useRef(null);
     const [interestsModal, setInterestsModal] = useState(false); // modal for interests
+    const [locationModal, setLocationModal] = useState(false); // modal for location
     
 
     const handleCheckboxChange = () => { // menu options visible 
@@ -38,7 +40,11 @@ const BurgerMenu = ({location,userid}) => {
         setInterestsModal(true);
         // open modal
     }   
-    
+    const handleLocationClick = () => { // open location modal
+        checkboxRef.current.checked = false; 
+        setIsOpen(false);
+        setLocationModal(true);
+    }
 
 
 
@@ -91,6 +97,8 @@ const BurgerMenu = ({location,userid}) => {
                     
                     <h3 style={{cursor:"pointer"}} onClick={handleInterestClick}> Set Interests</h3>
                     <InterestModal interestsModal={interestsModal} setInterestsModal={setInterestsModal} userid={userid} />
+                    <h3 style={{cursor:"pointer"}} onClick={handleLocationClick}> Set Location</h3>
+                    <SetLocation locationModal={locationModal} setLocationModal={setLocationModal} userid={userid} />
 
                 </div>
                )}

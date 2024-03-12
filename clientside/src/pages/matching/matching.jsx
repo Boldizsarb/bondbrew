@@ -96,13 +96,13 @@ const Matching = () => {
     const [currentCharacter, setCurrentCharacter] = useState({})
 
     useEffect(() => {     // this is all the indexing and it is fucked right now, need to solve the indexign 
-      console.log("Current Index:", currentIndex);
-      console.log("Current Character:", currentCharacter);
+      // console.log("Current Index:", currentIndex);
+      // console.log("Current Character:", currentCharacter);
   }, [currentIndex, currentCharacter]);
 
 
-  useEffect(() => {
-    // Update currentCharacter based on currentIndex
+  useEffect(() => {   // Update currentCharacter based on currentIndex for the info under the card 
+ 
     if (characters.length > 0 && currentIndex >= 0) {
         setCurrentCharacter(characters[currentIndex]);
     }
@@ -114,7 +114,6 @@ const Matching = () => {
       setLastDirection(direction)
       //setCurrentIndex(index + 1);
       setCurrentIndex(prevIndex => prevIndex + 1);
-     
    
     }
     //console.log(currentCharacter)
@@ -127,6 +126,9 @@ const Matching = () => {
     const toggleMatches = () => {
         setIsMatchesVisible(!isMatchesVisible); // Toggle visibility state
     };
+    
+    console.log(currentCharacter)
+    console.log(currentIndex)
     
     
     

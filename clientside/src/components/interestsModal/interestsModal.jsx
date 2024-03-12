@@ -1,4 +1,4 @@
-import { Modal, useMantineTheme, Button } from "@mantine/core";
+import { Modal, useMantineTheme } from "@mantine/core";
 import React, { useState, useEffect, useRef  } from "react";
 import interests from "../../data/interests.json";
 import "./interestModal.css";
@@ -39,9 +39,6 @@ function InterestModal({ interestsModal, setInterestsModal,userid }) {
 
 
 
-
-
-
     const toggleInterestSelection = (interest) => { // toggle th interest items
         setSelectedInterests((prevSelectedInterests) =>
           prevSelectedInterests.includes(interest)
@@ -68,32 +65,37 @@ function InterestModal({ interestsModal, setInterestsModal,userid }) {
             setMessage('You can only select a maximum of five interests');
         } else {
             setMessage('');
+            
             const updateInterests = async () => {
-                try {
-                  const response = await fetch(`${getUserUrl}userser/interestupdate`, {
-                    method: 'PUT', 
-                    headers: {
-                      'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ _id: userid, interests: selectedInterests }),
-                  });
-                  if (!response.ok) {
-                    throw new Error(response.statusText)
-                  }
-                 // const data = await response.json();
-                  //console.log(data);
-                  setInterestsModal(false);
-                } catch (error) {
-                  console.log(error.message);
+              try {
+                const response = await fetch(`${getUserUrl}userser/interestupdate`, {
+                  method: 'PUT', 
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({ _id: userid, interests: selectedInterests }),
+                });
+  
+                if (!response.ok) {
+                  throw new Error('Failed to update interests');
                 }
+                
+                const data = await response.json();
+                console.log(data);
+                setMessage('Interests updated successfully');
+                setInterestsModal(false);
+              } catch (error) {
+                console.error(error.message);
+                setMessage('An error occurred');
               }
-              updateInterests();
+          };
+  
+           updateInterests();
+      }
+  }
 
-            //setInterestsModal(false);
-            // rest of the logic
-        }
-    }
-     console.log(userid)
+
+     //console.log(userid)
     
 
     

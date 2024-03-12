@@ -314,11 +314,9 @@ export const getUserInterests = async (req, res) => {
 
 export const updateInterests = async (req, res) => {
 
-  //const id = req.params.id; // The ID from URL parameters
-  const { _id, interests } = req.body; // Extracting _id and interests from request body
-  
-  // Validate current user's ID before proceeding
-  //if (id === _id) {
+
+  const { _id, interests } = req.body; 
+
     if (!interests || !Array.isArray(interests) || interests.length === 0 || interests.length > 5) {
       return res.status(400).json("Interests are required and must be a non-empty array.");
     }
@@ -329,9 +327,23 @@ export const updateInterests = async (req, res) => {
     } catch (error) {
       res.status(500).json(error.message);
     }
-  //} else {
-    res.status(403).json("Access Denied! You can only update your own profile.");
-  //}
 };
+
+
+export const updateLocation = async (req, res) => {
+
+  const { _id, livesin } = req.body;
+
+  try {
+    const updatedUser = await UserModel.findByIdAndUpdate(_id, { $set: {  livesin } }, { new: true });             
+    res.status(200).json("Successfully updated location.");
+  }
+  catch (error) {
+    res.status(500).json(error.message);
+  }
+}
+
+
+
 
 
