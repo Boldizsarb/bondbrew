@@ -7,6 +7,7 @@ import RightArrow from '../../img/arrow_right.png';
 import BurgerMenu from '../../components/burgerMenu/burgerMenu';
 import { useSelector } from "react-redux";
 import InterestModal from '../../components/interestsModal/interestsModal';
+import User from '../../components/user/user';
 
 
 
@@ -58,8 +59,6 @@ const Matching = () => {
     }, []);
 
 
-    //console.log(interestCriteria)
-
     useEffect(() => {  
         if(!interestCriteria) {
            // need to set the interest modal open!!!!!!!!!!!!
@@ -70,7 +69,7 @@ const Matching = () => {
 
 
 
-    const getCharacters = useEffect(() => { // getting all the users 
+    const getCharacters = useEffect(() => { // getting all the users for now 
         const getCharacters = async () => {
           try {
             const response = await fetch(`${getUserUrl}userser/`);
@@ -86,9 +85,6 @@ const Matching = () => {
         }
         getCharacters(); // gets called when the page is loaded
     }, []);
-
-    //console.log(characters)
-
 
 
 
@@ -127,9 +123,146 @@ const Matching = () => {
         setIsMatchesVisible(!isMatchesVisible); // Toggle visibility state
     };
     
-    console.log(currentCharacter)
-    console.log(currentIndex)
+    // console.log(currentCharacter)
+    // console.log(currentIndex)
+
+    /// LIKES LOGIC  /// LIKES LOGIC  /// LIKES LOGIC  /// LIKES LOGIC  /// LIKES LOGIC  /// LIKES LOGIC  /// LIKES LOGIC  
+    const [peopleLikedcurrentuser, setPeopleLikedcurrentuser] = useState([]) // array of people who liked the current user
+    const [profileLikedCurrentUser, setProfileLikedCurrentUser] = useState([]) // returned array of whole profiles of people who liked the current user
+    const [matches, setMatches] = useState([]) // array of matches
+    const [profileMatches, setProfileMatches] = useState([]) // returned array of whole profiles of people who matched with the current user
+
+
+    useEffect(() => { // getting likes 
+
+        const getLikes = async () => {
+          try {
+            const response = await fetch(`${getUserUrl}match/getlikes`, {
+              method: 'POST', 
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ usertoid: user._id }), 
+            });
+            if (!response.ok) {
+              throw new Error(response.statusText)
+            }
+            const data = await response.json(); 
+            const userFromIds = data.map(item => item.userfromid);  // only extracting the userid where the like came from 
+            //console.log(userFromIds);
+            setPeopleLikedcurrentuser(userFromIds);
+          } catch (error) {
+            console.log(error.message);
+          }
+        }
+        getLikes();
+
+    }, []);
+
+    //console.log(peopleLikedcurrentuser)
     
+    useEffect(() => { // getting the profiles of the pople who liked the current user
+
+      const getProfiles = async () => {
+
+        if (peopleLikedcurrentuser.length === 0) {
+          return;
+        }
+        let profiles = [];
+
+        for(const userId of peopleLikedcurrentuser) {
+            //console.log(userId)
+        try {
+          const response = await fetch(`${getUserUrl}userser/${userId}`, {
+            method: 'GET', 
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+          if (!response.ok) {
+            throw new Error(response.statusText);
+          }
+          const profile = await response.json(); 
+          profiles.push(profile); 
+        } catch (error) {
+          console.log(error.message);
+        }
+      }
+      
+      setProfileLikedCurrentUser(profiles); // pushing all profiles in the array
+    };
+    getProfiles();
+  }, [peopleLikedcurrentuser])
+/// LIKES LOGIC  /// LIKES LOGIC  /// LIKES LOGIC  /// LIKES LOGIC  /// LIKES LOGIC  /// LIKES LOGIC  /// LIKES LOGIC  /// LIKES LOGIC  
+
+  //console.log(profileLikedCurrentUser)
+
+///// MATCH LOGIC    ///// MATCH LOGIC    ///// MATCH LOGIC    ///// MATCH LOGIC    ///// MATCH LOGIC    
+  useEffect(() => { 
+    const getMatches = async () => { // getting all the matches 
+      try {
+        const response = await fetch(`${getUserUrl}match/getmatches`, {
+          method: 'POST', 
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ userid: user._id }), 
+        });
+        if (!response.ok) {
+          throw new Error(response.statusText)
+        }
+        const data = await response.json();
+      
+      // filtering the matches to get the other user's id only 
+      const otherUserIds = data.map(item => {
+        return item.userfromid === user._id ? item.usertoid : item.userfromid;
+      });
+      setMatches(otherUserIds); 
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+  getMatches();
+}, []);
+
+
+
+useEffect(() => { // getting the profiles of the people who matched with the current user
+
+  const getProfiles = async () => {
+      
+      if (matches.length === 0) {
+        return;
+      }
+      let profiles = [];
+  
+      for(const userId of matches) {
+      try {
+        const response = await fetch(`${getUserUrl}userser/${userId}`, {
+          method: 'GET', 
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        if (!response.ok) {
+          throw new Error(response.statusText);
+        }
+        const profile = await response.json(); 
+        profiles.push(profile); 
+      } catch (error) {
+        console.log(error.message);
+      }
+    }
+
+    setProfileMatches(profiles); // pushing all profiles in the array
+  };
+  getProfiles();
+
+}, [matches])
+
+console.log(profileMatches)
+
+
     
     
 
@@ -175,9 +308,26 @@ const Matching = () => {
                     
                 </div>
                 <div className={`matches-div ${isMatchesVisible ? 'active' : ''}`}>
-                    <h1 id='matchesh1'>Matches</h1>
-                    <img src={isMatchesVisible ? LeftArrow : RightArrow} onClick={toggleMatches} className="toggle-arrow" style={{cursor: 'pointer'}} /> 
-                    awdasdasdasd
+                  <img src={isMatchesVisible ? LeftArrow : RightArrow} onClick={toggleMatches} className="toggle-arrow" style={{cursor: 'pointer'}} /> 
+
+                  <div className='matches-container'>
+                    <h1 className='matchesh1'>Matches ({profileMatches.length})</h1>
+                    {profileMatches.map((person, id) => (
+                      <User person={person} key={id} location={"matching"}/>
+                      ))}
+              
+                    
+                  </div>
+                    
+                  <div className='likes-container'>
+                    <h1 className='matchesh1'>Likes ({profileLikedCurrentUser.length})</h1>
+                    {profileLikedCurrentUser.map((person, id) => (
+                      <User person={person} key={id} location={"matching"}/>
+                      ))}
+                    
+
+                  </div>
+
                 </div>
 
             </div>

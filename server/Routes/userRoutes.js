@@ -27,4 +27,7 @@ router.get('/name/:name', getUserByFirstName)
 router.get('/fetch/:id', fetchUserById)
 
 
-export default router;
+
+
+export default router
+

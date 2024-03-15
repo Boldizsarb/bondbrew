@@ -10,6 +10,7 @@ import UploadRouter from "./Routes/uploadRoutes.js";
 import ChatRouter from "./Routes/chatRoutes.js";
 import MessageRouter from "./Routes/messageRoutes.js";
 import PlanRouter from "./Routes/planRoutes.js";
+import MatchRouter from "./Routes/matchesRoutes.js";
 
 
 const app = express();
@@ -29,7 +30,7 @@ app.use(cors());
 
 // Routes
 app.use("/user", SignupRouter); // login and register
-//http://localhost:5000/user/register
+
 app.use("/userser", Userrouter); // get, update, delete, follow, unfollow
 
 app.use("/post", PostRouter); // create, get, update, delete, like, timeline
@@ -41,6 +42,8 @@ app.use("/chat", ChatRouter); // create, get, find
 app.use("/message", MessageRouter); // add, get
 
 app.use("/plan", PlanRouter); // 
+
+app.use("/match", MatchRouter); // get, create, delete
 
 
 

@@ -83,12 +83,17 @@
     left: -47vh; /* gooes back to this extent  */
     transition: left 0.5s; /* Smooth transition for sliding effect */
     border-radius: 1rem;
+
+
+    display: flex; /* dividing the parent div to two sections */
+    flex-direction: column; /*same as above*/
+   
 }
 
 .matches-div.active {
     left: 0; /* When active, slide into view */
 }
-#matchesh1{
+.matchesh1{
     text-align: center;
     margin-top: 1rem;
     font-size: 1.5rem;
@@ -116,10 +121,14 @@
 /*BUG BUG::: smaller phone the flippin matches div over laps and hte arrow is not visible*/
 
 
- #burger-menu-onpage {
+ #burger-menu-onpage { /* burger menu presence only*/
   position: fixed;
   top: 1vh;
   right: 1vh;
   z-index: 1000;
 }
-
+.matches-container, .likes-container {
+  flex: 1; /* each takes up 50% of the space */
+  overflow-y: auto; /* allows for scrolling within each section */
+  width: 90%; /* doesnt flow over the little clean edge */
+}

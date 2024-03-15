@@ -48,7 +48,7 @@ const User = ({ person, location }) => {
           <span>{person.lastname.charAt(0).toUpperCase() + person.lastname.slice(1)}</span>
         </div>
       </div>
-      {location !== "plan" && (
+      {location !== "plan" && location !== "matching" && (
       <button
         className={
           following ? "button fc-button UnfollowButton" : "button fc-button"
