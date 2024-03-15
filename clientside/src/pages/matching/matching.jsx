@@ -13,6 +13,7 @@ import User from '../../components/user/user';
 
 
 
+
 const Matching = () => {    
 
 
@@ -25,6 +26,12 @@ const Matching = () => {
     const { user } = useSelector((state) => state.authReducer.authData); // user data 
     const [interestCriteria, setInterestCriteria] = useState(false) 
     const [interestsModal, setInterestsModal] = useState(false); // modal for interests
+
+    const [peopleLikedcurrentuser, setPeopleLikedcurrentuser] = useState([]) // array of people who liked the current user
+    const [profileLikedCurrentUser, setProfileLikedCurrentUser] = useState([]) // returned array of whole profiles of people who liked the current user
+    const [matches, setMatches] = useState([]) // array of matches
+    const [profileMatches, setProfileMatches] = useState([]) // returned array of whole profiles of people who matched with the current user
+    const [matchrefresh, setMatchrefresh] = useState(0) // refresh the matches
 
 
     
@@ -106,31 +113,23 @@ const Matching = () => {
 
   
     const swiped = (direction, nameToDelete, index) => {
-      console.log('removing: ' + nameToDelete)
+     // console.log('removing: ' + nameToDelete)
       setLastDirection(direction)
-      //setCurrentIndex(index + 1);
-      setCurrentIndex(prevIndex => prevIndex + 1);
+      //setCurrentIndex(index + 1); // not used 
+      setCurrentIndex(prevIndex => prevIndex + 1); // info underneath the card
    
     }
-    //console.log(currentCharacter)
-  
-    const outOfFrame = (name) => {
-      console.log(name + ' left the screen!')
-    }
 
 
-    const toggleMatches = () => {
-        setIsMatchesVisible(!isMatchesVisible); // Toggle visibility state
+    const toggleMatches = () => {// Toggle visibility state
+        setIsMatchesVisible(!isMatchesVisible); 
     };
     
     // console.log(currentCharacter)
     // console.log(currentIndex)
 
     /// LIKES LOGIC  /// LIKES LOGIC  /// LIKES LOGIC  /// LIKES LOGIC  /// LIKES LOGIC  /// LIKES LOGIC  /// LIKES LOGIC  
-    const [peopleLikedcurrentuser, setPeopleLikedcurrentuser] = useState([]) // array of people who liked the current user
-    const [profileLikedCurrentUser, setProfileLikedCurrentUser] = useState([]) // returned array of whole profiles of people who liked the current user
-    const [matches, setMatches] = useState([]) // array of matches
-    const [profileMatches, setProfileMatches] = useState([]) // returned array of whole profiles of people who matched with the current user
+    
 
 
     useEffect(() => { // getting likes 
@@ -157,7 +156,7 @@ const Matching = () => {
         }
         getLikes();
 
-    }, []);
+    }, [matchrefresh]);
 
     //console.log(peopleLikedcurrentuser)
     
@@ -219,11 +218,11 @@ const Matching = () => {
       });
       setMatches(otherUserIds); 
     } catch (error) {
-      console.log(error.message);
+      console.log(error.message);               //      Something1
     }
   }
   getMatches();
-}, []);
+}, [matchrefresh]);
 
 
 
@@ -260,7 +259,51 @@ useEffect(() => { // getting the profiles of the people who matched with the cur
 
 }, [matches])
 
-console.log(profileMatches)
+///// MATCH LOGIC   ///// MATCH LOGIC   ///// MATCH LOGIC   ///// MATCH LOGIC   ///// MATCH LOGIC   
+
+
+
+const outOfFrame = ( direction, character) => { // Swipe logic
+      
+      
+  if(character){
+
+    if(direction === 'right') {
+      //console.log(`${character.firstname} was swiped right`)
+
+      const initiatingLike = async () => {
+        try {
+          const response = await fetch(`${getUserUrl}match/`, {
+            method: 'POST', 
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ userfromid: user._id, usertoid: character._id }), 
+          });
+          if (!response.ok) {
+            throw new Error(response.statusText)
+          }
+          const data = await response.json();
+          console.log(data);
+        } catch (error) {
+          console.log(error.message);
+        }
+      }
+      initiatingLike();
+      setMatchrefresh(prev => prev + 1); // too fast need to slow down 
+      
+
+    }
+    else if(direction === 'left') {
+      console.log(`${character.firstname} was swiped left`)
+    }
+    else {
+      console.log(`${character.firstname} PASSS Either up or down, will have to be pushed to the array as last element`)
+    }
+  }
+  
+
+}
 
 
     
@@ -277,9 +320,7 @@ console.log(profileMatches)
         </div>
         <InterestModal interestsModal={interestsModal} setInterestsModal={setInterestsModal} userid={user._id} />
         
-        
-        
-
+      
 
             <div>
                 {/* <NavIcons /> */}
@@ -297,7 +338,7 @@ console.log(profileMatches)
                           //onSwipe={(dir) => swiped(dir, character.firstname)} 
                           onSwipe={(dir) => swiped(dir, character.firstname, index)}
                          
-                         onCardLeftScreen={() => outOfFrame(character.firstname)}>
+                         onCardLeftScreen={(dir) => outOfFrame(dir,character)}>
 
                               <div style={{ backgroundImage: 'url(' + (character.profilePicture ? 
                                 serverPubicFolder + character.profilePicture : serverPubicFolder + "defaultProfile.png") + ')' }} className='card1'>
@@ -334,8 +375,14 @@ console.log(profileMatches)
 
 
           
-            {currentCharacter.firstname && (
-              <p>{currentCharacter.firstname}</p>
+            {currentCharacter ? (
+                currentCharacter.firstname ? (
+                  <p>{currentCharacter.firstname}</p>
+                ) : (
+                  <p>There is no more card at the moment.</p>
+                )
+              ) : (
+                <p>There are no more users at the moment.</p> // or another placeholder message until `currentCharacter` is defined
               )}
 
           
