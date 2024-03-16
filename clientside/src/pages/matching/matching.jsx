@@ -32,38 +32,27 @@ const Matching = () => {
     const [matches, setMatches] = useState([]) // array of matches
     const [profileMatches, setProfileMatches] = useState([]) // returned array of whole profiles of people who matched with the current user
     const [matchrefresh, setMatchrefresh] = useState(0) // refresh the matches
+    const [characterRefresh, setCharacterRefresh] = useState(0) // refresh the chararcters when the interests chagne
 
 
     
-    useEffect(() => {  // checking if there is any interest first
 
-        const getInterests = async () => {
-          try {
-            const response = await fetch(`${getUserUrl}userser/interests`, {
-              method: 'POST', // or 'PUT' if that's what your backend expects for this operation
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({ _id: user._id }), 
-            });
-            if (!response.ok) {
-              throw new Error(response.statusText)
-            }
-            const data = await response.json();
+    useEffect(() => { // first check if the user has the right amount of interests 
 
-            if(data.interests.length < 2 || data.interests.length > 5) { // if the criteria is not met
-              setInterestCriteria(false);
-              setInterestsModal(true); // if no interest the modal opens 
-              // rest of the logic like forcing to chose the interests    
-            } else {
-                setInterestCriteria(true);
-            }
-          } catch (error) {
-            console.log(error.message);
-          }
-        }
-        getInterests();
+      const interests = user.interests;
+      
+      if(interests.length < 2 || interests.length > 5) {
+        // if the interests are not met
+        setInterestCriteria(false); 
+        setInterestsModal(true);
+      } else {
+        setInterestCriteria(true);
+      }
+
     }, []);
+
+
+
 
 
     useEffect(() => {  
@@ -76,23 +65,44 @@ const Matching = () => {
 
 
 
-    const getCharacters = useEffect(() => { // getting all the users for now 
-        const getCharacters = async () => {
-          try {
+    const getCharacters = useEffect(() => { // getting all the users for now
+
+      const getAndSortCharacters = async () => {
+        try {
             const response = await fetch(`${getUserUrl}userser/`);
             if (!response.ok) {
-              throw new Error(response.statusText)
+                throw new Error(response.statusText);
             }
-            const data = await response.json();
-            //const reversedData = data.reverse(); // reverse the data to get the last user first
-            setCharacters(data);
-          } catch (error) {
-            console.log(error.message);
-          }
-        }
-        getCharacters(); // gets called when the page is loaded
-    }, []);
+            let data = await response.json();
 
+            // Function to calculate the number of shared interests
+            const calculateSharedInterests = (interests1, interests2) => {
+                return interests1.filter(interest => interests2.includes(interest)).length;
+            };
+
+            // Temporarily add similarity scores for sorting
+            const dataWithScores = data.map(character => ({
+              ...character,
+              similarityScore: calculateSharedInterests(user.interests, character.interests)
+          }));
+
+          // Sort characters based on their similarity scores
+          dataWithScores.sort((a, b) => b.similarityScore - a.similarityScore);
+
+          setCharacters(dataWithScores); // Including similarity scores for display
+      } catch (error) {
+          console.log(error.message);
+      }
+  };
+
+  getAndSortCharacters();
+
+}, [characterRefresh]); // it refreshes when the interest changes 
+
+
+// Log the sorted characters (for debugging)
+console.log(characters);
+  
 
 
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -316,9 +326,9 @@ const outOfFrame = ( direction, character) => { // Swipe logic
         {/* <div onClick={toggleMatches} style={{cursor: 'pointer'}}>Click Me</div> */}
 
         <div id='burger-menu-onpage'>
-          <BurgerMenu location={"matching"} userid={user._id} />
+          <BurgerMenu location={"matching"} userid={user._id} setCharacterRefresh={setCharacterRefresh} />
         </div>
-        <InterestModal interestsModal={interestsModal} setInterestsModal={setInterestsModal} userid={user._id} />
+        <InterestModal interestsModal={interestsModal} setInterestsModal={setInterestsModal} userid={user._id} setCharacterRefresh={setCharacterRefresh}/>
         
       
 
@@ -377,7 +387,7 @@ const outOfFrame = ( direction, character) => { // Swipe logic
           
             {currentCharacter ? (
                 currentCharacter.firstname ? (
-                  <p>{currentCharacter.firstname}</p>
+                  <p>{currentCharacter.firstname}, {currentCharacter.similarityScore}</p>
                 ) : (
                   <p>There is no more card at the moment.</p>
                 )

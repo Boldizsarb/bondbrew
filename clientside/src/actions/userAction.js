@@ -23,15 +23,5 @@ export const unfollowUser = (id, data)=> async(dispatch)=> {
     dispatch({type: "UNFOLLOW_USER", data: id})
     UserApi.unfollowUser(id, data)
 }
-/// addedd later
 
-// export const fetchUserDetails = (userId) => async (dispatch) => {
-//     try {
-//       const response = await UserApi.fetchUser(userId);
-//       dispatch({ type: "FETCH_USER_DETAILS_SUCCESS", user: response.data });
-//       return { success: true, user: response.data };
-//     } catch (error) {
-//       console.error("Error fetching user details:", error);
-//       return { success: false, error };
-//     }
-//   };
+

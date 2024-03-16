@@ -2,15 +2,18 @@ import { Modal, useMantineTheme } from "@mantine/core";
 import React, { useState, useEffect, useRef  } from "react";
 import interests from "../../data/interests.json";
 import "./interestModal.css";
+import {useDispatch, useSelector } from "react-redux";
+import { updateUser } from "../../actions/userAction.js";
 
 
-function InterestModal({ interestsModal, setInterestsModal,userid }) {
+function InterestModal({ interestsModal, setInterestsModal,userid, setCharacterRefresh }) {
 
     const theme = useMantineTheme();
     const [selectedInterests, setSelectedInterests] = useState([]);
     const { hobbies } = interests;
     const [ message, setMessage ] = useState(''); 
     const getUserUrl = process.env.REACT_APP_AXIOS_BASE_URL;
+    const dispatch = useDispatch();
 
   // need to retrive the users interests from the database
   useEffect(() => {
@@ -56,51 +59,34 @@ function InterestModal({ interestsModal, setInterestsModal,userid }) {
         });
     };
 
-    const handleSubmittion = () => { // submit the interests
+ 
+
+  const handleSubmittion = () => { // redux updating the interests
+    if (selectedInterests.length < 2) {
+        setMessage('You need to select at least two interests');
+    } else if (selectedInterests.length > 5) {
+        setMessage('You can only select a maximum of five interests');
+    } else {
+        setMessage('');
+        // form data for the update including only the updated attributes
+        const formData = {
+            interests: selectedInterests,
+        };
+        dispatch(updateUser(userid, formData))
+            .then(() => {
+                alert('Interests updated successfully');
+                setInterestsModal(false); 
+                setCharacterRefresh((prev) => prev + 1) // callback to refresh the characters
+            })
+            .catch((error) => {
+                console.error('Error updating interests:', error.message);
+                setMessage('Failed to update interests. Please try again.');
+            });
+    }
+};
 
 
-        if(selectedInterests.length < 2) {
-            setMessage('You need to select at least two interests');
-        } else if(selectedInterests.length > 5) {
-            setMessage('You can only select a maximum of five interests');
-        } else {
-            setMessage('');
-            
-            const updateInterests = async () => {
-              try {
-                const response = await fetch(`${getUserUrl}userser/interestupdate`, {
-                  method: 'PUT', 
-                  headers: {
-                    'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify({ _id: userid, interests: selectedInterests }),
-                });
-  
-                if (!response.ok) {
-                  throw new Error('Failed to update interests');
-                }
-                
-                const data = await response.json();
-                console.log(data);
-                setMessage('Interests updated successfully');
-                setInterestsModal(false);
-              } catch (error) {
-                console.error(error.message);
-                setMessage('An error occurred');
-              }
-          };
-  
-           updateInterests();
-      }
-  }
-
-
-     //console.log(userid)
-    
-
-    
-
-
+     
 
     return (
 
@@ -182,3 +168,43 @@ function InterestModal({ interestsModal, setInterestsModal,userid }) {
 
 
 export default InterestModal;
+
+
+
+ //   const handleSubmittion = () => { // submit the interests with fetch
+
+
+  //       if(selectedInterests.length < 2) {
+  //           setMessage('You need to select at least two interests');
+  //       } else if(selectedInterests.length > 5) {
+  //           setMessage('You can only select a maximum of five interests');
+  //       } else {
+  //           setMessage('');
+            
+  //           const updateInterests = async () => {
+  //             try {
+  //               const response = await fetch(`${getUserUrl}userser/interestupdate`, {
+  //                 method: 'PUT', 
+  //                 headers: {
+  //                   'Content-Type': 'application/json',
+  //                 },
+  //                 body: JSON.stringify({ _id: userid, interests: selectedInterests }),
+  //               });
+  
+  //               if (!response.ok) {
+  //                 throw new Error('Failed to update interests');
+  //               }
+                
+  //               const data = await response.json();
+  //               console.log(data);
+  //               setMessage('Interests updated successfully');
+  //               setInterestsModal(false);
+  //             } catch (error) {
+  //               console.error(error.message);
+  //               setMessage('An error occurred');
+  //             }
+  //         };
+  
+  //          updateInterests();
+  //     }
+  // }

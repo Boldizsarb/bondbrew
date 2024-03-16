@@ -3,7 +3,9 @@ import { Modal, useMantineTheme } from "@mantine/core";
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { getUserLocation } from "../../middlewares/geoLocation.js";
-import { useSelector } from "react-redux";
+import {useDispatch, useSelector } from "react-redux";
+import { updateUser } from "../../actions/userAction.js";
+
 
 
 
@@ -21,37 +23,60 @@ function SetLocation ({locationModal, setLocationModal,userid}){
     const [message, setMessage] = useState(''); // message
 
     const { user } = useSelector((state) => state.authReducer.authData);
+    const dispatch = useDispatch();
 
     const handleCityChange = (event) => {
         setCity(event.target.value); // Update the city state with the new value
     };
 
-    const handlesubmission = async () => {
+    // const handlesubmission = async () => { // fetching but it is slow
 
-        if(city === '') {
+    //     if(city === '') {
+    //         setMessage('Please enter a city');
+    //         return;
+    //     }
+
+    //     try {
+    //         const response = await fetch(`${getUserUrl}userser/locationupdate`, {
+    //             method: 'PUT',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //             },
+    //             body: JSON.stringify({ _id: userid, livesin: city }), 
+    //         });
+    //         if (!response.ok) {
+    //             throw new Error(response.statusText)
+    //         }
+    //        alert('Location updated');
+    //        setLocationModal(false);
+    //     } catch (error) {
+    //         console.log(error.message);
+    //     }
+    // }
+    
+    
+    const handlesubmission = () => { // redux is instant 
+        if (city === '') {
             setMessage('Please enter a city');
             return;
         }
 
-        try {
-            const response = await fetch(`${getUserUrl}userser/locationupdate`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ _id: userid, livesin: city }), 
+        // Prepare the formData for location update
+        const formData = {
+            livesin: city
+        };
+
+        // Dispatch the updateUser action with the userid and formData
+        dispatch(updateUser(userid, formData))
+            .then(() => {
+                alert('Location updated successfully');
+                setLocationModal(false); // Close the modal after successful update
+            })
+            .catch((error) => {
+                console.error('Error updating location:', error.message);
+                setMessage('Failed to update location. Please try again.');
             });
-            if (!response.ok) {
-                throw new Error(response.statusText)
-            }
-           alert('Location updated');
-           setLocationModal(false);
-        } catch (error) {
-            console.log(error.message);
-        }
-    }
-    
-    
+    };
 
 
 

@@ -11,7 +11,7 @@ import SetLocation from "../setLocation/setLocationModal";
 
 
 
-const BurgerMenu = ({location,userid}) => {
+const BurgerMenu = ({location,userid,setCharacterRefresh}) => {
 
 
     const [isOpen, setIsOpen] = useState(false); // menu options visible
@@ -96,7 +96,7 @@ const BurgerMenu = ({location,userid}) => {
 
                     
                     <h3 style={{cursor:"pointer"}} onClick={handleInterestClick}> Set Interests</h3>
-                    <InterestModal interestsModal={interestsModal} setInterestsModal={setInterestsModal} userid={userid} />
+                    <InterestModal interestsModal={interestsModal} setInterestsModal={setInterestsModal} userid={userid} setCharacterRefresh={setCharacterRefresh}/>
                     <h3 style={{cursor:"pointer"}} onClick={handleLocationClick}> Set Location</h3>
                     <SetLocation locationModal={locationModal} setLocationModal={setLocationModal} userid={userid} />
 
