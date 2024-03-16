@@ -36,7 +36,10 @@ export const getPlans = async (req, res) => {
 
 export const getLimitedPlans = async (req, res) => {
   try {
-    const plans = await PlanModel.find();
+    //const plans = await PlanModel.find();
+    const plans = await PlanModel.aggregate([ // getting 7 random plans
+      { $sample: { size: 7 } }
+    ]);
     res.status(200).json(plans);
   } catch (error) {
     res.status(500).json(error);
