@@ -12,6 +12,7 @@ import { updateUser } from "../../actions/userAction.js";
 
 
 
+
 function SetLocation ({locationModal, setLocationModal,userid}){
 
     const theme = useMantineTheme();
@@ -20,50 +21,41 @@ function SetLocation ({locationModal, setLocationModal,userid}){
     const [useCurrentLocation, setUseCurrentLocation] = useState(false); // permission
     const [finalLocation, setFinalLocation] = useState({ lat: 50.92608620744581, lng: -1.4339711201693437});
     const [city, setCity] = useState(''); // city name
-    const [message, setMessage] = useState(''); // message
+
 
     const { user } = useSelector((state) => state.authReducer.authData);
     const dispatch = useDispatch();
+    const [userLocation, setUserLocation] = useState({latitude: 50.92608620744581, longitude:-1.4339711201693437});
 
-    const handleCityChange = (event) => {
-        setCity(event.target.value); // Update the city state with the new value
-    };
+    // const handleCityChange = (event) => {
+    //     setCity(event.target.value); // Update the city state with the new value
+    // };
 
-    // const handlesubmission = async () => { // fetching but it is slow
 
-    //     if(city === '') {
-    //         setMessage('Please enter a city');
-    //         return;
-    //     }
+    useEffect(() => { // current location
+        getUserLocation().then(({ latitude, longitude }) => {
+            setUserLocation({latitude:latitude, longitude:longitude})
+        })
 
-    //     try {
-    //         const response = await fetch(`${getUserUrl}userser/locationupdate`, {
-    //             method: 'PUT',
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //             },
-    //             body: JSON.stringify({ _id: userid, livesin: city }), 
-    //         });
-    //         if (!response.ok) {
-    //             throw new Error(response.statusText)
-    //         }
-    //        alert('Location updated');
-    //        setLocationModal(false);
-    //     } catch (error) {
-    //         console.log(error.message);
-    //     }
-    // }
+    }, []);
+
+    //console.log(userLocation);
+
+   
     
     
     const handlesubmission = () => { // redux is instant 
-        if (city === '') {
-            setMessage('Please enter a city');
-            return;
-        }
+        // if (city === '') {
+        //     setCity(user.livesin);
+        //     //setMessage('Please enter a city');
+        //     return;
+        // }
 
         // Prepare the formData for location update
         const formData = {
-            livesin: city
+         //   livesin: city,
+            lat: userLocation.latitude,
+            long: userLocation.longitude
         };
 
         // Dispatch the updateUser action with the userid and formData
@@ -74,7 +66,7 @@ function SetLocation ({locationModal, setLocationModal,userid}){
             })
             .catch((error) => {
                 console.error('Error updating location:', error.message);
-                setMessage('Failed to update location. Please try again.');
+               // setMessage('Failed to update location. Please try again.');
             });
     };
 
@@ -98,13 +90,12 @@ function SetLocation ({locationModal, setLocationModal,userid}){
                 onClose={() => setLocationModal(false)}
         > 
             <div>
-                <h3 style={{color:"red"}}>{message}</h3>
-                <h2>Your location</h2>
+                <h3>The application needs to use your location to work efficiently!</h3>
                 <div >
-                    <input style={{width:"80%"}} className="infoInput" type="text" placeholder={user.livesin} onChange={handleCityChange}/>
+                  
                     
                 </div>
-                <button className="button infoButton" onClick={handlesubmission}>Submit</button>
+                <button className="button infoButton" onClick={handlesubmission}>Allow</button>
                 
                 
             </div>
@@ -116,3 +107,30 @@ function SetLocation ({locationModal, setLocationModal,userid}){
 }
 
 export default SetLocation;
+
+ //  <input style={{width:"80%"}} className="infoInput" type="text" placeholder={user.livesin} onChange={handleCityChange}/>
+
+ // const handlesubmission = async () => { // fetching but it is slow
+
+    //     if(city === '') {
+    //         setMessage('Please enter a city');
+    //         return;
+    //     }
+
+    //     try {
+    //         const response = await fetch(`${getUserUrl}userser/locationupdate`, {
+    //             method: 'PUT',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //             },
+    //             body: JSON.stringify({ _id: userid, livesin: city }), 
+    //         });
+    //         if (!response.ok) {
+    //             throw new Error(response.statusText)
+    //         }
+    //        alert('Location updated');
+    //        setLocationModal(false);
+    //     } catch (error) {
+    //         console.log(error.message);
+    //     }
+    // }

@@ -5,9 +5,12 @@ import TinderCard from 'react-tinder-card';
 import LeftArrow from '../../img/arrow_left.png';
 import RightArrow from '../../img/arrow_right.png';
 import BurgerMenu from '../../components/burgerMenu/burgerMenu';
-import { useSelector } from "react-redux";
+import {useDispatch, useSelector } from "react-redux";
 import InterestModal from '../../components/interestsModal/interestsModal';
 import User from '../../components/user/user';
+import { getUserLocation } from '../../middlewares/geoLocation';
+import { updateUser } from '../../actions/userAction';
+import SetLocation from '../../components/setLocation/setLocationModal';
 
 
 
@@ -23,6 +26,7 @@ const Matching = () => {
     const [characters, setCharacters] = useState([]) // array of all people
     const getUserUrl = process.env.REACT_APP_AXIOS_BASE_URL;
     const serverPubicFolder = process.env.REACT_APP_PUBLIC_FOLDER;
+    const dispatch = useDispatch();
     const { user } = useSelector((state) => state.authReducer.authData); // user data 
     const [interestCriteria, setInterestCriteria] = useState(false) 
     const [interestsModal, setInterestsModal] = useState(false); // modal for interests
@@ -33,6 +37,7 @@ const Matching = () => {
     const [profileMatches, setProfileMatches] = useState([]) // returned array of whole profiles of people who matched with the current user
     const [matchrefresh, setMatchrefresh] = useState(0) // refresh the matches
     const [characterRefresh, setCharacterRefresh] = useState(0) // refresh the chararcters when the interests chagne
+    const [locationModal, setLocationModal] = useState(false);
 
 
     
@@ -40,7 +45,7 @@ const Matching = () => {
     useEffect(() => { // first check if the user has the right amount of interests 
 
       const interests = user.interests;
-      
+
       if(interests.length < 2 || interests.length > 5) {
         // if the interests are not met
         setInterestCriteria(false); 
@@ -51,21 +56,38 @@ const Matching = () => {
 
     }, []);
 
+    useEffect(() => { // getting the location of the user
 
-
-
-
-    useEffect(() => {  
-        if(!interestCriteria) {
-           // need to set the interest modal open!!!!!!!!!!!!
+      if(user.lat == null && user.long == null) { 
+       setLocationModal(true);
         }
-    }, [interestCriteria]);
+    }, [locationModal]); // will not close the modal until the user allowed location 
+    
+
+    ////// distence score: /// distence score: /// distence score: /// distence score: 
+   
+    const maxEffectiveDistance = 100; // Maximum distance for scoring (e.g., 100 km)
+    const defaultProximityScore = 0;
+
+    const haversineDistance = (lat1, lon1, lat2, lon2) => {
+      const R = 6371; // Earth's radius in km
+      const dLat = (lat2 - lat1) * (Math.PI / 180);
+      const dLon = (lon2 - lon1) * (Math.PI / 180);
+      const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) * 
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      const distance = R * c; // Distance in km
+      return distance;
+  };
+
+                                              //   50.941113093474044, -1.2950628439378966
+
+ 
 
 
 
-
-
-    const getCharacters = useEffect(() => { // getting all the users for now
+    const getCharacters = useEffect(() => { // getting users and sorting them
 
       const getAndSortCharacters = async () => {
         try {
@@ -75,21 +97,32 @@ const Matching = () => {
             }
             let data = await response.json();
 
-            // Function to calculate the number of shared interests
-            const calculateSharedInterests = (interests1, interests2) => {
-                return interests1.filter(interest => interests2.includes(interest)).length;
-            };
+            // intrests score: 
+            const dataWithScores = data.map(character => {
+              const sharedInterestsCount = user.interests.filter(interest => character.interests.includes(interest)).length;
+              const interestsScore = (sharedInterestsCount / Math.max(user.interests.length, 5)) * 70; // adjusting scrore extent
 
-            // Temporarily add similarity scores for sorting
-            const dataWithScores = data.map(character => ({
-              ...character,
-              similarityScore: calculateSharedInterests(user.interests, character.interests)
-          }));
 
-          // Sort characters based on their similarity scores
+              // calculating proximity score 
+              let proximityScore = defaultProximityScore;
+              if (user.lat && user.long  && character.lat && character.long) {
+                  const distance = haversineDistance(user.lat, user.long, character.lat, character.long);
+                  proximityScore = Math.max(0, (1 - distance / maxEffectiveDistance)) * 30; //normalizing it to 50%
+                  
+              }
+
+              return {
+                  ...character,
+                  similarityScore: interestsScore + proximityScore,
+                  interestsScore: interestsScore,
+                  proximityScore: proximityScore,
+              };
+          });
+
+          // Sort characters by their total similarity score
           dataWithScores.sort((a, b) => b.similarityScore - a.similarityScore);
 
-          setCharacters(dataWithScores); // Including similarity scores for display
+          setCharacters(dataWithScores);
       } catch (error) {
           console.log(error.message);
       }
@@ -329,6 +362,7 @@ const outOfFrame = ( direction, character) => { // Swipe logic
           <BurgerMenu location={"matching"} userid={user._id} setCharacterRefresh={setCharacterRefresh} />
         </div>
         <InterestModal interestsModal={interestsModal} setInterestsModal={setInterestsModal} userid={user._id} setCharacterRefresh={setCharacterRefresh}/>
+        <SetLocation locationModal={locationModal} setLocationModal={setLocationModal} userid={user._id} />
         
       
 
@@ -387,7 +421,7 @@ const outOfFrame = ( direction, character) => { // Swipe logic
           
             {currentCharacter ? (
                 currentCharacter.firstname ? (
-                  <p>{currentCharacter.firstname}, {currentCharacter.similarityScore}</p>
+                  <p>{currentCharacter.firstname}, {currentCharacter.similarityScore}, proximity: {currentCharacter.proximityScore}, interest: {currentCharacter.interestsScore}</p>
                 ) : (
                   <p>There is no more card at the moment.</p>
                 )
