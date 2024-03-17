@@ -17,6 +17,7 @@ import SetLocation from '../../components/setLocation/setLocationModal';
 
 
 
+
 const Matching = () => {    
 
 
@@ -38,6 +39,7 @@ const Matching = () => {
     const [matchrefresh, setMatchrefresh] = useState(0) // refresh the matches
     const [characterRefresh, setCharacterRefresh] = useState(0) // refresh the chararcters when the interests chagne
     const [locationModal, setLocationModal] = useState(false);
+    const [passedCharacters, setPassedCharacters] = useState([]); // array of passed characters
 
 
     
@@ -66,10 +68,10 @@ const Matching = () => {
 
     ////// distence score: /// distence score: /// distence score: /// distence score: 
    
-    const maxEffectiveDistance = 100; // Maximum distance for scoring (e.g., 100 km)
+    const maxEffectiveDistance = 100; // maximum distance 
     const defaultProximityScore = 0;
 
-    const haversineDistance = (lat1, lon1, lat2, lon2) => {
+    const haversineDistance = (lat1, lon1, lat2, lon2) => { // calculating the distance between two points
       const R = 6371; // Earth's radius in km
       const dLat = (lat2 - lat1) * (Math.PI / 180);
       const dLon = (lon2 - lon1) * (Math.PI / 180);
@@ -80,12 +82,9 @@ const Matching = () => {
       const distance = R * c; // Distance in km
       return distance;
   };
-
                                               //   50.941113093474044, -1.2950628439378966
 
- 
-
-
+  
 
     const getCharacters = useEffect(() => { // getting users and sorting them
 
@@ -97,8 +96,30 @@ const Matching = () => {
             }
             let data = await response.json();
 
+            //console.log(`Before extracting ${data.length}`); // debugging
+            //// before the calulation, some users needs to be filtered out.
+            let neededExtracting = [];
+
+            const populatingNeededExtracting = async () => { // getting the ids that needs to be extracted
+              const anotherResponse = await fetch(`${getUserUrl}match/extractmatches`, {
+                method: 'POST', 
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userid: user._id }), 
+              });
+                const data = await anotherResponse.json();
+                neededExtracting = data;
+            }
+            await populatingNeededExtracting(); // needed to be a promise otherwise it would be too fast
+            //console.log(neededExtracting); // debugging
+            neededExtracting.push(user._id); // extracting the user itself
+            // now extracting the users from the data
+            const filteredData = data.filter(character => !neededExtracting.includes(character._id));
+            //console.log(`After extracting ${filteredData.length}`); // debugging
+
             // intrests score: 
-            const dataWithScores = data.map(character => {
+            const dataWithScores = filteredData.map(character => {
               const sharedInterestsCount = user.interests.filter(interest => character.interests.includes(interest)).length;
               const interestsScore = (sharedInterestsCount / Math.max(user.interests.length, 5)) * 70; // adjusting scrore extent
 
@@ -119,7 +140,7 @@ const Matching = () => {
               };
           });
 
-          // Sort characters by their total similarity score
+          // sorting all characters based on similarity score
           dataWithScores.sort((a, b) => b.similarityScore - a.similarityScore);
 
           setCharacters(dataWithScores);
@@ -134,7 +155,7 @@ const Matching = () => {
 
 
 // Log the sorted characters (for debugging)
-console.log(characters);
+//console.log(characters);
   
 
 
@@ -178,6 +199,8 @@ console.log(characters);
     useEffect(() => { // getting likes 
 
         const getLikes = async () => {
+          setProfileLikedCurrentUser([]); // reset the array
+          setPeopleLikedcurrentuser([]); // reset the array
           try {
             const response = await fetch(`${getUserUrl}match/getlikes`, {
               method: 'POST', 
@@ -199,7 +222,7 @@ console.log(characters);
         }
         getLikes();
 
-    }, [matchrefresh]);
+    }, [matches]);
 
     //console.log(peopleLikedcurrentuser)
     
@@ -300,7 +323,7 @@ useEffect(() => { // getting the profiles of the people who matched with the cur
   };
   getProfiles();
 
-}, [matches])
+}, [matches,matchrefresh])
 
 ///// MATCH LOGIC   ///// MATCH LOGIC   ///// MATCH LOGIC   ///// MATCH LOGIC   ///// MATCH LOGIC   
 
@@ -311,7 +334,7 @@ const outOfFrame = ( direction, character) => { // Swipe logic
       
   if(character){
 
-    if(direction === 'right') {
+    if(direction === 'right') { // right --> like
       //console.log(`${character.firstname} was swiped right`)
 
       const initiatingLike = async () => {
@@ -332,26 +355,56 @@ const outOfFrame = ( direction, character) => { // Swipe logic
           console.log(error.message);
         }
       }
-      initiatingLike();
-      setMatchrefresh(prev => prev + 1); // too fast need to slow down 
-      
+      initiatingLike().then(() => {
+        setMatchrefresh(prev => prev + 1); // this way it will refresh when the response is back
+      });
+    }
 
+    else if(direction === 'left') { // left --> dislike
+      //console.log(`${character.firstname} was swiped left`)
+      const initiatingDislike = async () => {
+        try {
+          const response = await fetch(`${getUserUrl}match/dislike`, {
+            method: 'POST', 
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ userfromid: user._id, usertoid: character._id }), 
+          });
+          if (!response.ok) {
+            throw new Error(response.statusText)
+          }
+          const data = await response.json();
+          console.log(data);
+        } catch (error) {
+          console.log(error.message);
+        }
+      }
+      initiatingDislike();
     }
-    else if(direction === 'left') {
-      console.log(`${character.firstname} was swiped left`)
-    }
-    else {
-      console.log(`${character.firstname} PASSS Either up or down, will have to be pushed to the array as last element`)
+
+    else { // up or down --> pass
+      //console.log(`${character.firstname} PASSS Either up or down, will have to be pushed to the array as last element`)
+      setPassedCharacters(prev => [...prev, character]);
+      
     }
   }
   
+}
+//console.log(passedCharacters)
 
+
+const handlePassedList = () => { // changing the passed characters to the current characters
+  setCharacters(prev => [...prev, ...passedCharacters]);
+  setPassedCharacters([]);
 }
 
 
-    
-    
 
+
+
+
+                                       // 65.74252226971046, -176.03167362949762
 
     return (
         <>
@@ -364,7 +417,7 @@ const outOfFrame = ( direction, character) => { // Swipe logic
         <InterestModal interestsModal={interestsModal} setInterestsModal={setInterestsModal} userid={user._id} setCharacterRefresh={setCharacterRefresh}/>
         <SetLocation locationModal={locationModal} setLocationModal={setLocationModal} userid={user._id} />
         
-      
+                                        
 
             <div>
                 {/* <NavIcons /> */}
@@ -377,7 +430,7 @@ const outOfFrame = ( direction, character) => { // Swipe logic
                     </div>
                 <div className='cardContainer1'>
 
-                {characters.slice().reverse().map((character, index) =>
+                  {characters.slice().reverse().map((character, index) =>
                         <TinderCard className='swipe' key={character.firstname}
                           //onSwipe={(dir) => swiped(dir, character.firstname)} 
                           onSwipe={(dir) => swiped(dir, character.firstname, index)}
@@ -398,7 +451,7 @@ const outOfFrame = ( direction, character) => { // Swipe logic
                   <div className='matches-container'>
                     <h1 className='matchesh1'>Matches ({profileMatches.length})</h1>
                     {profileMatches.map((person, id) => (
-                      <User person={person} key={id} location={"matching"}/>
+                      <User person={person} key={id} location={"matched"}/>
                       ))}
               
                     
@@ -407,7 +460,7 @@ const outOfFrame = ( direction, character) => { // Swipe logic
                   <div className='likes-container'>
                     <h1 className='matchesh1'>Likes ({profileLikedCurrentUser.length})</h1>
                     {profileLikedCurrentUser.map((person, id) => (
-                      <User person={person} key={id} location={"matching"}/>
+                      <User person={person} key={id} location={"matching"} />
                       ))}
                     
 
@@ -417,16 +470,36 @@ const outOfFrame = ( direction, character) => { // Swipe logic
 
             </div>
 
-
           
             {currentCharacter ? (
                 currentCharacter.firstname ? (
-                  <p>{currentCharacter.firstname}, {currentCharacter.similarityScore}, proximity: {currentCharacter.proximityScore}, interest: {currentCharacter.interestsScore}</p>
+                  <div className='currentCharacter-info'>
+                     <p>Total similarity {currentCharacter.similarityScore.toFixed(2)} % 
+                     (Interest: {currentCharacter.interestsScore.toFixed(2)}% , Proximity: {currentCharacter.proximityScore.toFixed(2)}% ) </p>
+                     {currentCharacter.livesin && ( 
+                     <p>{currentCharacter.firstname} stays at: {currentCharacter.livesin}</p>
+                      )}
+                  
+                     
+                  </div>
+                 
+                  
+                  
                 ) : (
                   <p>There is no more card at the moment.</p>
                 )
-              ) : (
-                <p>There are no more users at the moment.</p> // or another placeholder message until `currentCharacter` is defined
+              ) : ( // if there no more cards
+               <div>
+                 <p>There are no more users at the moment.</p> 
+                 {passedCharacters.length > 0 && (
+                  <div className='passed-list'>
+                    <p>Would you like to take a second look on the passed users?</p>
+                    <button className="button infoButton" onClick={handlePassedList}>Yes</button>
+                  </div>
+                 )}
+                 
+               </div>
+                
               )}
 
           

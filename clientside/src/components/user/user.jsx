@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 const User = ({ person, location }) => {
 
   const serverPubicFolder = process.env.REACT_APP_PUBLIC_FOLDER;
+  const getUserUrl = process.env.REACT_APP_AXIOS_BASE_URL;
   const { user } = useSelector((state) => state.authReducer.authData);
   const dispatch = useDispatch()
   const navigate = useNavigate();
@@ -35,6 +36,39 @@ const User = ({ person, location }) => {
     return <div>No user to display</div>;
   }
 
+  const handlelikeclick = async () => { // message button in the matched page 
+    const receiverId = person._id;
+    const senderId = user._id;
+    try
+  {   // cheking if the chat exists first then creating a new chat if it does not
+      const chatExist = await fetch(`${getUserUrl}chat/find/${senderId}/${receiverId}`)
+      if (!chatExist.ok) {
+        //console.log("chat does not exist");
+        const responseCreatechat = await fetch(`${getUserUrl}chat`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ senderId, receiverId }),
+
+          });
+
+          if (!responseCreatechat.ok) {
+            console.log("error creating chat");
+          }else{
+            console.log("chat created");
+            navigate('/chat');
+          }
+      }else{
+       // console.log("chat exists");
+        navigate('/chat');
+      }
+    }catch(error){
+      console.log(error.message);
+    }
+
+  }
+
   return (
     <div>
     <div className="follower">
@@ -48,7 +82,7 @@ const User = ({ person, location }) => {
           <span>{person.lastname.charAt(0).toUpperCase() + person.lastname.slice(1)}</span>
         </div>
       </div>
-      {location !== "plan" && location !== "matching" && (
+      {location !== "plan" && location !== "matching" && location !== "matched" && (
       <button
         className={
           following ? "button fc-button UnfollowButton" : "button fc-button"
@@ -58,6 +92,9 @@ const User = ({ person, location }) => {
         {following ? "Unfollow" : "Follow"}
       </button>
        )}
+       {location === "matched" && (
+        <button className="button" onClick={handlelikeclick}>Message</button>
+        )}
       
     </div>
     <hr

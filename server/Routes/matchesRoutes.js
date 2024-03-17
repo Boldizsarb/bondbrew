@@ -1,5 +1,5 @@
 import express from "express";
-import {createLike, getLikes, getMatches} from "../Controllers/matchesController.js";
+import {createLike, getLikes, getMatches, createDislike, extractMatches} from "../Controllers/matchesController.js";
 
 const router = express.Router();
 
@@ -9,6 +9,8 @@ const router = express.Router();
 router.post('/', createLike);
 router.post('/getlikes', getLikes);
 router.post('/getmatches', getMatches);
+router.post('/dislike', createDislike);
+router.post('/extractmatches', extractMatches);
 
 
 
