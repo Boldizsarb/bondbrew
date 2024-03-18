@@ -7,11 +7,13 @@ import Comment from "../../img/chat.png";
 import Plan from "../../img/plan.png";
 import InterestModal from "../interestsModal/interestsModal";
 import SetLocation from "../setLocation/setLocationModal";
+import SetRadius from "../interestsModal/radiousModal";
 
 
 
 
-const BurgerMenu = ({location,userid,setCharacterRefresh}) => {
+
+const BurgerMenu = ({location,userid,setCharacterRefresh,setRadiusModal}) => {
 
 
     const [isOpen, setIsOpen] = useState(false); // menu options visible
@@ -19,6 +21,7 @@ const BurgerMenu = ({location,userid,setCharacterRefresh}) => {
     const checkboxRef = useRef(null);
     const [interestsModal, setInterestsModal] = useState(false); // modal for interests
     const [locationModal, setLocationModal] = useState(false); // modal for location
+    //const [radiusModal, setRadiusModal] = useState(false); // modal for radius
     
 
     const handleCheckboxChange = () => { // menu options visible 
@@ -44,6 +47,11 @@ const BurgerMenu = ({location,userid,setCharacterRefresh}) => {
         checkboxRef.current.checked = false; 
         setIsOpen(false);
         setLocationModal(true);
+    }
+    const handleRadiousClick = () => {
+        checkboxRef.current.checked = false;
+        setIsOpen(false);
+        setRadiusModal(true);
     }
 
 
@@ -97,8 +105,13 @@ const BurgerMenu = ({location,userid,setCharacterRefresh}) => {
                     
                     <h3 style={{cursor:"pointer"}} onClick={handleInterestClick}> Set Interests</h3>
                     <InterestModal interestsModal={interestsModal} setInterestsModal={setInterestsModal} userid={userid} setCharacterRefresh={setCharacterRefresh}/>
+
                     <h3 style={{cursor:"pointer"}} onClick={handleLocationClick}> Set Location</h3>
                     <SetLocation locationModal={locationModal} setLocationModal={setLocationModal} userid={userid} />
+
+                    <h3 style={{cursor:"pointer"}} onClick={handleRadiousClick}>Set Radius</h3>
+                   
+
 
                 </div>
                )}

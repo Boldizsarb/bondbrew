@@ -148,3 +148,14 @@ export const getPlanByTitle = async (req, res) => {
     res.status(500).json(error);
   }
 }
+
+export const getPlansByUser = async (req, res) => {
+  const userId = req.params.id;
+  try {
+    const plans = await PlanModel.find({ userId: userId });
+    res.status(200).json(plans);
+  }
+  catch (error) {
+    res.status(500).json(error);
+  }
+}

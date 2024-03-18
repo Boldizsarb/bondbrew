@@ -11,6 +11,8 @@ import User from '../../components/user/user';
 import { getUserLocation } from '../../middlewares/geoLocation';
 import { updateUser } from '../../actions/userAction';
 import SetLocation from '../../components/setLocation/setLocationModal';
+import PlanSearch from "../../components/planComponents/planSearch"
+import SetRadius from '../../components/interestsModal/radiousModal';
 
 
 
@@ -40,9 +42,11 @@ const Matching = () => {
     const [characterRefresh, setCharacterRefresh] = useState(0) // refresh the chararcters when the interests chagne
     const [locationModal, setLocationModal] = useState(false);
     const [passedCharacters, setPassedCharacters] = useState([]); // array of passed characters
+    const [radiusModal, setRadiusModal] = useState(false); // modal for radius
 
 
     
+
 
     useEffect(() => { // first check if the user has the right amount of interests 
 
@@ -68,7 +72,8 @@ const Matching = () => {
 
     ////// distence score: /// distence score: /// distence score: /// distence score: 
    
-    const maxEffectiveDistance = 100; // maximum distance 
+    const[ maxEffectiveDistance, setmaxEffectiveDistance] = useState(100) // maximum distance 
+
     const defaultProximityScore = 0;
 
     const haversineDistance = (lat1, lon1, lat2, lon2) => { // calculating the distance between two points
@@ -82,7 +87,7 @@ const Matching = () => {
       const distance = R * c; // Distance in km
       return distance;
   };
-                                              //   50.941113093474044, -1.2950628439378966
+                                              //   58.39812011305686, -4.549174927709644
 
   
 
@@ -151,7 +156,7 @@ const Matching = () => {
 
   getAndSortCharacters();
 
-}, [characterRefresh]); // it refreshes when the interest changes 
+}, [characterRefresh,maxEffectiveDistance]); // it refreshes when the interest changes 
 
 
 // Log the sorted characters (for debugging)
@@ -398,13 +403,44 @@ const handlePassedList = () => { // changing the passed characters to the curren
   setCharacters(prev => [...prev, ...passedCharacters]);
   setPassedCharacters([]);
 }
+const [userPlans, setUserPlans] = useState([]); // array of user's plans
+
+
+useEffect(() => { // users plans if there is any
+
+  const getPlans = async (characterid) => {
+    try {
+      const response = await fetch(`${getUserUrl}plan/user/${currentCharacter._id}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+      const data = await response.json();
+      // console.log(data);
+      setUserPlans(data);
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
+  getPlans();
+
+}, [currentCharacter]);
+
+//console.log(maxEffectiveDistance)
 
 
 
 
 
 
-                                       // 65.74252226971046, -176.03167362949762
+
+
+                                       // 57.656079684905116, -5.082789149478023
 
     return (
         <>
@@ -412,10 +448,11 @@ const handlePassedList = () => { // changing the passed characters to the curren
         {/* <div onClick={toggleMatches} style={{cursor: 'pointer'}}>Click Me</div> */}
 
         <div id='burger-menu-onpage'>
-          <BurgerMenu location={"matching"} userid={user._id} setCharacterRefresh={setCharacterRefresh} />
+          <BurgerMenu location={"matching"} userid={user._id} setCharacterRefresh={setCharacterRefresh} setRadiusModal={setRadiusModal}  />
         </div>
         <InterestModal interestsModal={interestsModal} setInterestsModal={setInterestsModal} userid={user._id} setCharacterRefresh={setCharacterRefresh}/>
         <SetLocation locationModal={locationModal} setLocationModal={setLocationModal} userid={user._id} />
+        <SetRadius radiusModal={radiusModal} setRadiusModal={setRadiusModal} maxEffectiveDistance={maxEffectiveDistance} setmaxEffectiveDistance={setmaxEffectiveDistance} />
         
                                         
 
@@ -474,11 +511,28 @@ const handlePassedList = () => { // changing the passed characters to the curren
             {currentCharacter ? (
                 currentCharacter.firstname ? (
                   <div className='currentCharacter-info'>
-                     <p>Total similarity {currentCharacter.similarityScore.toFixed(2)} % 
-                     (Interest: {currentCharacter.interestsScore.toFixed(2)}% , Proximity: {currentCharacter.proximityScore.toFixed(2)}% ) </p>
+                     <p>Total similarity {currentCharacter.similarityScore.toFixed(2)} % <span className='matching-percentage' >
+                     (Interest: {currentCharacter.interestsScore.toFixed(2)}% , Proximity: {currentCharacter.proximityScore.toFixed(2)}% )</span> </p>
+
                      {currentCharacter.livesin && ( 
                      <p>{currentCharacter.firstname} stays at: {currentCharacter.livesin}</p>
                       )}
+                      {currentCharacter. mostinterestedin && (
+                        <p>Most interested in: {currentCharacter.mostinterestedin}</p>
+                      )}
+
+
+                        {userPlans && Array.isArray(userPlans) &&userPlans.length > 0 ? (
+                          <>
+                          <p>Has active {userPlans.length} plan(s):</p> {/* This <p> tag is now inside the condition and will only show if there are plans */}
+                          {userPlans.map((plan, index) => (
+                              <PlanSearch key={index} plan={plan} location={"matching"}/>
+                          ))}
+                        </>
+                        ) : (
+                          <span>Has no active plans</span> // if there is no user returned 
+                        )}
+
                   
                      
                   </div>

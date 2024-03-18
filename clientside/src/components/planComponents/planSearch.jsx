@@ -11,7 +11,7 @@ const PlanSearch = ({plan, onPlanSelect, location}) => {
    // console.log(location)
 
     const handleCurrentPlan = () => {
-        if (location === "trend") {
+        if (location === "trend" || location === "matching") {
             navigate(`/plan`, { state: { plan: plan } }); // Sending plan data to /plan route
         } else {
             onPlanSelect(plan); // Notify the parent component about the selection
@@ -21,7 +21,8 @@ const PlanSearch = ({plan, onPlanSelect, location}) => {
     return (
         <div>
             <div className="trendPlanContaiener">
-                <span className="trendTitle" onClick={handleCurrentPlan} >{plan.title}</span><br />                <span className="trendCity">{plan.city}</span>
+                <span className="trendTitle" onClick={handleCurrentPlan} >{plan.title}</span><br />              
+                {location !== "matching" && <span className="trendCity">{plan.city}</span>}
                 <hr
                     style={{ width: "95%",border: "0.1px solid #ececec", marginTop: "20px",}}
                 />

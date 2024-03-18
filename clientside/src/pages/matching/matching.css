@@ -141,3 +141,6 @@
   overflow-y: auto; /* allows for scrolling within each section */
   width: 90%; /* doesnt flow over the little clean edge */
 }
+.matching-percentage{
+  font-size: 0.8rem;
+}
