@@ -136,10 +136,11 @@ const Matching = () => {
                   proximityScore = Math.max(0, (1 - distance / maxEffectiveDistance)) * 30; //normalizing it to 50%
                   
               }
-
+              const effectiveScore = proximityScore > 0 ? interestsScore + proximityScore : interestsScore - 100; // if the user is too far, then the scorre gets penalized
+              
               return {
                   ...character,
-                  similarityScore: interestsScore + proximityScore,
+                  similarityScore: effectiveScore,
                   interestsScore: interestsScore,
                   proximityScore: proximityScore,
               };
@@ -159,18 +160,13 @@ const Matching = () => {
 }, [characterRefresh,maxEffectiveDistance]); // it refreshes when the interest changes 
 
 
-// Log the sorted characters (for debugging)
-//console.log(characters);
-  
+
 
 
     const [currentIndex, setCurrentIndex] = useState(0);
     const [currentCharacter, setCurrentCharacter] = useState({})
 
-    useEffect(() => {     // this is all the indexing and it is fucked right now, need to solve the indexign 
-      // console.log("Current Index:", currentIndex);
-      // console.log("Current Character:", currentCharacter);
-  }, [currentIndex, currentCharacter]);
+   
 
 
   useEffect(() => {   // Update currentCharacter based on currentIndex for the info under the card 
@@ -511,8 +507,18 @@ useEffect(() => { // users plans if there is any
             {currentCharacter ? (
                 currentCharacter.firstname ? (
                   <div className='currentCharacter-info'>
+
+                    {currentCharacter.similarityScore < 0 ? (
+
+                      <p>Interest similarity: {currentCharacter.interestsScore.toFixed(2)}%, but {currentCharacter.firstname} is either too far, or hav not used matching, yet.</p>
+                    
+                    ): (
+
                      <p>Total similarity {currentCharacter.similarityScore.toFixed(2)} % <span className='matching-percentage' >
                      (Interest: {currentCharacter.interestsScore.toFixed(2)}% , Proximity: {currentCharacter.proximityScore.toFixed(2)}% )</span> </p>
+                    )}  
+
+
 
                      {currentCharacter.livesin && ( 
                      <p>{currentCharacter.firstname} stays at: {currentCharacter.livesin}</p>

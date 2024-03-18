@@ -18,7 +18,7 @@
     background: var(--cardColor);
     border-radius: 1rem;
     padding: 1rem;
-    height: auto;
+    max-height: 81vh;
     min-height: 80vh;
     overflow: scroll;
 
@@ -44,10 +44,6 @@
 }
 
 
-
-
-
-  
   .Chat-list {
     display: flex;
     flex-direction: column;
