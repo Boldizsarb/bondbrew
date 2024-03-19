@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./rideSide.css";
 import TrendCard from "../rightSideTrendCards/trendCards";
 import ShareModal from "../shareModal/shareModal";
@@ -50,42 +50,86 @@ const RightSide = ({location,person}) => {
             console.log("chat created");
             navigate('/chat');
           }
-
       }else{
        // console.log("chat exists");
         navigate('/chat');
       }
-
     }catch(error){
       console.log(error.message);
     }
-
   };
+
+  /////// color scheme ////  /////// color scheme ////  /////// color scheme ////  /////// color scheme ////  /////// color scheme //// 
+function setCookie(name, value, days) { // setting the cokies and in the app.js the color scheme is read from the cookies
+  let expires = '';
+  if (days) {
+    const date = new Date();
+    date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+    expires = '; expires=' + date.toUTCString();
+  }
+  document.cookie = name + '=' + (value || '') + expires + '; path=/';
+}
+
+// function getCookie(name) {
+//   const nameEQ = name + '=';
+//   const ca = document.cookie.split(';');
+//   for (let i = 0; i < ca.length; i++) {
+//     let c = ca[i];
+//     while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+//     if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+//   }
+//   return null;
+// }
 
   //const [buttonBgClass, setButtonBgClass] = useState('button-bg-default');
+  // useEffect(() => {
+  //   const savedScheme = getCookie('colorScheme');
+  //   if (savedScheme) {
+  //     applyColorScheme(savedScheme);
+  //   }
+  // }, []);
 
-  const changeColorToBlue = (color) => {
+  // const applyColorScheme = (color) => {
+  //   switch (color) {
+  //     case 'blue':
+  //       changeColorToBlue();
+  //       break;
+  //     case 'green':
+  //       changeColorToGreen();
+  //       break;
+  //     case '#e317e3':
+  //       changeColorToPink();
+  //       break;
+  //     default:
+  //       changeColorToDefault();
+  //   }
+  // };
+
+
+  const changeColorScheme = (color, buttonBg, buttonHover) => {
     document.documentElement.style.setProperty('--blur-color-default', color);
-    document.documentElement.style.setProperty('--buttonBg', 'linear-gradient(120deg, #2ed3f0 0%, #8fd3f4 100%)');
-    document.documentElement.style.setProperty('--buttonHover',  '#2ed3f0');
+    document.documentElement.style.setProperty('--buttonBg', buttonBg);
+    document.documentElement.style.setProperty('--buttonHover', buttonHover);
+    //localStorage.setItem('colorScheme', color);
+    setCookie('colorScheme', color, 365); // Save the theme for 365 days
   };
-  const changeColorToGreen = (color) => {
-    document.documentElement.style.setProperty('--blur-color-default', color);
-    document.documentElement.style.setProperty('--buttonBg', 'linear-gradient(120deg, #67e25f 0%, #07a81c 100%)');
-    document.documentElement.style.setProperty('--buttonHover',  ' #67e25f');
-  }
-  const changeColorToPink = (color) => {
-    document.documentElement.style.setProperty('--blur-color-default', color);
-    document.documentElement.style.setProperty('--buttonBg', 'linear-gradient(120deg, #ef8ae0 0%, #e14ae4 100%)');
-    document.documentElement.style.setProperty('--buttonHover',  ' #ed74db');
-  }
+
+  const changeColorToBlue = () => {
+    changeColorScheme('blue', 'linear-gradient(120deg, #2ed3f0 0%, #8fd3f4 100%)', '#2ed3f0');
+  };
+
+  const changeColorToGreen = () => {
+    changeColorScheme('green', 'linear-gradient(120deg, #67e25f 0%, #07a81c 100%)', '#67e25f');
+  };
+
+  const changeColorToPink = () => {
+    changeColorScheme('#e317e3', 'linear-gradient(120deg, #ef8ae0 0%, #e14ae4 100%)', '#ed74db');
+  };
+
   const changeColorToDefault = () => {
-    document.documentElement.style.setProperty('--blur-color-default', ' #bf862b');
-    document.documentElement.style.setProperty('--buttonBg', 'linear-gradient(98.63deg, #e7ab58 0%, #b06219 100%)');
-    document.documentElement.style.setProperty('--buttonHover',  ' #fca61f');
-  }
-
-
+    changeColorScheme('#bf862b', 'linear-gradient(98.63deg, #e7ab58 0%, #b06219 100%)', '#fca61f');
+  };
+ /////// color scheme ////  /////// color scheme ////  /////// color scheme ////  /////// color scheme //// 
 
 
   return (
@@ -98,11 +142,9 @@ const RightSide = ({location,person}) => {
   className="button r-button"
   onClick={() => {
     if (location === "clickedUser") {
-      // Handle click action for location equal to clickedUser (e.g., send message)
       handleMessageClick();
       
     } else {
-      // Handle click action for location not equal to clickedUser (e.g., open modal)
       setModalOpened(true);
     }
   }}
@@ -113,7 +155,7 @@ const RightSide = ({location,person}) => {
 
 <div className="color-circles">
 <span className="color-palet">Palette:</span>
-<div className="small-default-circle" onClick={() => changeColorToDefault("#bf862b")}></div>
+  <div className="small-default-circle" onClick={() => changeColorToDefault("#bf862b")}></div>
   <div className="small-blue-circle" onClick={() => changeColorToBlue("blue")}></div>
   <div className="small-green-circle" onClick={() => changeColorToGreen("green")}></div>
   <div className="small-pink-circle" onClick={() => changeColorToPink("#e317e3")}></div>
@@ -127,5 +169,4 @@ const RightSide = ({location,person}) => {
 export default RightSide; 
 
 
-{/* <button onClick={() => changeColorToBlue("blue")}>blue</button> */}
 

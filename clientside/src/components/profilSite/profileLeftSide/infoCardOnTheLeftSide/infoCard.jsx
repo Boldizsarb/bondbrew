@@ -164,6 +164,15 @@ const InfoCard = ({location,person}) => {
       </div>
       )}
 
+      {profileUser.bio && ( 
+      <div className="info">
+        <span>
+          <b>Bio: </b>
+        </span>
+        <span>{profileUser.bio}</span>
+      </div>
+      )}
+
 
       {location === "clickedProfile" ? (
         <button

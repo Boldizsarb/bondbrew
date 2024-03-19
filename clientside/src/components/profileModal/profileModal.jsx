@@ -199,6 +199,17 @@ function ProfileModal({ modalOpened, setModalOpened, data }) {
           />
         </div>
 
+        <div>
+          <input
+            type="text"
+            className="infoInput"
+            name="bio"
+            placeholder="Write something about yourself..."
+            onChange={handleChange}
+            value={formData.bio}
+          />
+        </div>
+
 
         <div>
             Profile Image 

@@ -58,3 +58,33 @@ export const createChat = async (req, res) => {
       res.status(500).json(error);
     }
   };
+
+  export const findChatById = async (req, res) => {
+    try {
+      const chat = await ChatModel.findById(req.params.id);
+      res.status(200).json(chat);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }; 
+
+
+  export const deleteChat = async (req, res) => {
+
+    const id = req.body.id; 
+
+    try {
+      const deletedChat = await ChatModel.findOneAndDelete({ _id: id });
+
+      // If no document is found and deleted, send a 404 Not Found response
+      if (!deletedChat) {
+        return res.status(404).json({ message: "Chat is not found" }); // Corrected error message
+      }
+  
+      // If a chat is successfully deleted, send a confirmation message
+      res.status(200).json({ message: 'Chat deleted successfully' }); // Corrected success message
+    } catch (error) {
+      // Send the actual error message from the catch block
+      res.status(500).json({ message: error.message });
+    }
+  };

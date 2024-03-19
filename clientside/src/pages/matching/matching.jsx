@@ -20,6 +20,7 @@ import SetRadius from '../../components/interestsModal/radiousModal';
 
 
 
+
 const Matching = () => {    
 
 
@@ -517,8 +518,9 @@ useEffect(() => { // users plans if there is any
                      <p>Total similarity {currentCharacter.similarityScore.toFixed(2)} % <span className='matching-percentage' >
                      (Interest: {currentCharacter.interestsScore.toFixed(2)}% , Proximity: {currentCharacter.proximityScore.toFixed(2)}% )</span> </p>
                     )}  
-
-
+                    {currentCharacter.bio && (
+                      <p>Bio: {currentCharacter.bio}</p>
+                    )}
 
                      {currentCharacter.livesin && ( 
                      <p>{currentCharacter.firstname} stays at: {currentCharacter.livesin}</p>

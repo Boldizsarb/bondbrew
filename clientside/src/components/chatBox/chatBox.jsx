@@ -6,6 +6,9 @@ import { getMessages } from "../../api/messageRequest";
 import {format} from "timeago.js";
 import InputEmoji from "react-input-emoji";
 import { addMessage } from "../../api/messageRequest";
+import Bin from "../../img/bin3.png";
+import Bin2 from "../../img/bin2.png";
+import DeleteChat from "./deleteModal";
 
 
 
@@ -15,6 +18,8 @@ const ChatBox = ({chat,currentUser, setSendMessage, receivedMessage }) => {
     const scroll = useRef();
     const [messages, setMessages] = useState([]); // an empty array
     const [newMessage, setNewMessage] = useState("");
+    const [isHovered, setIsHovered] = useState(false);
+    const [deleteModal, setDeleteModal] = useState(false);
 
     // fetching data for header
   useEffect(() => {
@@ -92,7 +97,13 @@ const ChatBox = ({chat,currentUser, setSendMessage, receivedMessage }) => {
     scroll.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]); // if messages change then the useEffect will run again
 
+  const handleMouseEnter = () => setIsHovered(true);
+  const handleMouseLeave = () => setIsHovered(false);
 
+  const handleDelete = () => { 
+    setDeleteModal(true);
+    
+  }
 
   return (
     <>
@@ -119,7 +130,12 @@ const ChatBox = ({chat,currentUser, setSendMessage, receivedMessage }) => {
                     <span>
                       {userData?.firstname} {userData?.lastname}
                     </span>
+                    <DeleteChat chatId={chat._id} deleteModal={deleteModal} setDeleteModal={setDeleteModal}/>
                   </div>
+                  <img src={isHovered ? Bin2 : Bin} alt="" className="bin-icon"
+                   onMouseEnter={handleMouseEnter} 
+                   onMouseLeave={handleMouseLeave} 
+                   onClick={handleDelete} />
                 </div>
               </div>
               <hr
