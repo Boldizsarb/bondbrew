@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useNavigate } from 'react-router-dom';
 import Plan from "../../img/plan.png";
+import Bot from "../../img/bot.png";
 
 
 
@@ -32,7 +33,10 @@ const NavIcons = () => {
         <Link to={"../chat"}> {/* takes you to the chat page */}
           <img src={Comment} alt="" />
         </Link>
-        
+
+        <Link to={"../chatBot"}> {/* takes you to the chat page */}
+          <img src={Bot} alt="" />
+        </Link>
     </div>
     )
 }

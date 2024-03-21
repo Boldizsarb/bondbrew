@@ -8,6 +8,7 @@ import Plan from "../../img/plan.png";
 import InterestModal from "../interestsModal/interestsModal";
 import SetLocation from "../setLocation/setLocationModal";
 import SetRadius from "../interestsModal/radiousModal";
+import Bot from "../../img/bot.png";
 
 
 
@@ -95,6 +96,13 @@ const BurgerMenu = ({location,userid,setCharacterRefresh,setRadiusModal}) => {
                     <div className="link-container">
                         <h1 className="h1-link">Chat</h1>
                         <img className="img-link-burger" src={Comment} alt="" />
+                    </div>
+                </Link>
+
+                <Link to={"../chatBot"}>
+                    <div className="link-container">
+                        <h1 className="h1-link">ChatBot</h1>
+                        <img className="img-link-burger" src={Bot} alt="" />
                     </div>
                 </Link>
                 <hr style={{ width: "95%",border: "0.1px solid #ececec", marginTop: "20px",}}/>

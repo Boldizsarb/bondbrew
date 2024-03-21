@@ -46,7 +46,7 @@ const Matching = () => {
     const [radiusModal, setRadiusModal] = useState(false); // modal for radius
 
 
-    
+   
 
 
     useEffect(() => { // first check if the user has the right amount of interests 

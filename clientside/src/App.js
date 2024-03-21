@@ -11,6 +11,7 @@ import ClickedUserProfile from "./pages/clickedUserProfile/clickedUserProfile";
 import Plan from "./pages/plan/plan";
 import Matching from "./pages/matching/matching";
 import React, {  useEffect } from "react";
+import ChatBot from "./pages/chatBot/chatBot";
 
 //////  this file enables the routing of the app
 function App() {
@@ -109,6 +110,10 @@ function App() {
          <Route
           path="/matching"
           element={user ? <Matching /> : <Navigate to="../auth" />}
+        />
+        <Route
+          path="/chatBot"
+          element={user ? <ChatBot /> : <Navigate to="../auth" />}
         />
       </Routes>
     </div>
