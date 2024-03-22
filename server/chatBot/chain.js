@@ -2,17 +2,13 @@
 import {config} from "dotenv";
 //import { OpenAI } from "langchain/llms/openai"; 
 //import { OpenAI } from "@langchain/openai"
-import { OpenAI } from "@langchain/openai"; 
 //import {PromptTemplate} from "langchain/prompts"
 import {PromptTemplate} from "@langchain/core/prompts"
 import {LLMChain} from "langchain/chains"
-
+import { OpenAI } from "@langchain/openai"; 
 config();
 
 const apiKey = process.env.REACT_APP_CHAT_BOT;
-
-
- 
 
 
 //const model = new OpenAI({ temperature: 0.5 });
