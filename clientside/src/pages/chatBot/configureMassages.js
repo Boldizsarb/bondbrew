@@ -1,5 +1,7 @@
 import {Configuration, OpenAIApi} from "openai"; 
 import OpenAI from 'openai';
+
+
 // import {config} from "dotenv";
 
 // config();
