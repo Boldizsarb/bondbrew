@@ -11,7 +11,7 @@ import ChatRouter from "./Routes/chatRoutes.js";
 import MessageRouter from "./Routes/messageRoutes.js";
 import PlanRouter from "./Routes/planRoutes.js";
 import MatchRouter from "./Routes/matchesRoutes.js";
-
+import ChatBot from "./Routes/chatBotRoutes.js";
 
 const app = express();
 app.use(express.json());
@@ -45,6 +45,8 @@ app.use("/plan", PlanRouter); //
 
 app.use("/match", MatchRouter); // get, create, delete
 
+app.use("/chatbot", ChatBot);
+
 
 
 
@@ -60,8 +62,5 @@ mongoose.connect(process.env.MONGO_DB, {
   )
   .catch((error) => console.log(error));
 
-
-
-// original: "mongodb+srv://donboyszy:WFU3NSzMmNOmWjSD@bondbrew.t7bbpt4.mongodb.net/?retryWrites=true&w=majority"
 
 

@@ -1,7 +1,8 @@
 import React,  {useEffect, useState } from 'react'
 import BurgerMenu from '../../components/burgerMenu/burgerMenu';
 import {useDispatch, useSelector } from "react-redux";
-import {chat} from "./configureMassages";
+
+
 
 
 //import { OpenAI } from 'openai';
@@ -10,37 +11,47 @@ import {chat} from "./configureMassages";
 
 const ChatBot = () => {
 
-    const chat_bot_api = process.env.REACT_APP_CHAT_BOT;
+    const getUserUrl = process.env.REACT_APP_AXIOS_BASE_URL;
     const [input, setInput] = useState('');
     const [response, setResponse] = useState('');
+    const [conversationHistory, setConversationHistory] = useState([]);
 
-    // const openai = new OpenAI({ // connecting to the LLM modell
-    //     apiKey: chat_bot_api,
-    //     dangerouslyAllowBrowser: true // overriding the user agent
-    // });
-
-
-    // const chatbot = async () => {
-    //     const response = await openai.chat({
-    //         messages: [
-    //             // { role: 'system', content: 'You are a helpful assistant.' },
-    //             { role: 'user', content: input }
-    //         ]
-    //     });
-
-    //     console.log(response.data);
-    // }
-
+ 
+   
     const handlechat = async () => {
+
+        //input.push(conversationHistory)
+        const newMessage = `Human: ${input}`;
+        const updatedConversationHistory = [...conversationHistory, newMessage];
+        
+
         try {
-            const chatResponse = await chat(input);
-            setResponse(chatResponse);
+
+            const response = await fetch(`${getUserUrl}chatbot`, {
+                method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ question: input, conversationHistory: conversationHistory}),
+            });
+            
+            const responseData = await response.json();
+
+             const aiResponse = responseData
+
+            console.log(aiResponse);
+            setConversationHistory([...updatedConversationHistory, `AI: ${aiResponse}`]);
+               //console.log(responseData);
+
+            setResponse(responseData);
+
           } catch (error) {
             console.error('Chat error:', error);
             setResponse('Sorry, there was an error processing your request.');
           }
         };
 
+console.log(conversationHistory);
 
 
 
