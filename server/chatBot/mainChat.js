@@ -18,15 +18,15 @@ export async function generateResponse(question, conversationHistory){
         apiKey: openaiKey,
         temperature: 0.5
     });
-    const standaloneQuestionTemplate = "Given some conversastion history (if any) and a quesstion, convert it to a standalone question. conversation history: {conversationHistory} question: {question} ";
+    const standaloneQuestionTemplate = "Given some conversastion history (if any) and a quesstion, convert it to a standalone question. conversation history: {conv_history} question: {question} ";
 
     const standaloneQuestionPrompt = PromptTemplate.fromTemplate(standaloneQuestionTemplate)
 
     // PUNCTUATION CHAIN // PUNCTUATION CHAIN // PUNCTUATION CHAIN // PUNCTUATION CHAIN // PUNCTUATION CHAIN // PUNCTUATION CHAIN // PUNCTUATION CHAIN // PUNCTUATION CHAIN //
     const answerTemplate = `You are a helpful psichologist with 20 years of experience who is speaking to a person
-    who is feeling lonely, You are very caring and loving. You are trying to help the person feel better. Try to answer based on the context provided and on the conversation history if possible.
+    who is probably lonely, You are very caring and loving. You are trying to help the person feel better. Try to answer based on the context provided and on the conversational history if possible.
     If you can not answer or help the person, you can refer them to a professional.
-    conversation history:{conversationHistory}
+    conversation history:{conv_history}
     context:{context}
     question:{question}`;
 
@@ -64,18 +64,23 @@ export async function generateResponse(question, conversationHistory){
         {
             context: retrieverChain,
             question: ({original_input}) => original_input.question,
-            conversationHistory: ({original_input}) => original_input.conversationHistory
+            conv_history: ({original_input}) => original_input.conv_history
         },
     answerChain
     ])
 
+   
+
 
     const response = await chain.invoke({ // question and the history coming from the converfsation
         question: question,
-          conversationHistory: formatConvHistory(conversationHistory) // formatted conversation histrory
-        //conversationHistory: conversationHistory
+        //conversationHistory: formatConvHistory(conversationHistory) // formatted conversation histrory
+        conv_history: conversationHistory
 
         })
+
+
+
     return response;
 
     console.log(response);

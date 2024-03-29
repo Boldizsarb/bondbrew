@@ -101,7 +101,7 @@ const BurgerMenu = ({location,userid,setCharacterRefresh,setRadiusModal}) => {
 
                 <Link to={"../chatBot"}>
                     <div className="link-container">
-                        <h1 className="h1-link">ChatBot</h1>
+                        <h1 className="h1-link">SentiMate</h1>
                         <img className="img-link-burger" src={Bot} alt="" />
                     </div>
                 </Link>

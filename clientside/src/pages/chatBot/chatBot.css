@@ -1,0 +1,60 @@
+.conversation12 {
+    padding-top: 2vh;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.chat-bubble {
+    max-width: 60%; /* Adjust based on preference */
+    padding: 10px;
+    margin: 5px;
+    border-radius: 20px;
+}
+
+.chat-bubble.human {
+    background-color: var(--cardColor);
+    align-self: flex-end; /* Aligns to the right */
+    margin-left: auto; /* Additional way to ensure it aligns to the right */
+}
+
+.chat-bubble.ai {
+    background: var(--buttonBg);
+    align-self: flex-start; /* Aligns to the left */
+    margin-right: auto; /* Additional way to ensure it aligns to the left */
+}
+
+
+.input-container {
+    position: fixed; /* or 'sticky' */
+    bottom: 0;
+    left: 0;
+    width: 98%;
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+    background: #fff; /* Adjust the background as necessary */
+    box-shadow: 0 -2px 5px rgba(0,0,0,0.1); 
+    border-radius: 25px;
+}
+
+.input-container input {
+    width: 80%;
+    padding: 10px;
+    margin-right: 10px; /* Adds a little space between the input and the button */
+    border: 1px solid #ccc; /* Styling the border */
+    border-radius: 4px; /* Rounded corners for the input */
+}
+
+.input-container button {
+    width: calc(20% - 10px); /* Adjusts width considering the margin-right of the input */
+    padding: 10px;
+    border: none;
+    border-radius: 4px; /* Rounded corners for the button */
+ 
+}
+
+/* Ensures the conversation container doesn't overlap with the input container */
+.conversation12 {
+    padding-bottom: 60px; /* Adjust based on the height of the input-container */
+}
