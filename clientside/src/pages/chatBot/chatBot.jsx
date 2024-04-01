@@ -1,7 +1,8 @@
-import React,  {useEffect, useState } from 'react'
+import React,  { useState } from 'react'
 import BurgerMenu from '../../components/burgerMenu/burgerMenu';
-import {useDispatch, useSelector } from "react-redux";
 import  './chatBot.css';
+import InfoModal from './infoModal';
+import Info from "../../img/info.png"
 
 
 
@@ -21,6 +22,7 @@ const ChatBot = () => {
     //const [conversationHistory, setConversationHistory] = useState('');
     const [aiResponse, setAiResponse] = useState([]);
     const [humanMessage, setHumanMessage] = useState([]);
+    const [infoModal, setInfoModal] = useState(false);
 
    const handleInput = (e) => {
     e.preventDefault();
@@ -31,22 +33,12 @@ const ChatBot = () => {
    
     const handlechat = async () => {
 
-      //setConversationHistory((currentHistory) => [...currentHistory, `Human:${input}`]); // this was working just slow
-
-      // const updatedConversationHistory = [...conversationHistory, `Human: ${input}`];
-      // setConversationHistory(updatedConversationHistory);
-      //const updatedConversationHistory = [...conversationHistory, `Human: ${input}`];
       const newHumanMessage = `Human: ${input}`;
       let updatedConversationHistory = [...conversationHistory, newHumanMessage];
 
       setHumanMessage(newHumanMessage);
-        // const newMessage = `Human: ${input}`;
-        // const updatedConversationHistory = [...conversationHistory, newMessage];
 
-
-         //let updatedConversationHistory = conversationHistory + newMessage;
         
-
         try {
           const conversationHistoryList = updatedConversationHistory.join("\n"); // need to turn into a string othervise the bot wont be able to read it 
 
@@ -62,23 +54,12 @@ const ChatBot = () => {
 
              const aiResponse = responseData
 
-            //console.log(aiResponse);
-
-           // updatedConversationHistory += aiResponse;
-
-            // setConversationHistory(updatedConversationHistory);
-            //  setConversationHistory([...updatedConversationHistory, `AI: ${aiResponse}`]);
-
-
-               //console.log(responseData);
                console.log(conversationHistory)
 
               setAiResponse(aiResponse);
                updatedConversationHistory = [...updatedConversationHistory, `AI: ${aiResponse}`];
 
-               // Update the conversation history state
                setConversationHistory(updatedConversationHistory);
-               //setConversationHistory(currentHistory => [...currentHistory, `Human: ${input};\n`, `AI: ${aiResponse};\n`]);
 
             setResponse(responseData);
             setInput('');
@@ -98,13 +79,16 @@ console.log(conversationHistory);
 
     return (
         <div>
+          
             <div id='burger-menu-onpage'style={{paddingBottom:"1vh"}}>
                 <BurgerMenu  />
             </div>
+            <InfoModal infoModal={infoModal} setInfoModal={setInfoModal} />
 
-
-            <h1 style={{ textAlign: 'center', marginTop: '10px', marginBottom: '20px' }}>SentiMate</h1>
-          
+          <div className='title-container'>
+              <h1 className='title-chatbot' style={{ textAlign: 'center', marginTop: '10px', marginBottom: '20px' }}>SentiMate</h1>
+              <img src={Info} alt="info" className="info-icon" onClick={() => setInfoModal(true)} />
+          </div>
 
             {/* {response && <p>Response: {response}</p>} */}
 

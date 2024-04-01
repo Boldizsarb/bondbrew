@@ -4,9 +4,38 @@
     flex-direction: column;
     width: 100%;
 }
+.title-chatbot{
+    text-shadow: 1px 1px 2px var(--buttonHover);
+}
+
+
+.title-container {
+    display: flex;
+    align-items: center; 
+    justify-content: center; 
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.title-chatbot {
+    text-shadow: 1px 1px 2px var(--buttonHover);
+    margin-right: 10px; 
+}
+
+.info-icon {
+    cursor: pointer; 
+    width: 25px; 
+    height: 25px; 
+    transition: transform 0.3s ease;
+}
+
+.info-icon:hover {
+    transform: scale(1.2);
+}
+
 
 .chat-bubble {
-    max-width: 60%; /* Adjust based on preference */
+    max-width: 60%; 
     padding: 10px;
     margin: 5px;
     border-radius: 20px;

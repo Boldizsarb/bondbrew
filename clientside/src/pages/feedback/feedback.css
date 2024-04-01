@@ -1,0 +1,28 @@
+.h1-feedback{
+    text-align: center;
+
+}
+
+.feedbackInput{
+    width: 90%;
+}
+.h3-feedback-list{
+    padding: 1vh;
+    cursor: pointer;
+}
+.toggle-p-list{
+    padding-left: 1vh;
+}
+
+
+
+.div-content-p {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease-out;
+  }
+  
+  .div-content-p.show {
+    max-height: 50vh;
+    overflow: auto;
+  }

@@ -9,6 +9,7 @@ import InterestModal from "../interestsModal/interestsModal";
 import SetLocation from "../setLocation/setLocationModal";
 import SetRadius from "../interestsModal/radiousModal";
 import Bot from "../../img/bot.png";
+import Feedback from '../../img/feedback.png'
 
 
 
@@ -87,7 +88,7 @@ const BurgerMenu = ({location,userid,setCharacterRefresh,setRadiusModal}) => {
 
                 <Link to={"../matching"}>
                     <div className="link-container">
-                        <h1 className="h1-link">Matching</h1>
+                        <h1 className="h1-link">Buddy Pairing</h1>
                         <img className="img-link-burger" src={Matching} alt="" />
                     </div>
                 </Link>
@@ -103,6 +104,13 @@ const BurgerMenu = ({location,userid,setCharacterRefresh,setRadiusModal}) => {
                     <div className="link-container">
                         <h1 className="h1-link">SentiMate</h1>
                         <img className="img-link-burger" src={Bot} alt="" />
+                    </div>
+                </Link>
+
+                <Link to={"../feedback"}>
+                    <div className="link-container">
+                        <h1 className="h1-link">Feedback/FAQ</h1>
+                        <img className="img-link-burger" src={Feedback} alt="" />
                     </div>
                 </Link>
                 <hr style={{ width: "95%",border: "0.1px solid #ececec", marginTop: "20px",}}/>
