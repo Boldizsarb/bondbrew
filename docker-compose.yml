@@ -1,0 +1,34 @@
+version: '3'
+services:
+  server:
+    build: 
+      context: ./server
+      dockerfile: server.dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000 
+    depends_on:
+      - mongo
+      - socket
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+  frontend:
+    build:
+      context: ./clientside
+      dockerfile: frontend.dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+    depends_on:
+      - server 
+      - socket
+  socket:
+    build: 
+      context: ./socket
+      dockerfile: socket.dockerfile
+    ports:
+      - "8800:8800"
