@@ -8,11 +8,6 @@ import Info from "../../img/info.png"
 
 
 
-
-//import { OpenAI } from 'openai';
-
-
-
 const ChatBot = () => {
 
     const getUserUrl = process.env.REACT_APP_AXIOS_BASE_URL;

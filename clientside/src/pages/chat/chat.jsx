@@ -65,6 +65,7 @@ const Chat = () => {
     
         );
       }, []);
+      
 
       ///// checking if the user is online
       const isUserOnline = (chat) => {

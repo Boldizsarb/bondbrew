@@ -12,6 +12,7 @@ import MessageRouter from "./Routes/messageRoutes.js";
 import PlanRouter from "./Routes/planRoutes.js";
 import MatchRouter from "./Routes/matchesRoutes.js";
 import ChatBot from "./Routes/chatBotRoutes.js";
+import Notification from "./Routes/notificationRoutes.js";
 
 const app = express();
 app.use(express.json());
@@ -46,6 +47,8 @@ app.use("/plan", PlanRouter); //
 app.use("/match", MatchRouter); // get, create, delete
 
 app.use("/chatbot", ChatBot);
+
+app.use("/notification", Notification);
 
 
 

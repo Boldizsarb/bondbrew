@@ -2,16 +2,20 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import { getUser } from "../../api/userRequest";
 import { useDispatch } from "react-redux";
+import "./conversation.css";
 
 // the paramaters are the being passed from the chat component
 const Conversation =({data,currentUserId, online}) => {
 
     const [userData, setUserData] = useState(null); // the other user on the right side of the chat which is not the current user
     const dispatch = useDispatch()
-
+    const[messageNotification, setMessageNotification] = useState([])
+    const getUserUrl = process.env.REACT_APP_AXIOS_BASE_URL;
+  
+    const userId = data.members.find((id)=> id !== currentUserId);
     useEffect(() => {
 
-        const userId = data.members.find((id)=> id !== currentUserId); // need to identify the id of the other user first
+        // need to identify the id of the other user first
         //console.log(userId);
         const getUserData = async () => { // getting user data from back end OUTSIDE OF REDUX
 
@@ -20,6 +24,17 @@ const Conversation =({data,currentUserId, online}) => {
                 setUserData(data);
                 dispatch({type:"SAVE_USER", data:data})
                 //console.log(data);
+                // NOTIFICATION //// NOTIFICATION //// NOTIFICATION
+                const response = await fetch(`${getUserUrl}notification/getmessage`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ userto: currentUserId }), // receiver should be the current user
+                    });
+                    const data1 = await response.json();
+                    const usertoIds = data1.map(notification => notification.userfrom); // extracting all the userto attributes
+                    setMessageNotification(usertoIds);
 
             } catch (error) {
                 console.log(error);
@@ -29,6 +44,9 @@ const Conversation =({data,currentUserId, online}) => {
 
     },[])
 
+console.log(messageNotification);
+
+console.log(userData?._id)
 
 
 
@@ -38,6 +56,10 @@ const Conversation =({data,currentUserId, online}) => {
             <div className="follower conversation">
                 <div >
                 {online && <div className="online-dot"></div>}
+
+                {messageNotification.includes(userData?._id) && (
+                    <div className="notification-badge">1</div> // Style this badge as needed
+                )}
                     
                     <img 
                         src={userData?.profilePicture? process.env.REACT_APP_PUBLIC_FOLDER + userData.profilePicture : process.env.REACT_APP_PUBLIC_FOLDER + "defaultProfile.png"}

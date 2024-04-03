@@ -1,6 +1,6 @@
 version: '3'
 services:
-  server:
+  server: ## express server 
     build: 
       context: ./server
       dockerfile: server.dockerfile
@@ -11,11 +11,11 @@ services:
     depends_on:
       - mongo
       - socket
-  mongo:
+  mongo: ## mongo db
     image: mongo:latest
     ports:
       - "27017:27017"
-  frontend:
+  frontend: ## react app
     build:
       context: ./clientside
       dockerfile: frontend.dockerfile
@@ -26,9 +26,11 @@ services:
     depends_on:
       - server 
       - socket
-  socket:
+  socket:  ## socket.io server
     build: 
       context: ./socket
       dockerfile: socket.dockerfile
     ports:
       - "8800:8800"
+
+

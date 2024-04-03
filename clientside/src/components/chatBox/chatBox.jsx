@@ -20,6 +20,7 @@ const ChatBox = ({chat,currentUser, setSendMessage, receivedMessage }) => {
     const [newMessage, setNewMessage] = useState("");
     const [isHovered, setIsHovered] = useState(false);
     const [deleteModal, setDeleteModal] = useState(false);
+    const getUserUrl = process.env.REACT_APP_AXIOS_BASE_URL;
 
     // fetching data for header
   useEffect(() => {
@@ -63,11 +64,12 @@ const ChatBox = ({chat,currentUser, setSendMessage, receivedMessage }) => {
    // Send Message
    const handleSend = async(e)=> {
     e.preventDefault()
+
     const message = {
       senderId : currentUser,
       text: newMessage,
       chatId: chat._id,
-  }
+    }
   const receiverId = chat.members.find((id)=>id!==currentUser);
   // send message to socket server
   setSendMessage({...message, receiverId})
@@ -76,6 +78,22 @@ const ChatBox = ({chat,currentUser, setSendMessage, receivedMessage }) => {
     const { data } = await addMessage(message);
     setMessages([...messages, data]);
     setNewMessage("");
+  
+    const createNotification = async () => {    // creating a notification
+      await fetch(`${getUserUrl}notification/message/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userfrom: currentUser, 
+          userto: receiverId 
+        }),
+      });
+    }
+    createNotification();
+    
+    // console.log(`reciver${receiverId}`)
+    // console.log(`sender${currentUser}`)
   }
   catch
   {
@@ -104,6 +122,32 @@ const ChatBox = ({chat,currentUser, setSendMessage, receivedMessage }) => {
     setDeleteModal(true);
     
   }
+
+  useEffect(() => { // notification delete if exists since the message has been seen 
+
+    const otheruserid = chat?.members?.find((id) => id !== currentUser);
+    if(otheruserid !== undefined){
+
+      try{
+        const deleteNotification = async () => {
+          await fetch(`${getUserUrl}notification/delete/`, {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ userfrom: otheruserid, // the other user got the notification 
+              userto: currentUser}), // the current user recived the notification
+          });
+        }
+        deleteNotification();
+        
+      }catch(error){
+        console.log(error)
+      }
+    }
+
+  }, [chat]); // if chat changes then 
+ 
 
   return (
     <>

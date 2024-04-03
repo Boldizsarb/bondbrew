@@ -23,7 +23,9 @@ const BurgerMenu = ({location,userid,setCharacterRefresh,setRadiusModal}) => {
     const checkboxRef = useRef(null);
     const [interestsModal, setInterestsModal] = useState(false); // modal for interests
     const [locationModal, setLocationModal] = useState(false); // modal for location
-    //const [radiusModal, setRadiusModal] = useState(false); // modal for radius
+
+    const[messageNotification, setMessageNotification] = useState(0);
+    const getUserUrl = process.env.REACT_APP_AXIOS_BASE_URL;
     
 
     const handleCheckboxChange = () => { // menu options visible 
@@ -55,6 +57,28 @@ const BurgerMenu = ({location,userid,setCharacterRefresh,setRadiusModal}) => {
         setIsOpen(false);
         setRadiusModal(true);
     }
+
+    useEffect(() => {
+
+        const notifications = async () => {
+            try {
+              const response = await fetch(`${getUserUrl}notification/getmessage`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userto: userid }), // receiver should be the current user
+              });
+              const data = await response.json();
+              setMessageNotification(data.length);
+            } catch (error) {
+              console.log(error);
+            }
+          };
+          notifications();
+      
+    }, []);
+
 
 
 
@@ -93,12 +117,17 @@ const BurgerMenu = ({location,userid,setCharacterRefresh,setRadiusModal}) => {
                     </div>
                 </Link>
 
-                <Link to={"../chat"}>
-                    <div className="link-container">
-                        <h1 className="h1-link">Chat</h1>
-                        <img className="img-link-burger" src={Comment} alt="" />
-                    </div>
-                </Link>
+                <div className="iconWithBadge">
+                    <Link to={"../chat"}>
+                        <div className="link-container">
+                            <h1 className="h1-link">Chat</h1>
+                            <img className="img-link-burger" src={Comment} alt="" />
+                        </div>
+                    </Link>
+                    {messageNotification > 0 && (
+                        <span className="notificationBadge">{messageNotification}</span> // Notification badge
+                    )}
+                </div>
 
                 <Link to={"../chatBot"}>
                     <div className="link-container">
