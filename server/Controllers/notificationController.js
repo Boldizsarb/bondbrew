@@ -91,15 +91,3 @@ export const deleteNotification = async (req, res) => {
 }
 
 
-// const existingNotification = await NotificationModel.findOne({
-//     userfrom: userfrom,
-//     userto: userto,
-//     type: "message"
-// });
-
-// if (existingNotification) {
-//     await existingNotification.remove();
-//     res.status(200).json({ message: "Notification deleted" });
-// } else {
-//     res.status(404).json({ message: "Notification not found" });
-// }

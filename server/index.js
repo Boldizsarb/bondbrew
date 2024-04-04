@@ -13,6 +13,8 @@ import PlanRouter from "./Routes/planRoutes.js";
 import MatchRouter from "./Routes/matchesRoutes.js";
 import ChatBot from "./Routes/chatBotRoutes.js";
 import Notification from "./Routes/notificationRoutes.js";
+import swaggerJSDoc from "swagger-jsdoc";
+import swaggerUI from "swagger-ui-express";
 
 const app = express();
 app.use(express.json());
@@ -49,6 +51,34 @@ app.use("/match", MatchRouter); // get, create, delete
 app.use("/chatbot", ChatBot);
 
 app.use("/notification", Notification);
+
+
+const swaggerOptions = {
+
+  swaggerDefinition: {
+      openapi: '3.0.0',
+      info: {
+          title: 'API Endpoints testing',
+          description: 'API Information',
+          contact: {
+              name: 'Developer'
+          },
+          licence: {
+              name: 'Apache 2.0',
+              url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
+          },
+          servers: [
+              {url: 'http://localhost:5000'}
+          ]
+      }
+  },
+  //apis: ['../../routes/*.js'] // files containing annotations as above#
+  apis: ["./Routes/*.js"]
+  
+};
+
+const swaggerDocs = swaggerJSDoc(swaggerOptions);
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
 
 
 

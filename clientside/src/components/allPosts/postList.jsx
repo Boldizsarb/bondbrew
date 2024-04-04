@@ -16,12 +16,14 @@ const Posts = () => {
   const [location, setLocation] = useState("");
 
   const [refreshTrigger, setRefreshTrigger] = useState(0); // to refresh the posts upon delete
+  const refreshTrigger1 = useSelector(state => state.refreshReducer); // when following or unfollowing a user, the posts need to be refreshed
+
 
  
 
   useEffect(() => { // need to make it depend on the number of posts
     dispatch(getTimelinePosts(user._id));
-  }, [refreshTrigger]); // if the trigger changes the useEffect will run again, refresing the posts
+  }, [refreshTrigger,refreshTrigger1]); // if the trigger changes the useEffect will run again, refresing the posts
 
 
   useEffect(() => {

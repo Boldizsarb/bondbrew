@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { followUser, unfollowUser } from "../../actions/userAction";
 import "./user.css";
 import { useNavigate } from 'react-router-dom'; 
-
+import { incrementRefreshTrigger } from "../../reducers/refreshReducer";
 
 
 
@@ -24,6 +24,9 @@ const User = ({ person, location }) => {
       ? dispatch(unfollowUser(person._id, user))
       : dispatch(followUser(person._id, user));
     setFollowing((prev) => !prev);
+    // post refresh
+    dispatch(incrementRefreshTrigger());
+  
   };
 
   const handleFirstNameClick = () => {
