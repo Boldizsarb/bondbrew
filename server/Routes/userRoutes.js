@@ -4,7 +4,7 @@ import{getUser, updateUser, deleteUser, followUser, UnFollowUser, getAllUsers, f
 import authMiddleWare from "../middleware/authMiddleware.js";
       
 const router = express.Router();
-
+// http://localhost:5000/api-docs/#/
 
 router.get('/', getAllUsers)
 router.post('/interests', getUserInterests)
@@ -158,6 +158,64 @@ router.get('/fetch/:id', fetchUserById)
  *              type: array
  *              items:
  *                type: string
+ *      400:
+ *        description: Bad request
+ *      500: 
+ *        description: Internal server error 
+ */
+
+// GET USER BY ID // GET USER BY ID // GET USER BY ID
+
+/**
+ * @swagger
+ * /userser/{id}:
+ *  get:
+ *    summary: Returns the user by id
+ *    tags: [Users]
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        schema:
+ *          type: string
+ *        required: true
+ *        description: The user id
+ *        example: 65d21151d5ebad6dcf7defe9
+ *    responses:
+ *      200:
+ *        description: The user by id
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Users'
+ *      400:
+ *        description: Bad request
+ *      500: 
+ *        description: Internal server error 
+ */
+
+// GET USER BY NAME // GET USER BY NAME // GET USER BY NAME
+
+/**
+ * @swagger
+ * /userser/name/{name}:
+ *  get:
+ *    summary: Returns the user by name
+ *    tags: [Users]
+ *    parameters:
+ *      - in: path
+ *        name: name
+ *        schema:
+ *          type: string
+ *        required: true
+ *        description: The user name
+ *        example: user
+ *    responses:
+ *      200:
+ *        description: The user by name
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Users'
  *      400:
  *        description: Bad request
  *      500: 
