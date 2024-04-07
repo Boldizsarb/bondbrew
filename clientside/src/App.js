@@ -13,6 +13,8 @@ import Matching from "./pages/matching/matching";
 import React, {  useEffect } from "react";
 import ChatBot from "./pages/chatBot/chatBot";
 import Feedback from "./pages/feedback/feedback";
+import NotFound from "./pages/notfound/notfound";
+
 
 //////  this file enables the routing of the app
 function App() {
@@ -120,6 +122,9 @@ function App() {
           path="/feedback"
           element={user ? <Feedback /> : <Navigate to="../auth" />}
         />
+        <Route path="*" element={user ? <NotFound /> : <Navigate to="../auth" />} 
+        />
+
       </Routes>
     </div>
   );

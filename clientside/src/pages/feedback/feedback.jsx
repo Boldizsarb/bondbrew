@@ -12,6 +12,7 @@ const Feedback = () => {
     const [message, setMessage] = useState(false); 
     const [isVisible, setIsVisible] = useState(false);
     const [isVisible2, setIsVisible2] = useState(false);
+    const [isVisible3, setIsVisible3] = useState(false);
 
     const submitFeedback = (e) => {
         e.preventDefault();
@@ -35,9 +36,18 @@ const Feedback = () => {
     const toggleDiv = () => {
         setIsVisible(!isVisible);
       };
-      const toggleDiv2 = () => {
-        setIsVisible2(!isVisible2);
-      };
+    const toggleDiv2 = () => {
+    setIsVisible2(!isVisible2);
+    };
+    const toggleDiv3 = () => {
+    setIsVisible3(!isVisible3);
+    };
+
+    const handleswagger = () => {
+        window.open('http://localhost:5000/api-docs/', '_blank');
+    }
+
+    console.log(user.isAdmin)
 
 
     return (
@@ -95,10 +105,27 @@ const Feedback = () => {
 
                 </div>
 
+                <h3 className='h3-feedback-list' onClick={toggleDiv3}>Development</h3>
+
+                <div className={`div-content-p ${isVisible3 ? 'show' : ''}`} style={{paddingBottom:"2vh"}}>
+                    <h4>Testing: </h4>
+                    {user.isAdmin ? (
+                        <lo>
+                            <li  className='toggle-p-list'> API Endpoint testing and documentation
+                            <span onClick={handleswagger} style={{cursor:"pointer"}}> CLICK ME!</span></li>
+                        </lo>
+                    ) : (
+                        <p>This section is for Admins only</p>
+                    )}
+                    <h4>Security:</h4>
+
+
+                </div>
+
             </div>
 
            
-
+ 
             <div className='feedback-form'>
             {message ? ( // Check if feedbackMessage is not empty
                 <h3 style={{textAlign:"center"}}>Thank you for your Feedback!</h3>
