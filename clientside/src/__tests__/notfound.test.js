@@ -5,6 +5,8 @@ import { render, screen } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import '@testing-library/jest-dom';
 import { MemoryRouter } from 'react-router-dom'; 
+
+
 describe('NotFound Component', () => {
   test('should render a div with text and an image', () => {
     // Wrap NotFound component with MemoryRouter to provide context
