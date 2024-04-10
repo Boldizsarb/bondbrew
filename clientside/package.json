@@ -53,7 +53,9 @@
       "/node_modules/(?!(axios|react-day-picker)/)"
     ],
     "moduleNameMapper": {
-      "\\.css$": "jest-css-modules"
+      "\\.css$": "jest-css-modules",
+   
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "empty-module"
     }
   },
   "eslintConfig": {
@@ -79,6 +81,6 @@
     "enzyme-adapter-react-16": "^1.15.8",
     "redux-mock-store": "^1.5.4",
     "typescript": "^5.4.3"
-  },
-  "type": "module"
+  }
+
 }
