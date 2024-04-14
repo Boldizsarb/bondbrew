@@ -32,40 +32,40 @@ services:
       dockerfile: socket.dockerfile
     ports:
       - "8800:8800"
-#   nginx: ## nginx server
-#     build: 
-#       context: ./nginx
-#       dockerfile: nginx.dockerfile
-#     ports:
-#       - "80:80"
-#       - "443:443" ## not sure if this is needed
-#     volumes:
-#        - ./letsencrypt:/etc/nginx/certs 
-#        - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-#        - certbot-etc:/etc/letsencrypt#
-#        - certbot-var:/var/lib/letsencrypt
-#        - certbot-www:/var/www/certbot
-#        - ./data/certbot/conf:/etc/letsencrypt
-#     depends_on:
-#       - server
-#       - frontend
-#       - socket
-#     environment:
-#        - NGINX_PORT=80
-#     command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'" # nginx reloads the newly obtained certificates
-#   certbot:
-#     image: certbot/certbot
-#     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do sleep 12h & wait $${!}; certbot renew; done;'"
-#     volumes:
-#       - certbot-etc:/etc/letsencrypt
-#       - certbot-var:/var/lib/letsencrypt
-#       - certbot-www:/var/www/certbot
-#     depends_on:
-#       - nginx
-# volumes:
-#   certbot-etc:
-#   certbot-var:
-#   certbot-www:
+  nginx: ## nginx server
+    build: 
+      context: ./nginx
+      dockerfile: nginx.dockerfile
+    ports:
+      - "80:80"
+      - "443:443" ## not sure if this is needed
+    volumes:
+       - ./letsencrypt:/etc/nginx/certs 
+       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+       - certbot-etc:/etc/letsencrypt#
+       - certbot-var:/var/lib/letsencrypt
+       - certbot-www:/var/www/certbot
+       - ./data/certbot/conf:/etc/letsencrypt
+    depends_on:
+      - server
+      - frontend
+      - socket
+    environment:
+       - NGINX_PORT=80
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'" # nginx reloads the newly obtained certificates
+  certbot:
+    image: certbot/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do sleep 12h & wait $${!}; certbot renew; done;'"
+    volumes:
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+      - certbot-www:/var/www/certbot
+    depends_on:
+      - nginx
+volumes:
+  certbot-etc:
+  certbot-var:
+  certbot-www:
 
 
 
