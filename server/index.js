@@ -74,7 +74,7 @@ app.use(cors(corsOptions));
 // app.use("/chatbot", ChatBot);
 
 // app.use("/notification", Notification);
-
+const apiRouter = express.Router();
 // try for dployment :
 apiRouter.use("/user", SignupRouter);
 apiRouter.use("/userser", Userrouter);
