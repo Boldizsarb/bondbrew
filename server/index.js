@@ -51,7 +51,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 
-app.use(cors(corsOptions));
+//app.use(cors(corsOptions));
 
 
 // Routes
@@ -74,6 +74,22 @@ app.use("/match", MatchRouter); // get, create, delete
 app.use("/chatbot", ChatBot);
 
 app.use("/notification", Notification);
+
+// try for dployment :
+apiRouter.use("/user", SignupRouter);
+apiRouter.use("/userser", Userrouter);
+apiRouter.use("/post", PostRouter);
+apiRouter.use("/upload", UploadRouter);
+apiRouter.use("/chat", ChatRouter);
+apiRouter.use("/message", MessageRouter);
+apiRouter.use("/plan", PlanRouter);
+apiRouter.use("/match", MatchRouter);
+apiRouter.use("/chatbot", ChatBot);
+apiRouter.use("/notification", Notification);
+
+// Apply the /api prefix to all routes defined in apiRouter
+app.use("/api", apiRouter);
+/////////////////////////
 
 
 const swaggerOptions = {
