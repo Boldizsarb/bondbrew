@@ -55,25 +55,25 @@ app.use(cors(corsOptions));
 
 
 // Routes
-app.use("/user", SignupRouter); // login and register
+// app.use("/user", SignupRouter); // login and register
 
-app.use("/userser", Userrouter); // get, update, delete, follow, unfollow
+// app.use("/userser", Userrouter); // get, update, delete, follow, unfollow
 
-app.use("/post", PostRouter); // create, get, update, delete, like, timeline
+// app.use("/post", PostRouter); // create, get, update, delete, like, timeline
 
-app.use("/upload", UploadRouter); // upload image
+// app.use("/upload", UploadRouter); // upload image
 
-app.use("/chat", ChatRouter); // create, get, find
+// app.use("/chat", ChatRouter); // create, get, find
 
-app.use("/message", MessageRouter); // add, get
+// app.use("/message", MessageRouter); // add, get
 
-app.use("/plan", PlanRouter); // 
+// app.use("/plan", PlanRouter); // 
 
-app.use("/match", MatchRouter); // get, create, delete
+// app.use("/match", MatchRouter); // get, create, delete
 
-app.use("/chatbot", ChatBot);
+// app.use("/chatbot", ChatBot);
 
-app.use("/notification", Notification);
+// app.use("/notification", Notification);
 
 // try for dployment :
 apiRouter.use("/user", SignupRouter);
