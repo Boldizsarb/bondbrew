@@ -46,7 +46,6 @@ services:
        - certbot-var:/var/lib/letsencrypt
        - certbot-www:/var/www/certbot
        - ./data/certbot/conf:/etc/letsencrypt
-       - ./server/public/images:/usr/share/nginx/html/images ## images
     depends_on:
       - server
       - frontend
