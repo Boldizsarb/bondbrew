@@ -29,7 +29,7 @@ app.use("/images", express.static("images"));
 app.use(bodyParser.json({ limit: "10mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "10mb", extended: true }));
 
-//app.use(cors()); // original
+app.use(cors()); // original
 
 // const corsOptions = { // specific cors options
 //   origin: function (origin, callback) {
@@ -44,11 +44,11 @@ app.use(bodyParser.urlencoded({ limit: "10mb", extended: true }));
 //   optionsSuccessStatus: 200
 // };
 
-const corsOptions = { 
-  origin: "*", // Allow all origins
-  optionsSuccessStatus: 200
-};
-app.use(cors(corsOptions));
+// const corsOptions = { 
+//   origin: "*", // Allow all origins
+//   optionsSuccessStatus: 200
+// };
+// app.use(cors(corsOptions));
 
 
 //app.use(cors(corsOptions));

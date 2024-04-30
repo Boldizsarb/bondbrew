@@ -22,12 +22,7 @@ const model = new OpenAI({
  
 
 const template = "Be very caring and loving answering the question\n: {question}";
-// the template could includel multiple variables like {anotherquestion} etc
 
-// const prompt = PromptTemplate.fromTemplate(template); // example
-// const chatChain = prompt.pipe(model);
-// const response = await chatChain.invoke({ question: "I am lonely"})
-// console.log(response);
 
 const standaloneQuestionTemplate = "Given a quesstion, convert it to a standalone question\n: {question}";
 

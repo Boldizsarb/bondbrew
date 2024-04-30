@@ -31,21 +31,5 @@ const vectorStore = new SupabaseVectorStore(embeddings, {
 
 const retriever = vectorStore.asRetriever(); // goes to the vector store and retrieves the most similar document
 
-// const template = "Be very caring and loving answering the question\n: {question}";
-
-
-// const standaloneQuestionTemplate = "Given a quesstion, convert it to a standalone question\n: {question}";
-
-// const standaloneQuestionPrompt = PromptTemplate.fromTemplate(standaloneQuestionTemplate)
-
-// const standaloneQuestionChain = standaloneQuestionPrompt.pipe(model).pipe(new StringOutputParser()).pipe(retriever); // creates a standalone question and then retrieves the most similar document
-
-// const response = await standaloneQuestionChain.invoke({
-//      question:
-//      // "I am lonely and I need a friend, I often have a panic attacks, my anxiety is through the roof and I am feeling very depressed. I am not sure what to do. Can you help me?" 
-//      "There is a lot of website I have visited, and keep on going on going back to some but my job is to look at GPR and I need to see the disclamer of the website."
-//     })
-
-// console.log(response);
 
 export {retriever}; 

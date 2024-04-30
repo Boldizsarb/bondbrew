@@ -21,7 +21,7 @@ const Posts = () => {
 
  
 
-  useEffect(() => { // need to make it depend on the number of posts
+  useEffect(() => { 
     dispatch(getTimelinePosts(user._id));
   }, [refreshTrigger,refreshTrigger1]); // if the trigger changes the useEffect will run again, refresing the posts
 

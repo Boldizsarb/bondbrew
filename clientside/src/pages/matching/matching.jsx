@@ -90,7 +90,6 @@ const Matching = () => {
   };
                                               //   58.39812011305686, -4.549174927709644
 
-  
 
     const getCharacters = useEffect(() => { // getting users and sorting them
 
